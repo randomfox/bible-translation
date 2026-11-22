@@ -307,7 +307,14 @@ fun AboutScreen(db: BibleDb, state: AppState) {
     val c = LocalBibleColors.current
     Scaffold(topBar = { BlueBar({ Text("About") }, onBack = { state.screen = Screen.Reader }) }) { pad ->
         Column(Modifier.padding(pad).fillMaxSize().verticalScroll(rememberScrollState()).padding(18.dp)) {
-            Text("Bible", style = MaterialTheme.typography.headlineSmall, color = c.verseNumber)
+            Text("Bible Reader", style = MaterialTheme.typography.headlineSmall, color = c.verseNumber)
+            Surface(Modifier.fillMaxWidth().padding(top = 10.dp), shape = RoundedCornerShape(10.dp), color = c.tile) {
+                Text("Made with Claude. The Claude Translation, its notes on the KJV, the judgements about what a " +
+                    "passage most likely means, and this app were produced by Claude, Anthropic's AI model. No human " +
+                    "scholars have reviewed them, and they will contain mistakes. Use them for reading and comparison, " +
+                    "and check any passage that matters against established translations and the original texts.",
+                    Modifier.padding(12.dp), color = c.onTile, fontSize = 14.sp, lineHeight = 20.sp)
+            }
             Text("Download more translations from ⋮ → Download translations. Read several side by side. Tap a verse to compare it across translations and to see " +
                 "where the Claude Translation differs from the KJV, which reading the text most likely means, and why.",
                 Modifier.padding(top = 6.dp), lineHeight = 21.sp)

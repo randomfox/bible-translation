@@ -1,6 +1,6 @@
-# Bible: Android app
+# Bible Reader (Android)
 
-A Bible reader for the translations in this repository. The Claude Translation (CT) is built in. The King James Version, Berean Standard Bible, World English Bible, Young's Literal Translation, the Hebrew and Greek source texts (WLC and SBLGNT) and the Greek Textus Receptus can be downloaded in the app (⋮ → Download translations), at 0.6–2.5 MB each. It is built with Kotlin and Jetpack Compose. The release APK is about 3.5 MB.
+Bible Reader is an Android app for the translations in this repository. The Claude Translation (CT) is built in. The King James Version, Berean Standard Bible, World English Bible, Young's Literal Translation, the Hebrew and Greek source texts (WLC and SBLGNT) and the Greek Textus Receptus can be downloaded in the app (⋮ → Download translations), at 0.6–2.5 MB each. It is built with Kotlin and Jetpack Compose. The release APK is about 3.5 MB.
 
 - **Reader:** a blue top bar with the reference and translation in the centre between previous and next chapter arrows, over a clean page with blue verse numbers and serif text. Swipe left or right to change chapter. It follows the phone's light or dark theme.
 - **Quick Nav:** tap the reference or the list icon. Book names sit in three columns under swipeable Old and New Testament tabs, then a five-column grid of chapters. The translation button and Home are in its bar.

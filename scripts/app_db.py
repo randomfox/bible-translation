@@ -91,7 +91,9 @@ def load_ft(src, meta):
     keys = _keys(src)
     t = Translation(
         id=1, code="CT", name="Claude Translation", language="en",
-        description="A new translation from the Hebrew, Aramaic and Greek, made with attention to the original "
+        description="Made by Claude, Anthropic's AI model, and not reviewed by human scholars, so check important "
+                    "passages against other translations. A new translation from the Hebrew, Aramaic and Greek, made "
+                    "with attention to the original "
                     "meaning and compared verse by verse with the KJV. [[ ]] marks passages judged to be later "
                     "additions; [ ] marks doubtful words.",
         license="CC0 1.0 (public domain dedication)",
