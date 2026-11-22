@@ -143,7 +143,8 @@ fun LibraryScreen(db: BibleDb, state: AppState, library: Library) {
     Scaffold(topBar = { BlueBar({ Text("Translations") }, onBack = { state.screen = Screen.Reader }) }) { pad ->
         LazyColumn(Modifier.padding(pad).fillMaxSize(), contentPadding = PaddingValues(vertical = 8.dp)) {
             item {
-                Text("Download the translations you want to read and compare. They are stored on your phone and work offline.",
+                Text("Download the translations you want to read and compare. The list and the files come from GitHub; once " +
+                    "downloaded, a translation is stored on your phone and works offline.",
                     Modifier.padding(horizontal = 18.dp, vertical = 8.dp), color = c.muted, fontSize = 14.sp)
                 library.error?.let { Text(it, Modifier.padding(horizontal = 18.dp, vertical = 4.dp), color = c.severity[2], fontSize = 14.sp) }
                 if (library.catalog == null && library.error == null)

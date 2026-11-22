@@ -311,6 +311,12 @@ fun AboutScreen(db: BibleDb, state: AppState) {
             Text("Download more translations from ⋮ → Download translations. Read several side by side. Tap a verse to compare it across translations and to see " +
                 "where the Claude Translation differs from the KJV, which reading the text most likely means, and why.",
                 Modifier.padding(top = 6.dp), lineHeight = 21.sp)
+            Text("Internet use", Modifier.padding(top = 16.dp), fontWeight = FontWeight.SemiBold, fontSize = 17.sp)
+            Text("The app goes online only when you open Download translations or download a translation. It then " +
+                "fetches the list of translations and the files you choose from GitHub (github.com, which serves them " +
+                "from githubusercontent.com). Nothing else is sent: no account, analytics, ads or tracking. GitHub sees " +
+                "your IP address, as with any download. Reading, comparing, notes and search work offline.",
+                Modifier.padding(top = 4.dp), lineHeight = 21.sp)
             Text("A dot after a verse marks a recorded difference: light for a nuance, amber for a notable change, " +
                 "red for a major one.", Modifier.padding(top = 8.dp), lineHeight = 21.sp, color = c.muted)
             db.translations.forEach { t ->

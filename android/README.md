@@ -15,6 +15,19 @@ A Bible reader for the translations in this repository. The Claude Translation (
 
 Verses the KJV has but the critical text lacks, such as Matthew 17:21, appear in the Claude Translation as marked gaps that open their note.
 
+## Install
+
+Download the APK from the [latest release](https://github.com/randomfox/bible-translation/releases/latest) on your phone, open it, and allow installs from your browser or file manager when Android asks. The APK is signed with a development key, not a store key.
+
+## Internet use and privacy
+
+The app has the `INTERNET` permission and uses it only for translations:
+
+- **When:** only when you open the Translations screen (⋮ → Download translations, or **Get more**), which fetches `catalog.json`, and when you tap **Download** or **Update**, which fetches that translation's pack. Nothing runs in the background or at startup.
+- **Where:** only the GitHub release [`translations`](https://github.com/randomfox/bible-translation/releases/tag/translations) on github.com, which redirects downloads to githubusercontent.com.
+- **What is sent:** ordinary HTTPS requests for those files. There is no account, analytics, advertising, crash reporting or tracking, and nothing you read, note or search leaves the phone. GitHub sees your IP address, as with any download.
+- **Offline:** reading, comparing, notes and search need no connection. The Claude Translation is built in, and downloaded translations stay on the phone.
+
 ## How translations are stored and downloaded
 
 Each translation is a **pack**: a small SQLite file built by `scripts/app_db.py`, with the layout described at the top of that script.
