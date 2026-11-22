@@ -56,11 +56,22 @@ class AppState(private val prefs: android.content.SharedPreferences, db: BibleDb
     var fontSize by mutableIntStateOf(prefs.getInt("font", 19))
     /** Verse to scroll to and highlight once, after a jump. */
     var target by mutableStateOf<Int?>(null)
+    /** The verse at the top of the screen in the current chapter. */
+    var readingVerse by mutableIntStateOf(1)
     var screen by mutableStateOf<Screen>(Screen.Reader)
     var searchQuery by mutableStateOf("")
 
     fun save() = prefs.edit().putInt("tid", translationId).putInt("book", book).putInt("chapter", chapter)
         .putInt("font", fontSize).apply()
+
+    /** Switches translation, staying on the verse being read (mapped through the KJV keys). */
+    fun switchTranslation(db: BibleDb, newTid: Int) {
+        if (newTid == translationId) return
+        val pos = db.mapPosition(translationId, book, chapter, readingVerse, newTid)
+        translationId = newTid
+        if (pos != null) { chapter = pos.first; target = pos.second.takeIf { it > 1 } }
+        save()
+    }
 
     fun goTo(book: Int, chapter: Int, verse: Int? = null) {
         this.book = book; this.chapter = chapter; target = verse; screen = Screen.Reader; save()

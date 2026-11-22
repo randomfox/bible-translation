@@ -12,20 +12,20 @@ import androidx.compose.ui.graphics.Color
 @Immutable
 data class BibleColors(
     val bar: Color, val onBar: Color, val verseNumber: Color, val tile: Color, val onTile: Color,
-    val selected: Color, val muted: Color, val severity: List<Color>,
+    val selected: Color, val muted: Color, val strip: Color, val indicator: Color, val severity: List<Color>,
 )
 
 private val Light = BibleColors(
     bar = Color(0xFF1F4F8F), onBar = Color.White, verseNumber = Color(0xFF1F4F8F),
     tile = Color(0xFFE8EFF9), onTile = Color(0xFF173A6B), selected = Color(0xFFFFF4C2),
-    muted = Color(0xFF6B7380),
+    muted = Color(0xFF6B7380), strip = Color(0xFFDDE1E7), indicator = Color(0xFF3C4A5C),
     severity = listOf(Color(0xFF9DB3D3), Color(0xFFE0A100), Color(0xFFC62828)),
 )
 
 private val Dark = BibleColors(
     bar = Color(0xFF16304F), onBar = Color(0xFFE8EEF7), verseNumber = Color(0xFF8FB4E8),
     tile = Color(0xFF1E2A3A), onTile = Color(0xFFCFE0F7), selected = Color(0xFF3A3420),
-    muted = Color(0xFF9AA3AF),
+    muted = Color(0xFF9AA3AF), strip = Color(0xFF232933), indicator = Color(0xFF8FB4E8),
     severity = listOf(Color(0xFF5C7397), Color(0xFFE0A100), Color(0xFFEF5350)),
 )
 

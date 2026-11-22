@@ -29,10 +29,12 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
+import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -82,6 +84,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -104,6 +107,7 @@ fun BlueBar(title: @Composable () -> Unit, onBack: (() -> Unit)? = null, actions
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ReaderScreen(db: BibleDb, state: AppState) {
     val c = LocalBibleColors.current
@@ -135,52 +139,53 @@ fun ReaderScreen(db: BibleDb, state: AppState) {
     val current = pages.getOrNull(pager.currentPage) ?: pages.first()
     Scaffold(
         topBar = {
-            BlueBar(title = {
-                Row(
-                    Modifier.clip(RoundedCornerShape(6.dp)).clickable { state.screen = Screen.Books(db.book(current.book).nt) }
-                        .padding(vertical = 4.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    Text("${db.book(current.book).name} ${current.chapter}", maxLines = 1)
-                    Icon(Icons.Filled.ArrowDropDown, null)
-                }
-            }) {
-                Box(
-                    Modifier.padding(end = 4.dp).clip(RoundedCornerShape(50))
-                        .border(1.dp, c.onBar.copy(alpha = 0.7f), RoundedCornerShape(50))
-                        .clickable { pickTranslation = true }.padding(horizontal = 12.dp, vertical = 5.dp)
-                ) { Text(translation.code, color = c.onBar, fontWeight = FontWeight.SemiBold, fontSize = 14.sp) }
-                IconButton({ state.screen = Screen.Search }) { Icon(Icons.Filled.Search, "Search") }
-                Box {
-                    IconButton({ menu = true }) { Icon(Icons.Filled.MoreVert, "More") }
-                    DropdownMenu(menu, { menu = false }) {
-                        DropdownMenuItem({ Text("Text size") }, { menu = false; textSize = true })
-                        DropdownMenuItem({ Text("About ${db.book(current.book).name}") },
-                            { menu = false; state.screen = Screen.BookInfo(current.book) })
-                        DropdownMenuItem({ Text("About this app") }, { menu = false; state.screen = Screen.About })
+            CenterAlignedTopAppBar(
+                title = {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        IconButton({ scope.launch { pager.animateScrollToPage(pager.currentPage - 1) } },
+                            enabled = pager.currentPage > 0) {
+                            Icon(Icons.AutoMirrored.Filled.KeyboardArrowLeft, "Previous chapter")
+                        }
+                        Column(
+                            Modifier.clip(RoundedCornerShape(50)).background(c.onBar.copy(alpha = 0.12f))
+                                .clickable { state.screen = Screen.Books(db.book(current.book).nt) }
+                                .padding(horizontal = 14.dp, vertical = 2.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                        ) {
+                            Text("${db.book(current.book).name} ${current.chapter}", maxLines = 1, fontSize = 18.sp,
+                                fontWeight = FontWeight.SemiBold, lineHeight = 22.sp)
+                            Text(translation.code, fontSize = 11.sp, lineHeight = 13.sp, letterSpacing = 0.08.em,
+                                color = c.onBar.copy(alpha = 0.8f))
+                        }
+                        IconButton({ scope.launch { pager.animateScrollToPage(pager.currentPage + 1) } },
+                            enabled = pager.currentPage < pages.lastIndex) {
+                            Icon(Icons.AutoMirrored.Filled.KeyboardArrowRight, "Next chapter")
+                        }
                     }
-                }
-            }
-        },
-        bottomBar = {
-            Surface(tonalElevation = 2.dp, color = MaterialTheme.colorScheme.surfaceContainerLow) {
-                Row(Modifier.fillMaxWidth().navigationBarsPadding().height(48.dp),
-                    verticalAlignment = Alignment.CenterVertically) {
-                    IconButton({ scope.launch { pager.animateScrollToPage(pager.currentPage - 1) } },
-                        enabled = pager.currentPage > 0) {
-                        Icon(Icons.AutoMirrored.Filled.KeyboardArrowLeft, "Previous chapter", tint = c.verseNumber)
+                },
+                navigationIcon = {
+                    IconButton({ state.screen = Screen.Books(db.book(current.book).nt) }) {
+                        Icon(Icons.AutoMirrored.Filled.List, "Quick Nav")
                     }
-                    Text(
-                        "${db.book(current.book).abbrev} ${current.chapter}  ·  ${translation.name}",
-                        Modifier.weight(1f).clickable { state.screen = Screen.Chapters(current.book) },
-                        color = c.muted, fontSize = 13.sp, textAlign = TextAlign.Center,
-                    )
-                    IconButton({ scope.launch { pager.animateScrollToPage(pager.currentPage + 1) } },
-                        enabled = pager.currentPage < pages.lastIndex) {
-                        Icon(Icons.AutoMirrored.Filled.KeyboardArrowRight, "Next chapter", tint = c.verseNumber)
+                },
+                actions = {
+                    IconButton({ state.screen = Screen.Search }) { Icon(Icons.Filled.Search, "Search") }
+                    Box {
+                        IconButton({ menu = true }) { Icon(Icons.Filled.MoreVert, "More") }
+                        DropdownMenu(menu, { menu = false }) {
+                            DropdownMenuItem({ Text("Translation") }, { menu = false; pickTranslation = true })
+                            DropdownMenuItem({ Text("Text size") }, { menu = false; textSize = true })
+                            DropdownMenuItem({ Text("About ${db.book(current.book).name}") },
+                                { menu = false; state.screen = Screen.BookInfo(current.book) })
+                            DropdownMenuItem({ Text("About this app") }, { menu = false; state.screen = Screen.About })
+                        }
                     }
-                }
-            }
+                },
+                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+                    containerColor = c.bar, titleContentColor = c.onBar, actionIconContentColor = c.onBar,
+                    navigationIconContentColor = c.onBar,
+                ),
+            )
         },
     ) { pad ->
         HorizontalPager(pager, Modifier.padding(pad).fillMaxSize(), beyondViewportPageCount = 1,
@@ -193,10 +198,7 @@ fun ReaderScreen(db: BibleDb, state: AppState) {
     selected?.let { VerseSheet(db, state, translation, it) { selected = null } }
     if (pickTranslation) TranslationDialog(db, tid, { pickTranslation = false }) { newTid ->
         pickTranslation = false
-        val pos = db.mapPosition(tid, current.book, current.chapter, 1, newTid)
-        state.translationId = newTid
-        if (pos != null) { state.chapter = pos.first; state.target = pos.second.takeIf { it > 1 } }
-        state.save()
+        state.switchTranslation(db, newTid)
     }
     if (textSize) TextSizeDialog(state) { textSize = false }
 }
@@ -213,6 +215,20 @@ private fun ChapterPage(
     val list = rememberLazyListState()
     var highlight by remember { mutableStateOf<Int?>(null) }
     val vs = verses ?: return
+    // Keep track of the verse at the top of the screen, so switching translation can keep it.
+    LaunchedEffect(vs, isCurrent) {
+        if (!isCurrent) return@LaunchedEffect
+        snapshotFlow {
+            val first = list.layoutInfo.visibleItemsInfo.firstOrNull()
+            val i = list.firstVisibleItemIndex +
+                if (first != null && list.firstVisibleItemScrollOffset > first.size / 2) 1 else 0
+            vs[(i - 1).coerceIn(0, vs.lastIndex)].verse   // item 0 is the chapter heading
+        }.collect { state.readingVerse = it }
+    }
+    // A jumped-to verse stays highlighted for a moment, then fades back.
+    LaunchedEffect(highlight) {
+        if (highlight != null) { delay(2500); highlight = null }
+    }
     LaunchedEffect(vs, isCurrent, state.target, state.book, state.chapter) {
         val t = state.target
         if (isCurrent && t != null && ref.book == state.book && ref.chapter == state.chapter) {
@@ -381,7 +397,7 @@ private fun Body(text: String, bold: Boolean = false) = Text(text, Modifier.padd
     fontWeight = if (bold) FontWeight.SemiBold else FontWeight.Normal)
 
 @Composable
-private fun TranslationDialog(db: BibleDb, current: Int, onDismiss: () -> Unit, onPick: (Int) -> Unit) {
+fun TranslationDialog(db: BibleDb, current: Int, onDismiss: () -> Unit, onPick: (Int) -> Unit) {
     AlertDialog(onDismiss, confirmButton = { TextButton(onDismiss) { Text("Close") } },
         title = { Text("Translation") },
         text = {

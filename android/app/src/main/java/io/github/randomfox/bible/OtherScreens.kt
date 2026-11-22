@@ -1,6 +1,23 @@
 package io.github.randomfox.bible
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.Surface
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.unit.em
+import kotlinx.coroutines.launch
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -59,26 +76,75 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 
+/** Quick Nav bar: centred title, back on the left, translations and home on the right. */
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun QuickNavBar(db: BibleDb, state: AppState, onBack: (() -> Unit)?) {
+    val c = LocalBibleColors.current
+    var pick by remember { mutableStateOf(false) }
+    CenterAlignedTopAppBar(
+        title = { Text("Quick Nav", fontWeight = FontWeight.SemiBold) },
+        navigationIcon = {
+            if (onBack != null) IconButton(onBack) { Icon(Icons.AutoMirrored.Filled.ArrowBack, "Back") }
+        },
+        actions = {
+            Text(db.translation(state.translationId).code,
+                Modifier.clip(RoundedCornerShape(50)).background(c.onBar.copy(alpha = 0.12f))
+                    .clickable { pick = true }.padding(horizontal = 10.dp, vertical = 4.dp),
+                fontSize = 13.sp, fontWeight = FontWeight.SemiBold)
+            IconButton({ state.screen = Screen.Reader }) { Icon(Icons.Filled.Home, "Back to reading") }
+        },
+        colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+            containerColor = c.bar, titleContentColor = c.onBar, actionIconContentColor = c.onBar,
+            navigationIconContentColor = c.onBar,
+        ),
+    )
+    if (pick) TranslationDialog(db, state.translationId, { pick = false }) { pick = false; state.switchTranslation(db, it) }
+}
+
+/** The grey strip under the bar: testament tabs, or the chosen book's name. */
+@Composable
+private fun NavStrip(content: @Composable () -> Unit) {
+    Surface(color = LocalBibleColors.current.strip, modifier = Modifier.fillMaxWidth().height(44.dp)) { content() }
+}
+
+@Composable
+private fun StripLabel(text: String, modifier: Modifier = Modifier, selected: Boolean = true) =
+    Text(text.uppercase(), modifier, fontSize = 12.sp, letterSpacing = 0.1.em, fontWeight = FontWeight.SemiBold,
+        color = if (selected) MaterialTheme.colorScheme.onSurface else LocalBibleColors.current.muted,
+        textAlign = TextAlign.Center)
+
 @Composable
 fun BooksScreen(db: BibleDb, state: AppState, nt: Boolean) {
     val c = LocalBibleColors.current
-    var tab by remember { mutableIntStateOf(if (nt) 1 else 0) }
-    Scaffold(topBar = { BlueBar({ Text("Books") }, onBack = { state.screen = Screen.Reader }) }) { pad ->
+    val pager = rememberPagerState(if (nt) 1 else 0) { 2 }
+    val scope = rememberCoroutineScope()
+    Scaffold(topBar = { QuickNavBar(db, state, onBack = null) }) { pad ->
         Column(Modifier.padding(pad).fillMaxSize()) {
-            TabRow(tab, containerColor = MaterialTheme.colorScheme.surfaceContainerLow) {
-                Tab(tab == 0, { tab = 0 }, text = { Text("Old Testament") })
-                Tab(tab == 1, { tab = 1 }, text = { Text("New Testament") })
+            NavStrip {
+                Row(Modifier.fillMaxSize()) {
+                    listOf("Old Testament", "New Testament").forEachIndexed { i, label ->
+                        val sel = pager.currentPage == i
+                        Box(Modifier.weight(1f).fillMaxHeight().clickable { scope.launch { pager.animateScrollToPage(i) } }) {
+                            StripLabel(label, Modifier.align(Alignment.Center), sel)
+                            if (sel) Box(Modifier.align(Alignment.BottomCenter).fillMaxWidth().height(3.dp).background(c.indicator))
+                        }
+                    }
+                }
             }
-            LazyVerticalGrid(GridCells.Fixed(3), Modifier.fillMaxSize(), contentPadding = PaddingValues(10.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                items(db.books.filter { it.nt == (tab == 1) }, key = { it.id }) { b ->
-                    val here = b.id == state.book
-                    Box(Modifier.height(56.dp).clip(RoundedCornerShape(8.dp))
-                        .background(if (here) c.bar else c.tile)
-                        .clickable { state.screen = Screen.Chapters(b.id) }.padding(6.dp),
-                        contentAlignment = Alignment.Center) {
-                        Text(b.name, color = if (here) c.onBar else c.onTile, fontSize = 14.sp,
-                            fontWeight = FontWeight.Medium, textAlign = TextAlign.Center, lineHeight = 16.sp)
+            HorizontalPager(pager, Modifier.fillMaxSize()) { page ->
+                LazyVerticalGrid(GridCells.Fixed(3), Modifier.fillMaxSize(),
+                    contentPadding = PaddingValues(horizontal = 8.dp, vertical = 6.dp)) {
+                    items(db.books.filter { it.nt == (page == 1) }, key = { it.id }) { b ->
+                        val here = b.id == state.book
+                        Text(b.name,
+                            Modifier.fillMaxWidth().clip(RoundedCornerShape(6.dp))
+                                .clickable { state.screen = Screen.Chapters(b.id) }
+                                .padding(horizontal = 8.dp, vertical = 13.dp),
+                            fontSize = 16.sp, maxLines = 1, softWrap = false,
+                            overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis,
+                            color = if (here) c.verseNumber else MaterialTheme.colorScheme.onSurface,
+                            fontWeight = if (here) FontWeight.Bold else FontWeight.Normal)
                     }
                 }
             }
@@ -94,20 +160,30 @@ fun ChaptersScreen(db: BibleDb, state: AppState, bookId: Int) {
         db.chapters(state.translationId).filter { it.book == bookId }.map { it.chapter }
     }
     val hasNotes = remember(state.translationId, bookId) { db.bookNotes(state.translationId, bookId).isNotEmpty() }
-    Scaffold(topBar = { BlueBar({ Text(book.name) }, onBack = { state.screen = Screen.Books(book.nt) }) }) { pad ->
-        LazyVerticalGrid(GridCells.Adaptive(58.dp), Modifier.padding(pad).fillMaxSize(),
-            contentPadding = PaddingValues(12.dp), verticalArrangement = Arrangement.spacedBy(8.dp),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            if (hasNotes) item(span = { GridItemSpan(maxLineSpan) }) {
-                Text("About the translation of ${book.name} →",
-                    Modifier.fillMaxWidth().clip(RoundedCornerShape(8.dp)).clickable { state.screen = Screen.BookInfo(bookId) }
-                        .padding(vertical = 10.dp, horizontal = 4.dp), color = c.verseNumber, fontWeight = FontWeight.Medium)
+    Scaffold(topBar = { QuickNavBar(db, state, onBack = { state.screen = Screen.Books(book.nt) }) }) { pad ->
+        Column(Modifier.padding(pad).fillMaxSize()) {
+            NavStrip {
+                Box(Modifier.fillMaxSize()) {
+                    StripLabel(book.name, Modifier.align(Alignment.Center))
+                    Box(Modifier.align(Alignment.BottomCenter).fillMaxWidth().height(3.dp).background(c.indicator))
+                }
             }
-            items(chapters) { ch ->
-                val here = bookId == state.book && ch == state.chapter
-                Box(Modifier.aspectRatio(1f).clip(RoundedCornerShape(8.dp)).background(if (here) c.bar else c.tile)
-                    .clickable { state.goTo(bookId, ch) }, contentAlignment = Alignment.Center) {
-                    Text("$ch", color = if (here) c.onBar else c.onTile, fontSize = 17.sp, fontWeight = FontWeight.Medium)
+            LazyVerticalGrid(GridCells.Fixed(5), Modifier.fillMaxSize(), contentPadding = PaddingValues(8.dp)) {
+                items(chapters) { ch ->
+                    val here = bookId == state.book && ch == state.chapter
+                    Box(Modifier.height(52.dp).clickable { state.goTo(bookId, ch) }, contentAlignment = Alignment.Center) {
+                        Box(Modifier.size(40.dp).clip(CircleShape)
+                            .background(if (here) c.bar else androidx.compose.ui.graphics.Color.Transparent),
+                            contentAlignment = Alignment.Center) {
+                            Text("$ch", fontSize = 18.sp, color = if (here) c.onBar else MaterialTheme.colorScheme.onSurface)
+                        }
+                    }
+                }
+                if (hasNotes) item(span = { GridItemSpan(maxLineSpan) }) {
+                    Text("About the translation of ${book.name} →",
+                        Modifier.fillMaxWidth().padding(top = 12.dp).clip(RoundedCornerShape(8.dp))
+                            .clickable { state.screen = Screen.BookInfo(bookId) }.padding(12.dp),
+                        color = c.verseNumber, fontWeight = FontWeight.Medium)
                 }
             }
         }
@@ -229,7 +305,7 @@ fun AboutScreen(db: BibleDb, state: AppState) {
         Column(Modifier.padding(pad).fillMaxSize().verticalScroll(rememberScrollState()).padding(18.dp)) {
             Text("Bible", style = MaterialTheme.typography.headlineSmall, color = c.verseNumber)
             Text("Read several translations side by side. Tap a verse to compare it across translations and to see " +
-                "where the Fresh Translation differs from the KJV, which reading the text most likely means, and why.",
+                "where the Claude Translation differs from the KJV, which reading the text most likely means, and why.",
                 Modifier.padding(top = 6.dp), lineHeight = 21.sp)
             Text("A dot after a verse marks a recorded difference: light for a nuance, amber for a notable change, " +
                 "red for a major one.", Modifier.padding(top = 8.dp), lineHeight = 21.sp, color = c.muted)

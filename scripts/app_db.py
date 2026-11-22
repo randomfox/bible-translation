@@ -87,7 +87,7 @@ def _keys(src, table_filter=""):
 def load_ft(src, meta):
     keys = _keys(src)
     t = Translation(
-        code="FT", name="Fresh Translation", language="en",
+        code="CT", name="Claude Translation", language="en",
         description="A new translation from the Hebrew, Aramaic and Greek, made with attention to the original "
                     "meaning and compared verse by verse with the KJV. [[ ]] marks passages judged to be later "
                     "additions; [ ] marks doubtful words.",
@@ -130,7 +130,7 @@ def load_orig(src, meta):
            src.execute("SELECT book_id, chapter, verse, kjv_chapter, kjv_verse FROM verses")}
     t = Translation(
         code="HEB-GRK", name="Hebrew & Greek", language="hbo,grc",
-        description="The texts the Fresh Translation was made from: the Westminster Leningrad Codex for the Old "
+        description="The texts the Claude Translation was made from: the Westminster Leningrad Codex for the Old "
                     "Testament and the SBL Greek New Testament for the New. (K) marks the written text (ketiv) and "
                     "[Q: ] the reading tradition (qere).",
         license="Old Testament: public domain. New Testament: CC BY 4.0",

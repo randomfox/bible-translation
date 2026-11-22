@@ -2,8 +2,9 @@
 
 A Bible reader for the translations in this repository. It is built with Kotlin and Jetpack Compose, has no network access, and keeps all its text in one bundled SQLite database.
 
-- **Reader:** a blue top bar and a clean page, with blue verse numbers and serif text. Swipe left or right to change chapter. It follows the phone's light or dark theme.
-- **Book and chapter picker:** tap the title. The books are in Old and New Testament tabs, then a grid of chapter numbers.
+- **Reader:** a blue top bar with the reference and translation in the centre between previous and next chapter arrows, over a clean page with blue verse numbers and serif text. Swipe left or right to change chapter. It follows the phone's light or dark theme.
+- **Quick Nav:** tap the reference or the list icon. Book names sit in three columns under swipeable Old and New Testament tabs, then a five-column grid of chapters. The translation button and Home are in its bar.
+- **Switching translation** keeps the verse at the top of the screen, even where the two numberings differ.
 - **Tap a verse** to open a panel with two tabs:
   - **Compare** shows the verse in every translation, the Hebrew or Greek included. Verses are matched through KJV numbering, so Malachi 3:19 in the Hebrew numbering lines up with KJV Malachi 4:1.
   - **Notes** shows every recorded difference from the KJV: its severity and category, both readings, the most likely meaning with its confidence, and the reasoning behind it.
@@ -11,7 +12,7 @@ A Bible reader for the translations in this repository. It is built with Kotlin 
 - **Search:** full text search of the English translations. Use quotes for an exact phrase.
 - **Other:** text size, notes on each book, and an About screen with each translation's licence and attribution.
 
-Verses the KJV has but the critical text lacks, such as Matthew 17:21, appear in the Fresh Translation as marked gaps that open their note.
+Verses the KJV has but the critical text lacks, such as Matthew 17:21, appear in the Claude Translation as marked gaps that open their note.
 
 ## Building
 
