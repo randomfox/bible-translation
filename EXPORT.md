@@ -10,6 +10,8 @@ python3 -I scripts/export.py
 
 The script writes `bible.sqlite` in the project root. You can pass a different output path as an argument.
 
+The Android app in [android/](android/README.md) reads its own database, which `scripts/app_db.py` builds from this file. That database is laid out so it can hold more translations later.
+
 ## Tables
 
 | Table | One row per | Purpose |

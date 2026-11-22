@@ -4,7 +4,7 @@ This project combines its own work with third-party texts under their own terms.
 
 | Part | Licence |
 |---|---|
-| The English translation, the comparison flags and notes, the context verdicts, the book summaries, the reports in `results/`, the scripts, and the structure of `bible.sqlite` | **CC0 1.0 Universal**: public domain dedication |
+| The English translation, the comparison flags and notes, the context verdicts, the book summaries, the reports in `results/`, the scripts, the Android app in `android/`, and the structure of `bible.sqlite` | **CC0 1.0 Universal**: public domain dedication |
 | Greek New Testament text (`source_verses` with `language = 'grc'`, `data/chapters/40_MAT` … `66_REV` `*.src.txt`) | SBLGNT, **CC BY 4.0**. Attribution is required, as given below |
 | Hebrew and Aramaic Old Testament text (`source_verses` with `language = 'hbo'`, the OT `*.src.txt` files) | Westminster Leningrad Codex, **public domain**. Credited to the Open Scriptures Hebrew Bible |
 | King James Version (`kjv_verses`, the `kjv` column of the chapter files) | **Public domain**, except under Crown patent in the United Kingdom |
