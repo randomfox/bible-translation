@@ -1,6 +1,6 @@
 # Bible: Android app
 
-A Bible reader for the translations in this repository. It is built with Kotlin and Jetpack Compose, has no network access, and keeps all its text in one bundled SQLite database.
+A Bible reader for the translations in this repository. It ships the Claude Translation (CT), the King James Version, the Berean Standard Bible, the World English Bible, Young's Literal Translation, the Hebrew and Greek source texts (WLC and SBLGNT), and the Greek Textus Receptus. It is built with Kotlin and Jetpack Compose, has no network access, and keeps all its text in one bundled SQLite database.
 
 - **Reader:** a blue top bar with the reference and translation in the centre between previous and next chapter arrows, over a clean page with blue verse numbers and serif text. Swipe left or right to change chapter. It follows the phone's light or dark theme.
 - **Quick Nav:** tap the reference or the list icon. Book names sit in three columns under swipeable Old and New Testament tabs, then a five-column grid of chapters. The translation button and Home are in its bar.
@@ -34,7 +34,7 @@ The app database holds any number of translations. Each translation keeps its ow
 
 To add one:
 
-1. In `scripts/app_db.py`, write a loader that returns a `Translation`, using `load_kjv` as the simplest example. For each verse, give `(book_id, chapter, verse, text, [(kjv_chapter, kjv_verse), ...])`. If the translation uses KJV numbering, the key is just its own reference.
+1. In `scripts/app_db.py`, write a loader that returns a `Translation`. For an eBible.org verse-per-line text, `vpl_loader` does it in one call, as for the BSB, WEB, YLT and TR. Give it a new `id`. Ids are saved in the app's settings, so never change or reuse one. For each verse, give `(book_id, chapter, verse, text, [(kjv_chapter, kjv_verse), ...])`. If the translation uses KJV numbering, the key is just its own reference.
 2. Set `markup`. Use `italic` if `[words]` mark supplied words, or `keep` if brackets are part of the text.
 3. Set `searchable`, and fill in `license` and `attribution`, which the About screen shows.
 4. Add the loader to `TRANSLATIONS` and rebuild. The app needs no code changes.

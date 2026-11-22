@@ -19,6 +19,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.unit.em
 import kotlinx.coroutines.launch
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -259,7 +260,8 @@ fun SearchScreen(db: BibleDb, state: AppState) {
                 Modifier.fillMaxWidth().padding(12.dp).focusRequester(focus), singleLine = true,
                 placeholder = { Text("Words, or \"an exact phrase\"") },
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search), keyboardActions = KeyboardActions())
-            Row(Modifier.padding(horizontal = 12.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            Row(Modifier.horizontalScroll(rememberScrollState()).padding(horizontal = 12.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 searchable.forEach { t -> FilterChip(t.id == tid, { tid = t.id }, { Text(t.code) }) }
             }
             hits?.let { h ->

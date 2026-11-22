@@ -8,7 +8,7 @@ This project combines its own work with third-party texts under their own terms.
 | Greek New Testament text (`source_verses` with `language = 'grc'`, `data/chapters/40_MAT` … `66_REV` `*.src.txt`) | SBLGNT, **CC BY 4.0**. Attribution is required, as given below |
 | Hebrew and Aramaic Old Testament text (`source_verses` with `language = 'hbo'`, the OT `*.src.txt` files) | Westminster Leningrad Codex, **public domain**. Credited to the Open Scriptures Hebrew Bible |
 | King James Version (`kjv_verses`, the `kjv` column of the chapter files) | **Public domain**, except under Crown patent in the United Kingdom |
-| Scrivener 1894 Textus Receptus and World English Bible (used for comparison only) | **Public domain** |
+| Berean Standard Bible, World English Bible, Young's Literal Translation and the Greek Textus Receptus (in the Android app's database); Scrivener 1894 Textus Receptus (used in the comparison) | **Public domain** |
 
 ## The translation: CC0 1.0
 
@@ -46,7 +46,11 @@ The Old Testament translation has no such condition, because the Westminster Len
 - It is public domain outside the United Kingdom. In the UK the right to print it is held under Crown letters patent by Cambridge University Press, Oxford University Press and Collins. Printing or importing printed copies there needs their permission.
 
 **Scrivener's Textus Receptus (1894)**
-- Edited by Dr Maurice A. Robinson, from <https://github.com/byztxt/greektext-scrivener>. Public domain.
+- Edited by Dr Maurice A. Robinson, from <https://github.com/byztxt/greektext-scrivener>. Public domain. Used in the KJV comparison.
 
-**World English Bible**
-- From eBible.org. Public domain. Used only as a baseline for the similarity scores in `results/`.
+**Translations in the Android app**
+These are shipped unchanged in the app's database, except that verse references are linked to KJV numbering. Each comes from [eBible.org](https://ebible.org/) as public domain.
+- **Berean Standard Bible (BSB):** dedicated to the public domain by Bible Hub and the Berean Bible translation committee in 2023.
+- **World English Bible (WEB):** public domain. "World English Bible" is a trademark of eBible.org, so a changed text must not use the name. The app's text is unchanged. The WEB also served as the baseline for the similarity scores in `results/`.
+- **Young's Literal Translation (YLT, 1898):** public domain.
+- **Greek Textus Receptus New Testament:** public domain due to its age. eBible.org's edition, with Adam Boyd's annotations, which are also public domain and aren't included.

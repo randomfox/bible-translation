@@ -229,7 +229,7 @@ private fun CompareDialog(db: BibleDb, state: AppState, tid: Int, onDismiss: () 
         dismissButton = { TextButton({ state.compare = emptyList(); state.save(); onDismiss() }) { Text("Turn off") } },
         title = { Text("Compare translations") },
         text = {
-            Column {
+            Column(Modifier.verticalScroll(rememberScrollState())) {
                 Text("Show these under each verse of ${db.translation(tid).name}:", fontSize = 14.sp,
                     color = LocalBibleColors.current.muted)
                 db.translations.filter { it.id != tid }.forEach { t ->

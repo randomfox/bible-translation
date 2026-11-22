@@ -62,6 +62,7 @@ CREATE VIRTUAL TABLE verses_fts USING fts4(content="", text, tokenize=unicode61)
 
 @dataclass
 class Translation:
+    id: int            # stable: saved in the app's settings, so never change or reuse one
     code: str
     name: str
     language: str
@@ -87,7 +88,7 @@ def _keys(src, table_filter=""):
 def load_ft(src, meta):
     keys = _keys(src)
     t = Translation(
-        code="CT", name="Claude Translation", language="en",
+        id=1, code="CT", name="Claude Translation", language="en",
         description="A new translation from the Hebrew, Aramaic and Greek, made with attention to the original "
                     "meaning and compared verse by verse with the KJV. [[ ]] marks passages judged to be later "
                     "additions; [ ] marks doubtful words.",
@@ -111,7 +112,7 @@ def load_ft(src, meta):
 
 def load_kjv(src, meta):
     t = Translation(
-        code="KJV", name="King James Version", language="en",
+        id=2, code="KJV", name="King James Version", language="en",
         description="The Authorized Version of 1611, in the standard 1769 text. Words in italics were supplied by "
                     "the translators.",
         license="Public domain (Crown patent in the UK)", attribution=meta["attribution_kjv"],
@@ -129,7 +130,7 @@ def load_orig(src, meta):
     kv0 = {(b, c, v): (kc, kv) for b, c, v, kc, kv in
            src.execute("SELECT book_id, chapter, verse, kjv_chapter, kjv_verse FROM verses")}
     t = Translation(
-        code="HEB-GRK", name="Hebrew & Greek", language="hbo,grc",
+        id=3, code="HEB-GRK", name="Hebrew & Greek", language="hbo,grc",
         description="The texts the Claude Translation was made from: the Westminster Leningrad Codex for the Old "
                     "Testament and the SBL Greek New Testament for the New. (K) marks the written text (ketiv) and "
                     "[Q: ] the reading tradition (qere).",
@@ -144,7 +145,62 @@ def load_orig(src, meta):
     return t
 
 
-TRANSLATIONS = [load_ft, load_kjv, load_orig]
+SOURCES = ROOT / "cache/sources"
+EBIBLE = "Text from eBible.org (https://ebible.org/), which distributes it as public domain."
+
+
+def load_vpl(path, book_ids, remap=None):
+    """eBible.org verse-per-line text: 'GEN 1:1 text'. Books outside the 66 and empty verses are skipped.
+    These translations use KJV verse numbering, so each verse's key is its own reference unless remapped."""
+    out = []
+    for line in open(path, encoding="utf-8"):
+        m = re.match(r"(\S+) (\d+):(\d+) ?(.*)", line.rstrip("\n"))
+        if not m or m.group(1) not in book_ids or not m.group(4).strip():
+            continue
+        b, c, v = book_ids[m.group(1)], int(m.group(2)), int(m.group(3))
+        out.append((b, c, v, m.group(4).strip(), [(remap or {}).get((b, c, v), (c, v))]))
+    return out
+
+
+def vpl_loader(tid, code, name, file, description, markup, searchable, attribution, remap=None,
+               language="en", license="Public domain"):
+    def load(src, meta):
+        ids = {code_: bid for bid, code_ in src.execute("SELECT id, code FROM books")}
+        t = Translation(id=tid, code=code, name=name, language=language, description=description,
+                        license=license, attribution=attribution, markup=markup, searchable=searchable)
+        t.verses = load_vpl(SOURCES / file, ids, remap)
+        return t
+    return load
+
+
+# The WEB prints the Romans doxology at 14:24-26 (as the Majority Text does); the KJV has it at 16:25-27.
+WEB_REMAP = {(45, 14, 24): (16, 25), (45, 14, 25): (16, 26), (45, 14, 26): (16, 27)}
+
+load_bsb = vpl_loader(
+    4, "BSB", "Berean Standard Bible", "engbsb/engbsb_vpl.txt",
+    "A modern, readable translation from the Hebrew, Aramaic and Greek (2016, revised 2023). Verses the oldest "
+    "manuscripts lack are left out.", "keep", True,
+    "Berean Standard Bible. Dedicated to the public domain by Bible Hub and the Berean Bible translation committee "
+    "(2023). " + EBIBLE)
+load_web = vpl_loader(
+    5, "WEB", "World English Bible", "web/eng-web_vpl.txt",
+    "A modern update of the American Standard Version of 1901, based on the Majority Text in the New Testament.",
+    "keep", True,
+    "World English Bible. Public domain; \"World English Bible\" is a trademark of eBible.org. " + EBIBLE,
+    remap=WEB_REMAP)
+load_ylt = vpl_loader(
+    6, "YLT", "Young's Literal Translation", "engylt/engylt_vpl.txt",
+    "Robert Young's very literal translation (1862, revised 1898), which keeps the Hebrew and Greek tenses and word "
+    "order where it can. Words in italics were supplied by the translator.", "italic", True,
+    "Young's Literal Translation (1898). Public domain. " + EBIBLE)
+load_tr = vpl_loader(
+    7, "TR", "Textus Receptus", "grctr/grctr_vpl.txt",
+    "The Greek \"Received Text\" of the New Testament, the kind of text the KJV was translated from. Compare it "
+    "with the SBL Greek New Testament (HEB-GRK) to see where the KJV's Greek differs.", "keep", False,
+    "Greek Textus Receptus New Testament. Public domain due to its age. " + EBIBLE, language="grc")
+
+# Display order. Ids are fixed per translation (see Translation.id).
+TRANSLATIONS = [load_ft, load_kjv, load_bsb, load_web, load_ylt, load_orig, load_tr]
 
 
 def main():
@@ -163,7 +219,7 @@ def main():
     counts = {}
     for sort, loader in enumerate(TRANSLATIONS):
         t = loader(src, meta)
-        tid = sort + 1
+        tid = t.id
         db.execute("INSERT INTO translations VALUES (?,?,?,?,?,?,?,?,?,?)",
                    (tid, t.code, t.name, t.language, t.description, t.license, t.attribution, t.markup,
                     int(t.searchable), sort))
