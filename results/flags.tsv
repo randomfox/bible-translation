@@ -1802,6 +1802,7 @@ Mark	NT	9:24	TEXT	1	cried out, and said with tears, Lord, I believe	cried out an
 Mark	NT	9:49	TEXT	1	and every sacrifice shall be salted with salt	(absent)	TR adds a second clause from Lev 2:13; absent from Sinaiticus and Vaticanus.
 Mark	NT	10:24	TEXT	2	how hard is it for them that trust in riches to enter into the kingdom of God!	how difficult it is to enter the kingdom of God!	TR adds "tous pepoithotas epi tois chremasin" ("for those who trust in riches"), softening the saying into one about attitude rather than wealth or entry as such; absent from Sinaiticus and Vaticanus.
 Mark	NT	10:21	TEXT	1	come, take up the cross, and follow me	come, follow me	TR adds "aras ton stauron" (from 8:34); absent from Sinaiticus, Vaticanus, Bezae.
+Mark	NT	10:2	TEXT	1	And the Pharisees came to him, and asked him	And they asked him	SBLGNT alone among the major editions omits "proselthontes Pharisaioi" (with D and some Old Latin); WH, Tregelles, NA28 and the Byzantine text all have it, so the KJV here matches most critical editions. My first draft had wrongly supplied the words; corrected to the SBLGNT text.
 Mark	NT	11:26	TEXT	2	But if ye do not forgive, neither will your Father which is in heaven forgive your trespasses.	(absent)	TR's 11:26 is imported from Matt 6:15; absent from Sinaiticus, Vaticanus, L, W, Delta.
 Mark	NT	11:10	TEXT	1	Blessed be the kingdom of our father David, that cometh in the name of the Lord	Blessed is the coming kingdom of our father David!	TR repeats "en onomati kyriou" from 11:9; absent from Sinaiticus and Vaticanus.
 Mark	NT	11:17	LEXICAL	1	ye have made it a den of thieves	you have made it a den of robbers	lestai are bandits, as at Matt 21:13.
@@ -1866,6 +1867,7 @@ Luke	NT	17:21	INTERP	2	the kingdom of God is within you	the kingdom of God is in
 Luke	NT	17:36	TEXT	2	Two [men] shall be in the field; the one shall be taken, and the other left.	(absent)	Imported from Mt 24:40; absent from P75, Sinaiticus, Vaticanus, A, W. Most TR editions print it; KJV includes it.
 Luke	NT	17:37	LEXICAL	1	thither will the eagles be gathered together	there the vultures will gather	"aetos" here means carrion birds gathering at a body.
 Luke	NT	18:12	LEXICAL	1	I give tithes of all that I possess	I give tithes of all that I get	"ktaomai" (present) means acquire, i.e. income, not existing possessions.
+Luke	NT	18:24	TEXT	1	when Jesus saw that he was very sorrowful	Jesus, seeing him	SBLGNT (with WH, Sinaiticus, B, L) omits "perilypon genomenon" (having become very sad), which Tregelles, NA28 and the TR include, repeating 18:23.
 Luke	NT	19:13	ARCHAIC	1	Occupy till I come	Engage in business until I come	"Occupy" in 1611 meant "trade, do business"; a modern reader hears "hold territory".
 Luke	NT	19:45	TEXT	1	them that sold therein, and them that bought	those who sold	TR adds "and them that bought" from Mk 11:15.
 Luke	NT	20:23	TEXT	1	and said unto them, Why tempt ye me?	and said to them,	TR adds "Why tempt ye me?" from Mt 22:18 / Mk 12:15.

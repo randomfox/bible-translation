@@ -1,9 +1,9 @@
 # Mark 1–16: summary
 
 - **Coverage:** 16 chapters and 673 SBLGNT verses. The KJV has 678. Five KJV verses have no counterpart in the critical text: 7:16, 9:44, 9:46, 11:26 and 15:28.
-- **Flags:** 38 flags on 38 verses.
-  - By category: TEXT 31, INTERP 5, LEXICAL 1, NAME 1.
-  - By severity: 23 at sev 1, 12 at sev 2, 1 at sev 3.
+- **Flags:** 39 flags on 39 verses.
+  - By category: TEXT 32, INTERP 5, LEXICAL 1, NAME 1.
+  - By severity: 26 at sev 1, 12 at sev 2, 1 at sev 3.
 
 ## Systematic
 

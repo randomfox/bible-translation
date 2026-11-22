@@ -1,19 +1,19 @@
 {
  "books_touched": 66,
  "verses_translated": 31155,
- "flags": 2318,
- "flagged_verses": 2274,
- "flagged_verse_pct": 7.3,
+ "flags": 2320,
+ "flagged_verses": 2276,
+ "flagged_verse_pct": 7.31,
  "by_category": {
   "INTERP": 612,
   "LEXICAL": 579,
-  "TEXT": 477,
+  "TEXT": 479,
   "MEANING": 292,
   "ARCHAIC": 251,
   "NAME": 107
  },
  "by_severity": {
-  "1": 1968,
+  "1": 1970,
   "2": 335,
   "3": 15
  },
@@ -27,7 +27,7 @@
    "TEXT": 105
   },
   "NT": {
-   "TEXT": 372,
+   "TEXT": 374,
    "INTERP": 99,
    "ARCHAIC": 23,
    "NAME": 7,
@@ -1030,17 +1030,17 @@
    "chapters_done": 16,
    "chapters": 16,
    "verses": 673,
-   "flagged_verses": 38,
-   "flags": 38,
+   "flagged_verses": 39,
+   "flags": 39,
    "by_category": {
-    "TEXT": 31,
+    "TEXT": 32,
     "INTERP": 5,
     "NAME": 1,
     "LEXICAL": 1
    },
    "by_severity": {
     "sev2": 12,
-    "sev1": 25,
+    "sev1": 26,
     "sev3": 1
    },
    "sim": {
@@ -1055,17 +1055,17 @@
    "chapters_done": 24,
    "chapters": 24,
    "verses": 1149,
-   "flagged_verses": 73,
-   "flags": 73,
+   "flagged_verses": 74,
+   "flags": 74,
    "by_category": {
-    "TEXT": 55,
+    "TEXT": 56,
     "INTERP": 14,
     "NAME": 1,
     "LEXICAL": 2,
     "ARCHAIC": 1
    },
    "by_severity": {
-    "sev1": 63,
+    "sev1": 64,
     "sev2": 10
    },
    "sim": {

@@ -2,9 +2,9 @@
 
 **Coverage:** 24 chapters and 1,149 SBLGNT verses. The KJV has 1,151. Two KJV verses have no counterpart in the critical text: 17:36 and 23:17.
 
-**Flags:** 73 flags.
-- By category: TEXT 55, INTERP 14, LEXICAL 2, ARCHAIC 1, NAME 1.
-- By severity: 63 at sev 1, 10 at sev 2, none at sev 3.
+**Flags:** 74 flags.
+- By category: TEXT 56, INTERP 14, LEXICAL 2, ARCHAIC 1, NAME 1.
+- By severity: 64 at sev 1, 10 at sev 2, none at sev 3.
 
 ## Systematic
 
