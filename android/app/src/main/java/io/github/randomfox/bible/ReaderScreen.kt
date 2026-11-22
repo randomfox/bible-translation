@@ -35,6 +35,7 @@ import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -122,6 +123,8 @@ fun ReaderScreen(db: BibleDb, state: AppState) {
     var menu by remember { mutableStateOf(false) }
     var pickTranslation by remember { mutableStateOf(false) }
     var textSize by remember { mutableStateOf(false) }
+    var pickCompare by remember { mutableStateOf(false) }
+    val others = state.compare.filter { it != tid && db.translations.any { t -> t.id == it } }
 
     LaunchedEffect(pager, pages) {
         snapshotFlow { pager.settledPage }.collect { p ->
@@ -154,7 +157,7 @@ fun ReaderScreen(db: BibleDb, state: AppState) {
                         ) {
                             Text("${db.book(current.book).name} ${current.chapter}", maxLines = 1, fontSize = 18.sp,
                                 fontWeight = FontWeight.SemiBold, lineHeight = 22.sp)
-                            Text(translation.code, fontSize = 11.sp, lineHeight = 13.sp, letterSpacing = 0.08.em,
+                            Text((listOf(tid) + others).joinToString(" · ") { db.translation(it).code }, fontSize = 11.sp, lineHeight = 13.sp, letterSpacing = 0.08.em,
                                 color = c.onBar.copy(alpha = 0.8f))
                         }
                         IconButton({ scope.launch { pager.animateScrollToPage(pager.currentPage + 1) } },
@@ -174,6 +177,8 @@ fun ReaderScreen(db: BibleDb, state: AppState) {
                         IconButton({ menu = true }) { Icon(Icons.Filled.MoreVert, "More") }
                         DropdownMenu(menu, { menu = false }) {
                             DropdownMenuItem({ Text("Translation") }, { menu = false; pickTranslation = true })
+                            DropdownMenuItem({ Text(if (others.isEmpty()) "Compare translations" else "Compare translations ✓") },
+                                { menu = false; pickCompare = true })
                             DropdownMenuItem({ Text("Text size") }, { menu = false; textSize = true })
                             DropdownMenuItem({ Text("About ${db.book(current.book).name}") },
                                 { menu = false; state.screen = Screen.BookInfo(current.book) })
@@ -190,7 +195,7 @@ fun ReaderScreen(db: BibleDb, state: AppState) {
     ) { pad ->
         HorizontalPager(pager, Modifier.padding(pad).fillMaxSize(), beyondViewportPageCount = 1,
             key = { pages[it].book * 1000 + pages[it].chapter }) { p ->
-            ChapterPage(db, state, translation, pages[p], isCurrent = p == pager.currentPage,
+            ChapterPage(db, state, translation, others, pages[p], isCurrent = p == pager.currentPage,
                 selected = selected) { selected = it }
         }
     }
@@ -201,20 +206,51 @@ fun ReaderScreen(db: BibleDb, state: AppState) {
         state.switchTranslation(db, newTid)
     }
     if (textSize) TextSizeDialog(state) { textSize = false }
+    if (pickCompare) CompareDialog(db, state, tid) { pickCompare = false }
+}
+
+@Composable
+private fun CompareDialog(db: BibleDb, state: AppState, tid: Int, onDismiss: () -> Unit) {
+    AlertDialog(onDismiss,
+        confirmButton = { TextButton(onDismiss) { Text("Done") } },
+        dismissButton = { TextButton({ state.compare = emptyList(); state.save(); onDismiss() }) { Text("Turn off") } },
+        title = { Text("Compare translations") },
+        text = {
+            Column {
+                Text("Show these under each verse of ${db.translation(tid).name}:", fontSize = 14.sp,
+                    color = LocalBibleColors.current.muted)
+                db.translations.filter { it.id != tid }.forEach { t ->
+                    val on = t.id in state.compare
+                    fun toggle() {
+                        state.compare = if (on) state.compare - t.id else (state.compare + t.id).sortedBy { db.translations.indexOf(db.translation(it)) }
+                        state.save()
+                    }
+                    Row(Modifier.fillMaxWidth().clip(RoundedCornerShape(8.dp)).clickable { toggle() }.padding(vertical = 4.dp),
+                        verticalAlignment = Alignment.CenterVertically) {
+                        Checkbox(on, { toggle() })
+                        Text("${t.name} (${t.code})")
+                    }
+                }
+            }
+        })
 }
 
 @Composable
 private fun ChapterPage(
-    db: BibleDb, state: AppState, translation: Translation, ref: ChapterRef, isCurrent: Boolean,
+    db: BibleDb, state: AppState, translation: Translation, others: List<Int>, ref: ChapterRef, isCurrent: Boolean,
     selected: Verse?, onTap: (Verse) -> Unit,
 ) {
     val c = LocalBibleColors.current
-    val verses by produceState<List<Verse>?>(null, translation.id, ref) {
-        value = withContext(Dispatchers.IO) { db.chapter(translation.id, ref.book, ref.chapter) }
+    val data by produceState<Pair<List<Verse>, Map<Long, List<Pair<Translation, Verse>>>>?>(null, translation.id, ref, others) {
+        value = withContext(Dispatchers.IO) {
+            val v = db.chapter(translation.id, ref.book, ref.chapter)
+            v to db.parallelChapter(translation.id, v, others)
+        }
     }
     val list = rememberLazyListState()
     var highlight by remember { mutableStateOf<Int?>(null) }
-    val vs = verses ?: return
+    val vs = data?.first ?: return
+    val parallels = data?.second.orEmpty()
     // Keep track of the verse at the top of the screen, so switching translation can keep it.
     LaunchedEffect(vs, isCurrent) {
         if (!isCurrent) return@LaunchedEffect
@@ -254,13 +290,25 @@ private fun ChapterPage(
                 highlight == v.verse -> c.selected.copy(alpha = 0.6f)
                 else -> androidx.compose.ui.graphics.Color.Transparent
             }
-            Text(
-                verseLine(v, translation, c),
-                Modifier.fillMaxWidth().background(bg).clickable { onTap(v) }
-                    .padding(horizontal = 18.dp, vertical = 5.dp),
-                style = if (isHebrew(v.text)) bodyStyle.copy(textDirection = TextDirection.Rtl,
-                    fontSize = (state.fontSize + 3).sp, lineHeight = (state.fontSize * 1.9f).sp) else bodyStyle,
-            )
+            val comparing = others.isNotEmpty()
+            Column(Modifier.fillMaxWidth().background(bg).clickable { onTap(v) }
+                .padding(horizontal = 18.dp, vertical = if (comparing) 9.dp else 5.dp)) {
+                Text(verseLine(v, translation, c), Modifier.fillMaxWidth(), style = verseStyle(bodyStyle, v.text, state.fontSize))
+                parallels[if (v.id == 0L) -v.verse.toLong() else v.id]?.forEach { (t, pv) ->
+                    val small = bodyStyle.copy(fontSize = (state.fontSize - 2).sp, lineHeight = (state.fontSize * 1.4f).sp,
+                        color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.8f))
+                    Text(buildAnnotatedString {
+                        withStyle(SpanStyle(color = c.muted, fontWeight = FontWeight.Bold, fontSize = 0.7.em,
+                            fontFamily = FontFamily.SansSerif, letterSpacing = 0.05.em)) {
+                            append(t.code)
+                            if (pv.chapter != v.chapter || pv.verse != v.verse) append(" ${pv.chapter}:${pv.verse}")
+                            append("  ")
+                        }
+                        append(renderText(pv.text, t.italicBrackets))
+                    }, Modifier.fillMaxWidth().padding(top = 4.dp), style = verseStyle(small, pv.text, state.fontSize - 2))
+                }
+            }
+            if (comparing) HorizontalDivider(Modifier.padding(horizontal = 18.dp), color = c.muted.copy(alpha = 0.15f))
         }
     }
 }
@@ -274,6 +322,9 @@ private fun verseLine(v: Verse, t: Translation, c: BibleColors): AnnotatedString
     if (v.noteCount > 0) withStyle(SpanStyle(color = c.severity[(v.maxSeverity - 1).coerceIn(0, 2)],
         fontSize = 0.6.em, baselineShift = BaselineShift(0.35f))) { append(" ●") }
 }
+
+private fun verseStyle(base: TextStyle, text: String, size: Int) = if (isHebrew(text))
+    base.copy(textDirection = TextDirection.Rtl, fontSize = (size + 3).sp, lineHeight = (size * 1.9f).sp) else base
 
 /** Hebrew verses read right to left, with the verse number on the right. */
 fun isHebrew(text: String) = text.firstOrNull { it.isLetter() }?.let { it in '\u0590'..'\u05FF' } == true

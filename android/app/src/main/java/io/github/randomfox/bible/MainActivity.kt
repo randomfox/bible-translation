@@ -54,6 +54,8 @@ class AppState(private val prefs: android.content.SharedPreferences, db: BibleDb
     var book by mutableIntStateOf(prefs.getInt("book", 43))
     var chapter by mutableIntStateOf(prefs.getInt("chapter", 1))
     var fontSize by mutableIntStateOf(prefs.getInt("font", 19))
+    /** Translations shown under each verse for comparison (the reading translation is skipped). */
+    var compare by mutableStateOf(prefs.getString("compare", "")!!.split(",").mapNotNull { it.toIntOrNull() })
     /** Verse to scroll to and highlight once, after a jump. */
     var target by mutableStateOf<Int?>(null)
     /** The verse at the top of the screen in the current chapter. */
@@ -62,7 +64,7 @@ class AppState(private val prefs: android.content.SharedPreferences, db: BibleDb
     var searchQuery by mutableStateOf("")
 
     fun save() = prefs.edit().putInt("tid", translationId).putInt("book", book).putInt("chapter", chapter)
-        .putInt("font", fontSize).apply()
+        .putInt("font", fontSize).putString("compare", compare.joinToString(",")).apply()
 
     /** Switches translation, staying on the verse being read (mapped through the KJV keys). */
     fun switchTranslation(db: BibleDb, newTid: Int) {

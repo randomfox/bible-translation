@@ -100,6 +100,41 @@ class BibleDb private constructor(private val db: SQLiteDatabase) {
         return translations.map { t -> Parallel(t, rows.filter { it.first == t.id }.map { it.second }) }
     }
 
+    /**
+     * For every verse of a chapter, the matching verses in [others], matched through the KJV keys.
+     * Keyed by verse id (or -verse for a gap row). Each matching verse is listed once, under the first
+     * verse it matches, so a verse split differently in another numbering is not repeated.
+     */
+    fun parallelChapter(tid: Int, verses: List<Verse>, others: List<Int>): Map<Long, List<Pair<Translation, Verse>>> {
+        if (others.isEmpty() || verses.isEmpty()) return emptyMap()
+        val v0 = verses.first()
+        val rows = db.list(
+            "SELECT DISTINCT v1.id, v1.verse, v2.translation_id, v2.id, v2.chapter, v2.verse, v2.text FROM verses v1 " +
+                "JOIN verse_keys k1 ON k1.verse_id=v1.id JOIN verse_keys k2 ON k2.book_id=k1.book_id " +
+                "AND k2.kjv_chapter=k1.kjv_chapter AND k2.kjv_verse=k1.kjv_verse JOIN verses v2 ON v2.id=k2.verse_id " +
+                "AND v2.translation_id IN (${others.joinToString(",")}) WHERE v1.translation_id=? AND v1.book_id=? " +
+                "AND v1.chapter=? ORDER BY v1.verse, v2.translation_id, v2.chapter, v2.verse", tid, v0.book, v0.chapter
+        ) { Triple(it.getLong(0) to it.getInt(1), it.getInt(2), Verse(it.getLong(3), v0.book, it.getInt(4), it.getInt(5), it.getString(6))) }
+        // A verse goes under the verse with the same reference if there is one (same numbering),
+        // otherwise under the first verse it matches.
+        val home = HashMap<Long, Long>()
+        for ((p, _, v) in rows) {
+            val (pid, pverse) = p
+            if (v.id !in home || (v.chapter == v0.chapter && v.verse == pverse)) home[v.id] = pid
+        }
+        val seen = HashSet<Long>()
+        val out = LinkedHashMap<Long, MutableList<Pair<Translation, Verse>>>()
+        for ((p, t, v) in rows) if (home[v.id] == p.first && seen.add(v.id))
+            out.getOrPut(p.first) { mutableListOf() }.add(translation(t) to v)
+        for (list in out.values) list.sortBy { (t, v) -> translations.indexOf(t) * 100000 + v.chapter * 1000 + v.verse }
+        for (gap in verses.filter { it.id == 0L }) {
+            val list = parallel(gap).filter { it.translation.id in others }
+                .flatMap { p -> p.verses.filter { seen.add(it.id) }.map { p.translation to it } }
+            if (list.isNotEmpty()) out[-gap.verse.toLong()] = list.toMutableList()
+        }
+        return out
+    }
+
     /** Where a chapter/verse in one translation falls in another translation's numbering. */
     fun mapPosition(fromTid: Int, book: Int, chapter: Int, verse: Int, toTid: Int): Pair<Int, Int>? {
         if (fromTid == toTid) return chapter to verse
