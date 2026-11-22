@@ -1,0 +1,662 @@
+[
+ {
+  "n": 1,
+  "code": "GEN",
+  "name": "Genesis",
+  "osis": "Gen",
+  "testament": "OT",
+  "chapters": 50,
+  "verses": 1533,
+  "dir": "01_GEN"
+ },
+ {
+  "n": 2,
+  "code": "EXO",
+  "name": "Exodus",
+  "osis": "Exod",
+  "testament": "OT",
+  "chapters": 40,
+  "verses": 1213,
+  "dir": "02_EXO"
+ },
+ {
+  "n": 3,
+  "code": "LEV",
+  "name": "Leviticus",
+  "osis": "Lev",
+  "testament": "OT",
+  "chapters": 27,
+  "verses": 859,
+  "dir": "03_LEV"
+ },
+ {
+  "n": 4,
+  "code": "NUM",
+  "name": "Numbers",
+  "osis": "Num",
+  "testament": "OT",
+  "chapters": 36,
+  "verses": 1289,
+  "dir": "04_NUM"
+ },
+ {
+  "n": 5,
+  "code": "DEU",
+  "name": "Deuteronomy",
+  "osis": "Deut",
+  "testament": "OT",
+  "chapters": 34,
+  "verses": 959,
+  "dir": "05_DEU"
+ },
+ {
+  "n": 6,
+  "code": "JOS",
+  "name": "Joshua",
+  "osis": "Josh",
+  "testament": "OT",
+  "chapters": 24,
+  "verses": 658,
+  "dir": "06_JOS"
+ },
+ {
+  "n": 7,
+  "code": "JDG",
+  "name": "Judges",
+  "osis": "Judg",
+  "testament": "OT",
+  "chapters": 21,
+  "verses": 618,
+  "dir": "07_JDG"
+ },
+ {
+  "n": 8,
+  "code": "RUT",
+  "name": "Ruth",
+  "osis": "Ruth",
+  "testament": "OT",
+  "chapters": 4,
+  "verses": 85,
+  "dir": "08_RUT"
+ },
+ {
+  "n": 9,
+  "code": "1SA",
+  "name": "1 Samuel",
+  "osis": "1Sam",
+  "testament": "OT",
+  "chapters": 31,
+  "verses": 811,
+  "dir": "09_1SA"
+ },
+ {
+  "n": 10,
+  "code": "2SA",
+  "name": "2 Samuel",
+  "osis": "2Sam",
+  "testament": "OT",
+  "chapters": 24,
+  "verses": 695,
+  "dir": "10_2SA"
+ },
+ {
+  "n": 11,
+  "code": "1KI",
+  "name": "1 Kings",
+  "osis": "1Kgs",
+  "testament": "OT",
+  "chapters": 22,
+  "verses": 817,
+  "dir": "11_1KI"
+ },
+ {
+  "n": 12,
+  "code": "2KI",
+  "name": "2 Kings",
+  "osis": "2Kgs",
+  "testament": "OT",
+  "chapters": 25,
+  "verses": 719,
+  "dir": "12_2KI"
+ },
+ {
+  "n": 13,
+  "code": "1CH",
+  "name": "1 Chronicles",
+  "osis": "1Chr",
+  "testament": "OT",
+  "chapters": 29,
+  "verses": 943,
+  "dir": "13_1CH"
+ },
+ {
+  "n": 14,
+  "code": "2CH",
+  "name": "2 Chronicles",
+  "osis": "2Chr",
+  "testament": "OT",
+  "chapters": 36,
+  "verses": 822,
+  "dir": "14_2CH"
+ },
+ {
+  "n": 15,
+  "code": "EZR",
+  "name": "Ezra",
+  "osis": "Ezra",
+  "testament": "OT",
+  "chapters": 10,
+  "verses": 280,
+  "dir": "15_EZR"
+ },
+ {
+  "n": 16,
+  "code": "NEH",
+  "name": "Nehemiah",
+  "osis": "Neh",
+  "testament": "OT",
+  "chapters": 13,
+  "verses": 405,
+  "dir": "16_NEH"
+ },
+ {
+  "n": 17,
+  "code": "EST",
+  "name": "Esther",
+  "osis": "Esth",
+  "testament": "OT",
+  "chapters": 10,
+  "verses": 167,
+  "dir": "17_EST"
+ },
+ {
+  "n": 18,
+  "code": "JOB",
+  "name": "Job",
+  "osis": "Job",
+  "testament": "OT",
+  "chapters": 42,
+  "verses": 1070,
+  "dir": "18_JOB"
+ },
+ {
+  "n": 19,
+  "code": "PSA",
+  "name": "Psalms",
+  "osis": "Ps",
+  "testament": "OT",
+  "chapters": 150,
+  "verses": 2527,
+  "dir": "19_PSA"
+ },
+ {
+  "n": 20,
+  "code": "PRO",
+  "name": "Proverbs",
+  "osis": "Prov",
+  "testament": "OT",
+  "chapters": 31,
+  "verses": 915,
+  "dir": "20_PRO"
+ },
+ {
+  "n": 21,
+  "code": "ECC",
+  "name": "Ecclesiastes",
+  "osis": "Eccl",
+  "testament": "OT",
+  "chapters": 12,
+  "verses": 222,
+  "dir": "21_ECC"
+ },
+ {
+  "n": 22,
+  "code": "SOL",
+  "name": "Song of Songs",
+  "osis": "Song",
+  "testament": "OT",
+  "chapters": 8,
+  "verses": 117,
+  "dir": "22_SOL"
+ },
+ {
+  "n": 23,
+  "code": "ISA",
+  "name": "Isaiah",
+  "osis": "Isa",
+  "testament": "OT",
+  "chapters": 66,
+  "verses": 1291,
+  "dir": "23_ISA"
+ },
+ {
+  "n": 24,
+  "code": "JER",
+  "name": "Jeremiah",
+  "osis": "Jer",
+  "testament": "OT",
+  "chapters": 52,
+  "verses": 1364,
+  "dir": "24_JER"
+ },
+ {
+  "n": 25,
+  "code": "LAM",
+  "name": "Lamentations",
+  "osis": "Lam",
+  "testament": "OT",
+  "chapters": 5,
+  "verses": 154,
+  "dir": "25_LAM"
+ },
+ {
+  "n": 26,
+  "code": "EZE",
+  "name": "Ezekiel",
+  "osis": "Ezek",
+  "testament": "OT",
+  "chapters": 48,
+  "verses": 1273,
+  "dir": "26_EZE"
+ },
+ {
+  "n": 27,
+  "code": "DAN",
+  "name": "Daniel",
+  "osis": "Dan",
+  "testament": "OT",
+  "chapters": 12,
+  "verses": 357,
+  "dir": "27_DAN"
+ },
+ {
+  "n": 28,
+  "code": "HOS",
+  "name": "Hosea",
+  "osis": "Hos",
+  "testament": "OT",
+  "chapters": 14,
+  "verses": 197,
+  "dir": "28_HOS"
+ },
+ {
+  "n": 29,
+  "code": "JOE",
+  "name": "Joel",
+  "osis": "Joel",
+  "testament": "OT",
+  "chapters": 4,
+  "verses": 73,
+  "dir": "29_JOE"
+ },
+ {
+  "n": 30,
+  "code": "AMO",
+  "name": "Amos",
+  "osis": "Amos",
+  "testament": "OT",
+  "chapters": 9,
+  "verses": 146,
+  "dir": "30_AMO"
+ },
+ {
+  "n": 31,
+  "code": "OBA",
+  "name": "Obadiah",
+  "osis": "Obad",
+  "testament": "OT",
+  "chapters": 1,
+  "verses": 21,
+  "dir": "31_OBA"
+ },
+ {
+  "n": 32,
+  "code": "JON",
+  "name": "Jonah",
+  "osis": "Jonah",
+  "testament": "OT",
+  "chapters": 4,
+  "verses": 48,
+  "dir": "32_JON"
+ },
+ {
+  "n": 33,
+  "code": "MIC",
+  "name": "Micah",
+  "osis": "Mic",
+  "testament": "OT",
+  "chapters": 7,
+  "verses": 105,
+  "dir": "33_MIC"
+ },
+ {
+  "n": 34,
+  "code": "NAH",
+  "name": "Nahum",
+  "osis": "Nah",
+  "testament": "OT",
+  "chapters": 3,
+  "verses": 47,
+  "dir": "34_NAH"
+ },
+ {
+  "n": 35,
+  "code": "HAB",
+  "name": "Habakkuk",
+  "osis": "Hab",
+  "testament": "OT",
+  "chapters": 3,
+  "verses": 56,
+  "dir": "35_HAB"
+ },
+ {
+  "n": 36,
+  "code": "ZEP",
+  "name": "Zephaniah",
+  "osis": "Zeph",
+  "testament": "OT",
+  "chapters": 3,
+  "verses": 53,
+  "dir": "36_ZEP"
+ },
+ {
+  "n": 37,
+  "code": "HAG",
+  "name": "Haggai",
+  "osis": "Hag",
+  "testament": "OT",
+  "chapters": 2,
+  "verses": 38,
+  "dir": "37_HAG"
+ },
+ {
+  "n": 38,
+  "code": "ZEC",
+  "name": "Zechariah",
+  "osis": "Zech",
+  "testament": "OT",
+  "chapters": 14,
+  "verses": 211,
+  "dir": "38_ZEC"
+ },
+ {
+  "n": 39,
+  "code": "MAL",
+  "name": "Malachi",
+  "osis": "Mal",
+  "testament": "OT",
+  "chapters": 3,
+  "verses": 55,
+  "dir": "39_MAL"
+ },
+ {
+  "n": 40,
+  "code": "MAT",
+  "name": "Matthew",
+  "osis": "Matt",
+  "testament": "NT",
+  "chapters": 28,
+  "verses": 1068,
+  "dir": "40_MAT"
+ },
+ {
+  "n": 41,
+  "code": "MAR",
+  "name": "Mark",
+  "osis": "Mark",
+  "testament": "NT",
+  "chapters": 16,
+  "verses": 673,
+  "dir": "41_MAR"
+ },
+ {
+  "n": 42,
+  "code": "LUK",
+  "name": "Luke",
+  "osis": "Luke",
+  "testament": "NT",
+  "chapters": 24,
+  "verses": 1149,
+  "dir": "42_LUK"
+ },
+ {
+  "n": 43,
+  "code": "JOH",
+  "name": "John",
+  "osis": "John",
+  "testament": "NT",
+  "chapters": 21,
+  "verses": 878,
+  "dir": "43_JOH"
+ },
+ {
+  "n": 44,
+  "code": "ACT",
+  "name": "Acts",
+  "osis": "Acts",
+  "testament": "NT",
+  "chapters": 28,
+  "verses": 1002,
+  "dir": "44_ACT"
+ },
+ {
+  "n": 45,
+  "code": "ROM",
+  "name": "Romans",
+  "osis": "Rom",
+  "testament": "NT",
+  "chapters": 16,
+  "verses": 430,
+  "dir": "45_ROM"
+ },
+ {
+  "n": 46,
+  "code": "1CO",
+  "name": "1 Corinthians",
+  "osis": "1Cor",
+  "testament": "NT",
+  "chapters": 16,
+  "verses": 437,
+  "dir": "46_1CO"
+ },
+ {
+  "n": 47,
+  "code": "2CO",
+  "name": "2 Corinthians",
+  "osis": "2Cor",
+  "testament": "NT",
+  "chapters": 13,
+  "verses": 256,
+  "dir": "47_2CO"
+ },
+ {
+  "n": 48,
+  "code": "GAL",
+  "name": "Galatians",
+  "osis": "Gal",
+  "testament": "NT",
+  "chapters": 6,
+  "verses": 149,
+  "dir": "48_GAL"
+ },
+ {
+  "n": 49,
+  "code": "EPH",
+  "name": "Ephesians",
+  "osis": "Eph",
+  "testament": "NT",
+  "chapters": 6,
+  "verses": 155,
+  "dir": "49_EPH"
+ },
+ {
+  "n": 50,
+  "code": "PHI",
+  "name": "Philippians",
+  "osis": "Phil",
+  "testament": "NT",
+  "chapters": 4,
+  "verses": 104,
+  "dir": "50_PHI"
+ },
+ {
+  "n": 51,
+  "code": "COL",
+  "name": "Colossians",
+  "osis": "Col",
+  "testament": "NT",
+  "chapters": 4,
+  "verses": 95,
+  "dir": "51_COL"
+ },
+ {
+  "n": 52,
+  "code": "1TH",
+  "name": "1 Thessalonians",
+  "osis": "1Thess",
+  "testament": "NT",
+  "chapters": 5,
+  "verses": 89,
+  "dir": "52_1TH"
+ },
+ {
+  "n": 53,
+  "code": "2TH",
+  "name": "2 Thessalonians",
+  "osis": "2Thess",
+  "testament": "NT",
+  "chapters": 3,
+  "verses": 47,
+  "dir": "53_2TH"
+ },
+ {
+  "n": 54,
+  "code": "1TI",
+  "name": "1 Timothy",
+  "osis": "1Tim",
+  "testament": "NT",
+  "chapters": 6,
+  "verses": 113,
+  "dir": "54_1TI"
+ },
+ {
+  "n": 55,
+  "code": "2TI",
+  "name": "2 Timothy",
+  "osis": "2Tim",
+  "testament": "NT",
+  "chapters": 4,
+  "verses": 83,
+  "dir": "55_2TI"
+ },
+ {
+  "n": 56,
+  "code": "TIT",
+  "name": "Titus",
+  "osis": "Titus",
+  "testament": "NT",
+  "chapters": 3,
+  "verses": 46,
+  "dir": "56_TIT"
+ },
+ {
+  "n": 57,
+  "code": "PHM",
+  "name": "Philemon",
+  "osis": "Phlm",
+  "testament": "NT",
+  "chapters": 1,
+  "verses": 25,
+  "dir": "57_PHM"
+ },
+ {
+  "n": 58,
+  "code": "HEB",
+  "name": "Hebrews",
+  "osis": "Heb",
+  "testament": "NT",
+  "chapters": 13,
+  "verses": 303,
+  "dir": "58_HEB"
+ },
+ {
+  "n": 59,
+  "code": "JAM",
+  "name": "James",
+  "osis": "Jas",
+  "testament": "NT",
+  "chapters": 5,
+  "verses": 108,
+  "dir": "59_JAM"
+ },
+ {
+  "n": 60,
+  "code": "1PE",
+  "name": "1 Peter",
+  "osis": "1Pet",
+  "testament": "NT",
+  "chapters": 5,
+  "verses": 105,
+  "dir": "60_1PE"
+ },
+ {
+  "n": 61,
+  "code": "2PE",
+  "name": "2 Peter",
+  "osis": "2Pet",
+  "testament": "NT",
+  "chapters": 3,
+  "verses": 61,
+  "dir": "61_2PE"
+ },
+ {
+  "n": 62,
+  "code": "1JO",
+  "name": "1 John",
+  "osis": "1John",
+  "testament": "NT",
+  "chapters": 5,
+  "verses": 105,
+  "dir": "62_1JO"
+ },
+ {
+  "n": 63,
+  "code": "2JO",
+  "name": "2 John",
+  "osis": "2John",
+  "testament": "NT",
+  "chapters": 1,
+  "verses": 13,
+  "dir": "63_2JO"
+ },
+ {
+  "n": 64,
+  "code": "3JO",
+  "name": "3 John",
+  "osis": "3John",
+  "testament": "NT",
+  "chapters": 1,
+  "verses": 15,
+  "dir": "64_3JO"
+ },
+ {
+  "n": 65,
+  "code": "JUD",
+  "name": "Jude",
+  "osis": "Jude",
+  "testament": "NT",
+  "chapters": 1,
+  "verses": 25,
+  "dir": "65_JUD"
+ },
+ {
+  "n": 66,
+  "code": "REV",
+  "name": "Revelation",
+  "osis": "Rev",
+  "testament": "NT",
+  "chapters": 22,
+  "verses": 405,
+  "dir": "66_REV"
+ }
+]
