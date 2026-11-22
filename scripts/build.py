@@ -115,6 +115,31 @@ def load_tr(fname):
     return {k: tr_to_greek(re.sub(r"\s+", " ", v).strip()) for k, v in verses.items()}
 
 
+# Verses the SBLGNT editor leaves out of the main text but other critical editions print.
+# They are taken from the SBLGNT apparatus (data/sblgntapp) and tagged with the editions
+# that read them, so the gap is filled from a named source rather than from memory.
+# (book, chapter, apparatus heading, editions whose reading is used)
+SUPPLEMENT = [("Rom", 16, "Romans 16:24", "WH Treg NA28")]
+
+
+def load_supplement(name, ch):
+    out = []
+    for book, c, heading, eds in SUPPLEMENT:
+        if book != name or c != ch:
+            continue
+        lines = (SRC / "LogosBible_SBLGNT" / "data" / "sblgntapp" / "text" / f"{name}.txt").read_text(encoding="utf-8-sig").splitlines()
+        i = lines.index(heading)
+        for line in lines[i + 1:]:
+            if not line.strip():
+                break
+            reading = line.split("]", 1)[-1].strip()
+            if reading.endswith(" " + eds):
+                body = unicodedata.normalize("NFC", reading[: -len(eds)].strip())
+                for vs, text in re.findall(r"(?:^| )(\d+) (.+?)(?= \d+ |$)", body):
+                    out.append((int(vs), f"{{{eds}}} {text.strip()}"))
+    return out
+
+
 def write_chapter(d, ch, src_lines, kjv_lines, tr_lines=None):
     d.mkdir(parents=True, exist_ok=True)
     (d / f"{ch:03d}.src.txt").write_text("\n".join(src_lines) + "\n", encoding="utf-8")
@@ -176,6 +201,8 @@ def main():
         allc = sorted(set(chapters) | {c for c, _ in tr})
         for c in allc:
             vv = chapters.get(c, [])
+            have = {v for v, _ in vv}
+            vv = sorted(vv + [x for x in load_supplement(name, c) if x[0] not in have])
             src_lines = [f"{c}:{vs}\t{t}" for vs, t in vv]
             kv = sorted(v for (cc, v) in [(k[1], k[2]) for k in kjv if k[0] == code and k[1] == c])
             kjv_lines = [f"{c}:{v}\t{kjv[(code, c, v)]}" for v in kv]

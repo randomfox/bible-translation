@@ -1,10 +1,12 @@
 # Romans 1–16: summary
 
-**Coverage:** 16 chapters, 430 verses. The KJV has 433. The doxology (KJV 16:25–27) is missing from this project's source file, so it was not translated. That is a gap in the source data, not a textual judgment. In the manuscripts the doxology appears in different places: after 14:23, 15:33 or 16:23.
+**Coverage:** 16 chapters, 433 verses, the same as the KJV.
 
-**Flags:** 32 flags.
-- By category: TEXT 17, LEXICAL 9, INTERP 6.
-- By severity: 31 at sev 1, 1 at sev 2.
+**Source of the doxology (16:25–27).** The SBLGNT editor prints 16:24, the grace benediction, and leaves the doxology out of the main text altogether. It appears only in the SBLGNT apparatus. Westcott–Hort, Tregelles and NA28 make the opposite choice: they omit 16:24 and print the doxology as 16:25–27, all three with the same wording. This translation follows the SBLGNT for 16:24 and takes 16:25–27 from those three editions. The build script adds the doxology from the apparatus and labels it with its source.
+
+**Flags:** 34 flags.
+- By category: TEXT 18, LEXICAL 10, INTERP 6.
+- By severity: 33 at sev 1, 1 at sev 2.
 
 ## Systematic
 
@@ -23,7 +25,8 @@
 4. **3:22.** The KJV's "faith of Jesus Christ" is literal and keeps a genuine ambiguity: faith *in* Christ, or Christ's own faithfulness. Many modern versions settle it in favour of "faith in Christ". On this point the KJV is the more neutral.
 5. **16:1.** Phoebe is called "servant", where the same Greek word is rendered "deacons" for men in Phil 1:1 and 1 Tim 3.
 6. **14:10.** "judgment seat of Christ" against "of God".
-7. **7:6.** The KJV reads "that being dead wherein we were held", which makes the law the one that dies. Paul says *we* died to it.
+7. **16:25–27.** The doxology appears in different places in the manuscripts: after 14:23, after 15:33, after 16:23, in two places, or not at all. The KJV prints it at the end of the letter, as NA28 does. It renders *chronois aioniois* as "since the world began"; the Greek means "through long ages".
+8. **7:6.** The KJV reads "that being dead wherein we were held", which makes the law the one that dies. Paul says *we* died to it.
 
 ## Assessment
 

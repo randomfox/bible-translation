@@ -1,19 +1,19 @@
 {
  "books_touched": 66,
- "verses_translated": 31152,
- "flags": 2316,
- "flagged_verses": 2273,
+ "verses_translated": 31155,
+ "flags": 2318,
+ "flagged_verses": 2274,
  "flagged_verse_pct": 7.3,
  "by_category": {
   "INTERP": 612,
-  "LEXICAL": 578,
-  "TEXT": 476,
+  "LEXICAL": 579,
+  "TEXT": 477,
   "MEANING": 292,
   "ARCHAIC": 251,
   "NAME": 107
  },
  "by_severity": {
-  "1": 1966,
+  "1": 1968,
   "2": 335,
   "3": 15
  },
@@ -27,11 +27,11 @@
    "TEXT": 105
   },
   "NT": {
-   "TEXT": 371,
+   "TEXT": 372,
    "INTERP": 99,
    "ARCHAIC": 23,
    "NAME": 7,
-   "LEXICAL": 81,
+   "LEXICAL": 82,
    "MEANING": 24
   }
  },
@@ -1130,22 +1130,22 @@
    "testament": "NT",
    "chapters_done": 16,
    "chapters": 16,
-   "verses": 430,
-   "flagged_verses": 32,
-   "flags": 32,
+   "verses": 433,
+   "flagged_verses": 33,
+   "flags": 34,
    "by_category": {
-    "TEXT": 17,
-    "LEXICAL": 9,
+    "TEXT": 18,
+    "LEXICAL": 10,
     "INTERP": 6
    },
    "by_severity": {
-    "sev1": 31,
+    "sev1": 33,
     "sev2": 1
    },
    "sim": {
-    "mine_kjv": 0.631,
-    "mine_web": 0.722,
-    "web_kjv": 0.716
+    "mine_kjv": 0.632,
+    "mine_web": 0.72,
+    "web_kjv": 0.715
    }
   },
   {
