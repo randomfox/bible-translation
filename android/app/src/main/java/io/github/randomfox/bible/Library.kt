@@ -34,6 +34,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
+import androidx.lifecycle.repeatOnLifecycle
 import kotlinx.coroutines.withContext
 import org.json.JSONObject
 import java.io.File
@@ -74,14 +75,24 @@ class Library(private val context: Context, private val db: BibleDb) {
         }.sortedBy { it.sort }
     }
 
+    /**
+     * Set after a failed connection. The app can't tell "offline" from "network switched off for this app"
+     * (GrapheneOS's Network permission reports itself as granted), so the screen offers the app's settings.
+     */
+    var networkBlocked by mutableStateOf(false)
+        private set
+
     suspend fun refresh() = withContext(Dispatchers.IO) {
         try {
             val json = get(BASE_URL + "catalog.json").use { it.readBytes().decodeToString() }
             parse(json)
             cached.writeText(json)
             error = null
+            networkBlocked = false
         } catch (e: Exception) {
-            error = "Couldn't reach the translation list. Check your connection." +
+            networkBlocked = true
+            error = "Couldn't reach the translation list. Check your connection. If you are online, network access " +
+                "may be switched off for this app (for example the Network permission on GrapheneOS)." +
                 if (catalog != null) " Showing the last list downloaded." else ""
         }
     }
@@ -114,7 +125,8 @@ class Library(private val context: Context, private val db: BibleDb) {
                 error = null
             } catch (ex: Exception) {
                 error = "${e.name}: " + (ex.message?.takeIf { ex is IllegalStateException || ex is IllegalArgumentException }
-                    ?: "download failed. Check your connection and try again.")
+                    ?: "download failed. Check your connection, or whether network access is allowed for this app.")
+                    .also { if (ex !is IllegalStateException && ex !is IllegalArgumentException) networkBlocked = true }
             } finally {
                 gz.delete(); raw.delete()
                 progress.remove(e.id)
@@ -136,7 +148,12 @@ class Library(private val context: Context, private val db: BibleDb) {
 @Composable
 fun LibraryScreen(db: BibleDb, state: AppState, library: Library) {
     val c = LocalBibleColors.current
-    LaunchedEffect(Unit) { library.refresh() }
+    val context = androidx.compose.ui.platform.LocalContext.current
+    // Refresh on open and whenever the screen comes back (e.g. after changing the permission in settings).
+    val lifecycle = androidx.lifecycle.compose.LocalLifecycleOwner.current
+    LaunchedEffect(lifecycle) {
+        lifecycle.repeatOnLifecycle(androidx.lifecycle.Lifecycle.State.RESUMED) { library.refresh() }
+    }
     val installed = db.translations
     val entries = (library.catalog.orEmpty() + installed.filter { t -> library.catalog.orEmpty().none { it.id == t.id } }
         .map { CatalogEntry(it.id, it.code, it.name, it.description, it.license, it.version, 999, null, 0, null, it.id == BibleDb.CORE_ID) })
@@ -147,6 +164,10 @@ fun LibraryScreen(db: BibleDb, state: AppState, library: Library) {
                     "downloaded, a translation is stored on your phone and works offline.",
                     Modifier.padding(horizontal = 18.dp, vertical = 8.dp), color = c.muted, fontSize = 14.sp)
                 library.error?.let { Text(it, Modifier.padding(horizontal = 18.dp, vertical = 4.dp), color = c.severity[2], fontSize = 14.sp) }
+                if (library.networkBlocked) OutlinedButton({
+                    context.startActivity(android.content.Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                        android.net.Uri.fromParts("package", context.packageName, null)))
+                }, Modifier.padding(horizontal = 18.dp, vertical = 4.dp)) { Text("Open app settings") }
                 if (library.catalog == null && library.error == null)
                     LinearProgressIndicator(Modifier.fillMaxWidth().padding(horizontal = 18.dp, vertical = 8.dp))
             }
