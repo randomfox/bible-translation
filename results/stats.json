@@ -1,0 +1,1635 @@
+{
+ "books_touched": 66,
+ "verses_translated": 31152,
+ "flags": 2316,
+ "flagged_verses": 2273,
+ "flagged_verse_pct": 7.3,
+ "by_category": {
+  "INTERP": 612,
+  "LEXICAL": 578,
+  "TEXT": 476,
+  "MEANING": 292,
+  "ARCHAIC": 251,
+  "NAME": 107
+ },
+ "by_severity": {
+  "1": 1966,
+  "2": 335,
+  "3": 15
+ },
+ "by_testament": {
+  "OT": {
+   "LEXICAL": 497,
+   "INTERP": 513,
+   "ARCHAIC": 228,
+   "NAME": 100,
+   "MEANING": 268,
+   "TEXT": 105
+  },
+  "NT": {
+   "TEXT": 371,
+   "INTERP": 99,
+   "ARCHAIC": 23,
+   "NAME": 7,
+   "LEXICAL": 81,
+   "MEANING": 24
+  }
+ },
+ "similarity": {
+  "mine_kjv": 0.688,
+  "mine_web": 0.77,
+  "web_kjv": 0.766
+ },
+ "books": [
+  {
+   "book": "Genesis",
+   "testament": "OT",
+   "chapters_done": 50,
+   "chapters": 50,
+   "verses": 1533,
+   "flagged_verses": 151,
+   "flags": 158,
+   "by_category": {
+    "LEXICAL": 43,
+    "INTERP": 47,
+    "ARCHAIC": 33,
+    "NAME": 9,
+    "MEANING": 24,
+    "TEXT": 2
+   },
+   "by_severity": {
+    "sev1": 132,
+    "sev2": 25,
+    "sev3": 1
+   },
+   "sim": {
+    "mine_kjv": 0.717,
+    "mine_web": 0.805,
+    "web_kjv": 0.794
+   }
+  },
+  {
+   "book": "Exodus",
+   "testament": "OT",
+   "chapters_done": 40,
+   "chapters": 40,
+   "verses": 1213,
+   "flagged_verses": 122,
+   "flags": 126,
+   "by_category": {
+    "LEXICAL": 34,
+    "MEANING": 31,
+    "INTERP": 26,
+    "ARCHAIC": 32,
+    "NAME": 2,
+    "TEXT": 1
+   },
+   "by_severity": {
+    "sev1": 99,
+    "sev2": 27
+   },
+   "sim": {
+    "mine_kjv": 0.686,
+    "mine_web": 0.779,
+    "web_kjv": 0.792
+   }
+  },
+  {
+   "book": "Leviticus",
+   "testament": "OT",
+   "chapters_done": 27,
+   "chapters": 27,
+   "verses": 859,
+   "flagged_verses": 91,
+   "flags": 91,
+   "by_category": {
+    "MEANING": 18,
+    "INTERP": 19,
+    "ARCHAIC": 14,
+    "LEXICAL": 38,
+    "TEXT": 2
+   },
+   "by_severity": {
+    "sev2": 17,
+    "sev1": 74
+   },
+   "sim": {
+    "mine_kjv": 0.662,
+    "mine_web": 0.787,
+    "web_kjv": 0.757
+   }
+  },
+  {
+   "book": "Numbers",
+   "testament": "OT",
+   "chapters_done": 36,
+   "chapters": 36,
+   "verses": 1289,
+   "flagged_verses": 93,
+   "flags": 96,
+   "by_category": {
+    "INTERP": 31,
+    "ARCHAIC": 22,
+    "NAME": 7,
+    "LEXICAL": 25,
+    "MEANING": 11
+   },
+   "by_severity": {
+    "sev1": 81,
+    "sev2": 15
+   },
+   "sim": {
+    "mine_kjv": 0.674,
+    "mine_web": 0.769,
+    "web_kjv": 0.79
+   }
+  },
+  {
+   "book": "Deuteronomy",
+   "testament": "OT",
+   "chapters_done": 34,
+   "chapters": 34,
+   "verses": 959,
+   "flagged_verses": 115,
+   "flags": 119,
+   "by_category": {
+    "INTERP": 35,
+    "LEXICAL": 39,
+    "ARCHAIC": 19,
+    "MEANING": 21,
+    "NAME": 2,
+    "TEXT": 3
+   },
+   "by_severity": {
+    "sev1": 98,
+    "sev2": 20,
+    "sev3": 1
+   },
+   "sim": {
+    "mine_kjv": 0.697,
+    "mine_web": 0.787,
+    "web_kjv": 0.791
+   }
+  },
+  {
+   "book": "Joshua",
+   "testament": "OT",
+   "chapters_done": 24,
+   "chapters": 24,
+   "verses": 658,
+   "flagged_verses": 50,
+   "flags": 50,
+   "by_category": {
+    "TEXT": 3,
+    "LEXICAL": 8,
+    "NAME": 8,
+    "MEANING": 7,
+    "INTERP": 14,
+    "ARCHAIC": 10
+   },
+   "by_severity": {
+    "sev1": 47,
+    "sev2": 3
+   },
+   "sim": {
+    "mine_kjv": 0.697,
+    "mine_web": 0.773,
+    "web_kjv": 0.803
+   }
+  },
+  {
+   "book": "Judges",
+   "testament": "OT",
+   "chapters_done": 21,
+   "chapters": 21,
+   "verses": 618,
+   "flagged_verses": 78,
+   "flags": 80,
+   "by_category": {
+    "INTERP": 29,
+    "LEXICAL": 20,
+    "ARCHAIC": 11,
+    "MEANING": 13,
+    "NAME": 6,
+    "TEXT": 1
+   },
+   "by_severity": {
+    "sev1": 68,
+    "sev2": 12
+   },
+   "sim": {
+    "mine_kjv": 0.707,
+    "mine_web": 0.78,
+    "web_kjv": 0.802
+   }
+  },
+  {
+   "book": "Ruth",
+   "testament": "OT",
+   "chapters_done": 4,
+   "chapters": 4,
+   "verses": 85,
+   "flagged_verses": 7,
+   "flags": 8,
+   "by_category": {
+    "INTERP": 3,
+    "MEANING": 2,
+    "TEXT": 2,
+    "ARCHAIC": 1
+   },
+   "by_severity": {
+    "sev1": 7,
+    "sev2": 1
+   },
+   "sim": {
+    "mine_kjv": 0.725,
+    "mine_web": 0.786,
+    "web_kjv": 0.784
+   }
+  },
+  {
+   "book": "1 Samuel",
+   "testament": "OT",
+   "chapters_done": 31,
+   "chapters": 31,
+   "verses": 811,
+   "flagged_verses": 72,
+   "flags": 74,
+   "by_category": {
+    "INTERP": 25,
+    "TEXT": 7,
+    "NAME": 5,
+    "ARCHAIC": 12,
+    "LEXICAL": 16,
+    "MEANING": 9
+   },
+   "by_severity": {
+    "sev1": 69,
+    "sev2": 5
+   },
+   "sim": {
+    "mine_kjv": 0.733,
+    "mine_web": 0.806,
+    "web_kjv": 0.818
+   }
+  },
+  {
+   "book": "2 Samuel",
+   "testament": "OT",
+   "chapters_done": 24,
+   "chapters": 24,
+   "verses": 695,
+   "flagged_verses": 70,
+   "flags": 74,
+   "by_category": {
+    "INTERP": 27,
+    "LEXICAL": 21,
+    "ARCHAIC": 7,
+    "MEANING": 9,
+    "TEXT": 7,
+    "NAME": 3
+   },
+   "by_severity": {
+    "sev1": 60,
+    "sev2": 13,
+    "sev3": 1
+   },
+   "sim": {
+    "mine_kjv": 0.737,
+    "mine_web": 0.806,
+    "web_kjv": 0.829
+   }
+  },
+  {
+   "book": "1 Kings",
+   "testament": "OT",
+   "chapters_done": 22,
+   "chapters": 22,
+   "verses": 817,
+   "flagged_verses": 76,
+   "flags": 78,
+   "by_category": {
+    "ARCHAIC": 15,
+    "INTERP": 16,
+    "MEANING": 16,
+    "LEXICAL": 26,
+    "NAME": 4,
+    "TEXT": 1
+   },
+   "by_severity": {
+    "sev1": 67,
+    "sev2": 11
+   },
+   "sim": {
+    "mine_kjv": 0.75,
+    "mine_web": 0.821,
+    "web_kjv": 0.832
+   }
+  },
+  {
+   "book": "2 Kings",
+   "testament": "OT",
+   "chapters_done": 25,
+   "chapters": 25,
+   "verses": 719,
+   "flagged_verses": 71,
+   "flags": 72,
+   "by_category": {
+    "MEANING": 9,
+    "INTERP": 16,
+    "LEXICAL": 27,
+    "ARCHAIC": 8,
+    "TEXT": 5,
+    "NAME": 7
+   },
+   "by_severity": {
+    "sev1": 57,
+    "sev2": 15
+   },
+   "sim": {
+    "mine_kjv": 0.751,
+    "mine_web": 0.809,
+    "web_kjv": 0.829
+   }
+  },
+  {
+   "book": "1 Chronicles",
+   "testament": "OT",
+   "chapters_done": 29,
+   "chapters": 29,
+   "verses": 943,
+   "flagged_verses": 43,
+   "flags": 43,
+   "by_category": {
+    "ARCHAIC": 5,
+    "MEANING": 3,
+    "INTERP": 16,
+    "TEXT": 7,
+    "NAME": 6,
+    "LEXICAL": 6
+   },
+   "by_severity": {
+    "sev1": 39,
+    "sev2": 4
+   },
+   "sim": {
+    "mine_kjv": 0.746,
+    "mine_web": 0.813,
+    "web_kjv": 0.809
+   }
+  },
+  {
+   "book": "2 Chronicles",
+   "testament": "OT",
+   "chapters_done": 36,
+   "chapters": 36,
+   "verses": 822,
+   "flagged_verses": 51,
+   "flags": 53,
+   "by_category": {
+    "TEXT": 14,
+    "LEXICAL": 9,
+    "NAME": 2,
+    "MEANING": 8,
+    "INTERP": 16,
+    "ARCHAIC": 4
+   },
+   "by_severity": {
+    "sev1": 47,
+    "sev2": 6
+   },
+   "sim": {
+    "mine_kjv": 0.75,
+    "mine_web": 0.811,
+    "web_kjv": 0.828
+   }
+  },
+  {
+   "book": "Ezra",
+   "testament": "OT",
+   "chapters_done": 10,
+   "chapters": 10,
+   "verses": 280,
+   "flagged_verses": 15,
+   "flags": 15,
+   "by_category": {
+    "NAME": 4,
+    "LEXICAL": 4,
+    "MEANING": 3,
+    "ARCHAIC": 1,
+    "INTERP": 2,
+    "TEXT": 1
+   },
+   "by_severity": {
+    "sev1": 14,
+    "sev2": 1
+   },
+   "sim": {
+    "mine_kjv": 0.698,
+    "mine_web": 0.754,
+    "web_kjv": 0.831
+   }
+  },
+  {
+   "book": "Nehemiah",
+   "testament": "OT",
+   "chapters_done": 13,
+   "chapters": 13,
+   "verses": 405,
+   "flagged_verses": 13,
+   "flags": 13,
+   "by_category": {
+    "LEXICAL": 3,
+    "INTERP": 5,
+    "TEXT": 3,
+    "NAME": 2
+   },
+   "by_severity": {
+    "sev1": 13
+   },
+   "sim": {
+    "mine_kjv": 0.695,
+    "mine_web": 0.768,
+    "web_kjv": 0.792
+   }
+  },
+  {
+   "book": "Esther",
+   "testament": "OT",
+   "chapters_done": 10,
+   "chapters": 10,
+   "verses": 167,
+   "flagged_verses": 9,
+   "flags": 9,
+   "by_category": {
+    "LEXICAL": 3,
+    "MEANING": 1,
+    "ARCHAIC": 2,
+    "INTERP": 3
+   },
+   "by_severity": {
+    "sev1": 7,
+    "sev2": 2
+   },
+   "sim": {
+    "mine_kjv": 0.691,
+    "mine_web": 0.761,
+    "web_kjv": 0.812
+   }
+  },
+  {
+   "book": "Job",
+   "testament": "OT",
+   "chapters_done": 42,
+   "chapters": 42,
+   "verses": 1070,
+   "flagged_verses": 71,
+   "flags": 71,
+   "by_category": {
+    "INTERP": 18,
+    "LEXICAL": 30,
+    "ARCHAIC": 2,
+    "TEXT": 5,
+    "MEANING": 15,
+    "NAME": 1
+   },
+   "by_severity": {
+    "sev2": 17,
+    "sev1": 51,
+    "sev3": 3
+   },
+   "sim": {
+    "mine_kjv": 0.63,
+    "mine_web": 0.735,
+    "web_kjv": 0.699
+   }
+  },
+  {
+   "book": "Psalms",
+   "testament": "OT",
+   "chapters_done": 150,
+   "chapters": 150,
+   "verses": 2527,
+   "flagged_verses": 122,
+   "flags": 123,
+   "by_category": {
+    "INTERP": 45,
+    "ARCHAIC": 12,
+    "LEXICAL": 33,
+    "NAME": 5,
+    "TEXT": 12,
+    "MEANING": 16
+   },
+   "by_severity": {
+    "sev1": 99,
+    "sev2": 23,
+    "sev3": 1
+   },
+   "sim": {
+    "mine_kjv": 0.656,
+    "mine_web": 0.721,
+    "web_kjv": 0.704
+   }
+  },
+  {
+   "book": "Proverbs",
+   "testament": "OT",
+   "chapters_done": 31,
+   "chapters": 31,
+   "verses": 915,
+   "flagged_verses": 53,
+   "flags": 53,
+   "by_category": {
+    "INTERP": 23,
+    "ARCHAIC": 3,
+    "MEANING": 10,
+    "LEXICAL": 14,
+    "TEXT": 3
+   },
+   "by_severity": {
+    "sev1": 42,
+    "sev2": 11
+   },
+   "sim": {
+    "mine_kjv": 0.608,
+    "mine_web": 0.705,
+    "web_kjv": 0.64
+   }
+  },
+  {
+   "book": "Ecclesiastes",
+   "testament": "OT",
+   "chapters_done": 12,
+   "chapters": 12,
+   "verses": 222,
+   "flagged_verses": 15,
+   "flags": 15,
+   "by_category": {
+    "MEANING": 2,
+    "LEXICAL": 1,
+    "TEXT": 3,
+    "INTERP": 9
+   },
+   "by_severity": {
+    "sev2": 5,
+    "sev1": 10
+   },
+   "sim": {
+    "mine_kjv": 0.662,
+    "mine_web": 0.73,
+    "web_kjv": 0.743
+   }
+  },
+  {
+   "book": "Song of Songs",
+   "testament": "OT",
+   "chapters_done": 8,
+   "chapters": 8,
+   "verses": 117,
+   "flagged_verses": 13,
+   "flags": 13,
+   "by_category": {
+    "INTERP": 4,
+    "LEXICAL": 6,
+    "ARCHAIC": 2,
+    "TEXT": 1
+   },
+   "by_severity": {
+    "sev1": 13
+   },
+   "sim": {
+    "mine_kjv": 0.677,
+    "mine_web": 0.747,
+    "web_kjv": 0.707
+   }
+  },
+  {
+   "book": "Isaiah",
+   "testament": "OT",
+   "chapters_done": 66,
+   "chapters": 66,
+   "verses": 1291,
+   "flagged_verses": 73,
+   "flags": 73,
+   "by_category": {
+    "MEANING": 9,
+    "LEXICAL": 23,
+    "INTERP": 25,
+    "ARCHAIC": 2,
+    "TEXT": 8,
+    "NAME": 6
+   },
+   "by_severity": {
+    "sev1": 57,
+    "sev3": 2,
+    "sev2": 14
+   },
+   "sim": {
+    "mine_kjv": 0.674,
+    "mine_web": 0.755,
+    "web_kjv": 0.737
+   }
+  },
+  {
+   "book": "Jeremiah",
+   "testament": "OT",
+   "chapters_done": 52,
+   "chapters": 52,
+   "verses": 1364,
+   "flagged_verses": 42,
+   "flags": 42,
+   "by_category": {
+    "INTERP": 10,
+    "TEXT": 8,
+    "LEXICAL": 12,
+    "MEANING": 7,
+    "NAME": 5
+   },
+   "by_severity": {
+    "sev1": 38,
+    "sev2": 4
+   },
+   "sim": {
+    "mine_kjv": 0.708,
+    "mine_web": 0.761,
+    "web_kjv": 0.8
+   }
+  },
+  {
+   "book": "Lamentations",
+   "testament": "OT",
+   "chapters_done": 5,
+   "chapters": 5,
+   "verses": 154,
+   "flagged_verses": 6,
+   "flags": 6,
+   "by_category": {
+    "LEXICAL": 2,
+    "TEXT": 2,
+    "INTERP": 2
+   },
+   "by_severity": {
+    "sev1": 6
+   },
+   "sim": {
+    "mine_kjv": 0.622,
+    "mine_web": 0.686,
+    "web_kjv": 0.776
+   }
+  },
+  {
+   "book": "Ezekiel",
+   "testament": "OT",
+   "chapters_done": 48,
+   "chapters": 48,
+   "verses": 1273,
+   "flagged_verses": 45,
+   "flags": 47,
+   "by_category": {
+    "LEXICAL": 23,
+    "TEXT": 3,
+    "INTERP": 10,
+    "NAME": 5,
+    "ARCHAIC": 3,
+    "MEANING": 3
+   },
+   "by_severity": {
+    "sev1": 42,
+    "sev2": 5
+   },
+   "sim": {
+    "mine_kjv": 0.679,
+    "mine_web": 0.75,
+    "web_kjv": 0.779
+   }
+  },
+  {
+   "book": "Daniel",
+   "testament": "OT",
+   "chapters_done": 12,
+   "chapters": 12,
+   "verses": 357,
+   "flagged_verses": 20,
+   "flags": 20,
+   "by_category": {
+    "NAME": 1,
+    "ARCHAIC": 1,
+    "MEANING": 6,
+    "INTERP": 9,
+    "LEXICAL": 3
+   },
+   "by_severity": {
+    "sev1": 11,
+    "sev2": 8,
+    "sev3": 1
+   },
+   "sim": {
+    "mine_kjv": 0.718,
+    "mine_web": 0.789,
+    "web_kjv": 0.804
+   }
+  },
+  {
+   "book": "Hosea",
+   "testament": "OT",
+   "chapters_done": 14,
+   "chapters": 14,
+   "verses": 197,
+   "flagged_verses": 17,
+   "flags": 17,
+   "by_category": {
+    "INTERP": 9,
+    "NAME": 3,
+    "LEXICAL": 3,
+    "MEANING": 2
+   },
+   "by_severity": {
+    "sev1": 16,
+    "sev2": 1
+   },
+   "sim": {
+    "mine_kjv": 0.651,
+    "mine_web": 0.716,
+    "web_kjv": 0.69
+   }
+  },
+  {
+   "book": "Joel",
+   "testament": "OT",
+   "chapters_done": 4,
+   "chapters": 4,
+   "verses": 73,
+   "flagged_verses": 3,
+   "flags": 3,
+   "by_category": {
+    "LEXICAL": 1,
+    "MEANING": 1,
+    "INTERP": 1
+   },
+   "by_severity": {
+    "sev1": 3
+   },
+   "sim": {
+    "mine_kjv": 0.691,
+    "mine_web": 0.759,
+    "web_kjv": 0.76
+   }
+  },
+  {
+   "book": "Amos",
+   "testament": "OT",
+   "chapters_done": 9,
+   "chapters": 9,
+   "verses": 146,
+   "flagged_verses": 8,
+   "flags": 8,
+   "by_category": {
+    "ARCHAIC": 1,
+    "LEXICAL": 3,
+    "NAME": 3,
+    "MEANING": 1
+   },
+   "by_severity": {
+    "sev1": 7,
+    "sev2": 1
+   },
+   "sim": {
+    "mine_kjv": 0.698,
+    "mine_web": 0.776,
+    "web_kjv": 0.747
+   }
+  },
+  {
+   "book": "Obadiah",
+   "testament": "OT",
+   "chapters_done": 1,
+   "chapters": 1,
+   "verses": 21,
+   "flagged_verses": 2,
+   "flags": 2,
+   "by_category": {
+    "LEXICAL": 1,
+    "INTERP": 1
+   },
+   "by_severity": {
+    "sev1": 2
+   },
+   "sim": {
+    "mine_kjv": 0.654,
+    "mine_web": 0.694,
+    "web_kjv": 0.73
+   }
+  },
+  {
+   "book": "Jonah",
+   "testament": "OT",
+   "chapters_done": 4,
+   "chapters": 4,
+   "verses": 48,
+   "flagged_verses": 2,
+   "flags": 2,
+   "by_category": {
+    "ARCHAIC": 1,
+    "LEXICAL": 1
+   },
+   "by_severity": {
+    "sev1": 2
+   },
+   "sim": {
+    "mine_kjv": 0.75,
+    "mine_web": 0.766,
+    "web_kjv": 0.763
+   }
+  },
+  {
+   "book": "Micah",
+   "testament": "OT",
+   "chapters_done": 7,
+   "chapters": 7,
+   "verses": 105,
+   "flagged_verses": 5,
+   "flags": 5,
+   "by_category": {
+    "LEXICAL": 1,
+    "NAME": 1,
+    "INTERP": 3
+   },
+   "by_severity": {
+    "sev1": 4,
+    "sev2": 1
+   },
+   "sim": {
+    "mine_kjv": 0.693,
+    "mine_web": 0.748,
+    "web_kjv": 0.711
+   }
+  },
+  {
+   "book": "Nahum",
+   "testament": "OT",
+   "chapters_done": 3,
+   "chapters": 3,
+   "verses": 47,
+   "flagged_verses": 3,
+   "flags": 3,
+   "by_category": {
+    "LEXICAL": 1,
+    "NAME": 2
+   },
+   "by_severity": {
+    "sev1": 3
+   },
+   "sim": {
+    "mine_kjv": 0.576,
+    "mine_web": 0.688,
+    "web_kjv": 0.681
+   }
+  },
+  {
+   "book": "Habakkuk",
+   "testament": "OT",
+   "chapters_done": 3,
+   "chapters": 3,
+   "verses": 56,
+   "flagged_verses": 4,
+   "flags": 4,
+   "by_category": {
+    "INTERP": 1,
+    "LEXICAL": 3
+   },
+   "by_severity": {
+    "sev2": 1,
+    "sev1": 3
+   },
+   "sim": {
+    "mine_kjv": 0.588,
+    "mine_web": 0.687,
+    "web_kjv": 0.618
+   }
+  },
+  {
+   "book": "Zephaniah",
+   "testament": "OT",
+   "chapters_done": 3,
+   "chapters": 3,
+   "verses": 53,
+   "flagged_verses": 2,
+   "flags": 2,
+   "by_category": {
+    "INTERP": 1,
+    "LEXICAL": 1
+   },
+   "by_severity": {
+    "sev1": 2
+   },
+   "sim": {
+    "mine_kjv": 0.601,
+    "mine_web": 0.672,
+    "web_kjv": 0.71
+   }
+  },
+  {
+   "book": "Haggai",
+   "testament": "OT",
+   "chapters_done": 2,
+   "chapters": 2,
+   "verses": 38,
+   "flagged_verses": 1,
+   "flags": 1,
+   "by_category": {
+    "INTERP": 1
+   },
+   "by_severity": {
+    "sev2": 1
+   },
+   "sim": {
+    "mine_kjv": 0.741,
+    "mine_web": 0.838,
+    "web_kjv": 0.786
+   }
+  },
+  {
+   "book": "Zechariah",
+   "testament": "OT",
+   "chapters_done": 14,
+   "chapters": 14,
+   "verses": 211,
+   "flagged_verses": 23,
+   "flags": 23,
+   "by_category": {
+    "LEXICAL": 8,
+    "INTERP": 6,
+    "NAME": 1,
+    "ARCHAIC": 2,
+    "MEANING": 5,
+    "TEXT": 1
+   },
+   "by_severity": {
+    "sev1": 22,
+    "sev2": 1
+   },
+   "sim": {
+    "mine_kjv": 0.657,
+    "mine_web": 0.753,
+    "web_kjv": 0.752
+   }
+  },
+  {
+   "book": "Malachi",
+   "testament": "OT",
+   "chapters_done": 3,
+   "chapters": 3,
+   "verses": 55,
+   "flagged_verses": 18,
+   "flags": 19,
+   "by_category": {
+    "LEXICAL": 5,
+    "MEANING": 6,
+    "INTERP": 5,
+    "ARCHAIC": 3
+   },
+   "by_severity": {
+    "sev1": 17,
+    "sev2": 2
+   },
+   "sim": {
+    "mine_kjv": 0.603,
+    "mine_web": 0.72,
+    "web_kjv": 0.759
+   }
+  },
+  {
+   "book": "Matthew",
+   "testament": "NT",
+   "chapters_done": 28,
+   "chapters": 28,
+   "verses": 1068,
+   "flagged_verses": 64,
+   "flags": 66,
+   "by_category": {
+    "TEXT": 44,
+    "INTERP": 11,
+    "ARCHAIC": 2,
+    "NAME": 1,
+    "LEXICAL": 4,
+    "MEANING": 4
+   },
+   "by_severity": {
+    "sev1": 56,
+    "sev2": 10
+   },
+   "sim": {
+    "mine_kjv": 0.695,
+    "mine_web": 0.784,
+    "web_kjv": 0.745
+   }
+  },
+  {
+   "book": "Mark",
+   "testament": "NT",
+   "chapters_done": 16,
+   "chapters": 16,
+   "verses": 673,
+   "flagged_verses": 38,
+   "flags": 38,
+   "by_category": {
+    "TEXT": 31,
+    "INTERP": 5,
+    "NAME": 1,
+    "LEXICAL": 1
+   },
+   "by_severity": {
+    "sev2": 12,
+    "sev1": 25,
+    "sev3": 1
+   },
+   "sim": {
+    "mine_kjv": 0.67,
+    "mine_web": 0.781,
+    "web_kjv": 0.72
+   }
+  },
+  {
+   "book": "Luke",
+   "testament": "NT",
+   "chapters_done": 24,
+   "chapters": 24,
+   "verses": 1149,
+   "flagged_verses": 73,
+   "flags": 73,
+   "by_category": {
+    "TEXT": 55,
+    "INTERP": 14,
+    "NAME": 1,
+    "LEXICAL": 2,
+    "ARCHAIC": 1
+   },
+   "by_severity": {
+    "sev1": 63,
+    "sev2": 10
+   },
+   "sim": {
+    "mine_kjv": 0.704,
+    "mine_web": 0.801,
+    "web_kjv": 0.732
+   }
+  },
+  {
+   "book": "John",
+   "testament": "NT",
+   "chapters_done": 21,
+   "chapters": 21,
+   "verses": 878,
+   "flagged_verses": 48,
+   "flags": 48,
+   "by_category": {
+    "INTERP": 9,
+    "LEXICAL": 7,
+    "TEXT": 30,
+    "ARCHAIC": 1,
+    "MEANING": 1
+   },
+   "by_severity": {
+    "sev1": 43,
+    "sev2": 4,
+    "sev3": 1
+   },
+   "sim": {
+    "mine_kjv": 0.718,
+    "mine_web": 0.803,
+    "web_kjv": 0.743
+   }
+  },
+  {
+   "book": "Acts",
+   "testament": "NT",
+   "chapters_done": 28,
+   "chapters": 28,
+   "verses": 1002,
+   "flagged_verses": 54,
+   "flags": 54,
+   "by_category": {
+    "LEXICAL": 9,
+    "TEXT": 30,
+    "INTERP": 8,
+    "MEANING": 4,
+    "NAME": 3
+   },
+   "by_severity": {
+    "sev1": 44,
+    "sev2": 10
+   },
+   "sim": {
+    "mine_kjv": 0.674,
+    "mine_web": 0.777,
+    "web_kjv": 0.741
+   }
+  },
+  {
+   "book": "Romans",
+   "testament": "NT",
+   "chapters_done": 16,
+   "chapters": 16,
+   "verses": 430,
+   "flagged_verses": 32,
+   "flags": 32,
+   "by_category": {
+    "TEXT": 17,
+    "LEXICAL": 9,
+    "INTERP": 6
+   },
+   "by_severity": {
+    "sev1": 31,
+    "sev2": 1
+   },
+   "sim": {
+    "mine_kjv": 0.631,
+    "mine_web": 0.722,
+    "web_kjv": 0.716
+   }
+  },
+  {
+   "book": "1 Corinthians",
+   "testament": "NT",
+   "chapters_done": 16,
+   "chapters": 16,
+   "verses": 437,
+   "flagged_verses": 31,
+   "flags": 31,
+   "by_category": {
+    "INTERP": 8,
+    "LEXICAL": 8,
+    "TEXT": 13,
+    "ARCHAIC": 2
+   },
+   "by_severity": {
+    "sev1": 30,
+    "sev2": 1
+   },
+   "sim": {
+    "mine_kjv": 0.616,
+    "mine_web": 0.691,
+    "web_kjv": 0.691
+   }
+  },
+  {
+   "book": "2 Corinthians",
+   "testament": "NT",
+   "chapters_done": 13,
+   "chapters": 13,
+   "verses": 256,
+   "flagged_verses": 16,
+   "flags": 16,
+   "by_category": {
+    "LEXICAL": 7,
+    "INTERP": 3,
+    "TEXT": 6
+   },
+   "by_severity": {
+    "sev1": 16
+   },
+   "sim": {
+    "mine_kjv": 0.537,
+    "mine_web": 0.639,
+    "web_kjv": 0.665
+   }
+  },
+  {
+   "book": "Galatians",
+   "testament": "NT",
+   "chapters_done": 6,
+   "chapters": 6,
+   "verses": 149,
+   "flagged_verses": 14,
+   "flags": 14,
+   "by_category": {
+    "INTERP": 2,
+    "TEXT": 8,
+    "LEXICAL": 2,
+    "MEANING": 2
+   },
+   "by_severity": {
+    "sev1": 14
+   },
+   "sim": {
+    "mine_kjv": 0.631,
+    "mine_web": 0.734,
+    "web_kjv": 0.694
+   }
+  },
+  {
+   "book": "Ephesians",
+   "testament": "NT",
+   "chapters_done": 6,
+   "chapters": 6,
+   "verses": 155,
+   "flagged_verses": 16,
+   "flags": 16,
+   "by_category": {
+    "TEXT": 11,
+    "ARCHAIC": 1,
+    "MEANING": 1,
+    "INTERP": 2,
+    "LEXICAL": 1
+   },
+   "by_severity": {
+    "sev1": 16
+   },
+   "sim": {
+    "mine_kjv": 0.688,
+    "mine_web": 0.751,
+    "web_kjv": 0.754
+   }
+  },
+  {
+   "book": "Philippians",
+   "testament": "NT",
+   "chapters_done": 4,
+   "chapters": 4,
+   "verses": 104,
+   "flagged_verses": 9,
+   "flags": 9,
+   "by_category": {
+    "LEXICAL": 4,
+    "INTERP": 1,
+    "MEANING": 2,
+    "TEXT": 2
+   },
+   "by_severity": {
+    "sev1": 7,
+    "sev2": 2
+   },
+   "sim": {
+    "mine_kjv": 0.626,
+    "mine_web": 0.706,
+    "web_kjv": 0.708
+   }
+  },
+  {
+   "book": "Colossians",
+   "testament": "NT",
+   "chapters_done": 4,
+   "chapters": 4,
+   "verses": 95,
+   "flagged_verses": 11,
+   "flags": 11,
+   "by_category": {
+    "TEXT": 8,
+    "INTERP": 1,
+    "LEXICAL": 2
+   },
+   "by_severity": {
+    "sev1": 11
+   },
+   "sim": {
+    "mine_kjv": 0.626,
+    "mine_web": 0.71,
+    "web_kjv": 0.725
+   }
+  },
+  {
+   "book": "1 Thessalonians",
+   "testament": "NT",
+   "chapters_done": 5,
+   "chapters": 5,
+   "verses": 89,
+   "flagged_verses": 7,
+   "flags": 7,
+   "by_category": {
+    "TEXT": 3,
+    "INTERP": 1,
+    "ARCHAIC": 1,
+    "LEXICAL": 1,
+    "MEANING": 1
+   },
+   "by_severity": {
+    "sev1": 7
+   },
+   "sim": {
+    "mine_kjv": 0.609,
+    "mine_web": 0.723,
+    "web_kjv": 0.696
+   }
+  },
+  {
+   "book": "2 Thessalonians",
+   "testament": "NT",
+   "chapters_done": 3,
+   "chapters": 3,
+   "verses": 47,
+   "flagged_verses": 7,
+   "flags": 7,
+   "by_category": {
+    "TEXT": 4,
+    "MEANING": 1,
+    "ARCHAIC": 1,
+    "INTERP": 1
+   },
+   "by_severity": {
+    "sev1": 7
+   },
+   "sim": {
+    "mine_kjv": 0.609,
+    "mine_web": 0.737,
+    "web_kjv": 0.679
+   }
+  },
+  {
+   "book": "1 Timothy",
+   "testament": "NT",
+   "chapters_done": 6,
+   "chapters": 6,
+   "verses": 113,
+   "flagged_verses": 15,
+   "flags": 15,
+   "by_category": {
+    "TEXT": 7,
+    "LEXICAL": 3,
+    "INTERP": 2,
+    "MEANING": 2,
+    "ARCHAIC": 1
+   },
+   "by_severity": {
+    "sev1": 14,
+    "sev2": 1
+   },
+   "sim": {
+    "mine_kjv": 0.547,
+    "mine_web": 0.658,
+    "web_kjv": 0.683
+   }
+  },
+  {
+   "book": "2 Timothy",
+   "testament": "NT",
+   "chapters_done": 4,
+   "chapters": 4,
+   "verses": 83,
+   "flagged_verses": 7,
+   "flags": 7,
+   "by_category": {
+    "LEXICAL": 3,
+    "TEXT": 3,
+    "ARCHAIC": 1
+   },
+   "by_severity": {
+    "sev1": 7
+   },
+   "sim": {
+    "mine_kjv": 0.592,
+    "mine_web": 0.677,
+    "web_kjv": 0.706
+   }
+  },
+  {
+   "book": "Titus",
+   "testament": "NT",
+   "chapters_done": 3,
+   "chapters": 3,
+   "verses": 46,
+   "flagged_verses": 5,
+   "flags": 5,
+   "by_category": {
+    "TEXT": 2,
+    "INTERP": 1,
+    "ARCHAIC": 1,
+    "LEXICAL": 1
+   },
+   "by_severity": {
+    "sev1": 5
+   },
+   "sim": {
+    "mine_kjv": 0.536,
+    "mine_web": 0.644,
+    "web_kjv": 0.69
+   }
+  },
+  {
+   "book": "Philemon",
+   "testament": "NT",
+   "chapters_done": 1,
+   "chapters": 1,
+   "verses": 25,
+   "flagged_verses": 3,
+   "flags": 3,
+   "by_category": {
+    "ARCHAIC": 1,
+    "TEXT": 2
+   },
+   "by_severity": {
+    "sev1": 3
+   },
+   "sim": {
+    "mine_kjv": 0.565,
+    "mine_web": 0.739,
+    "web_kjv": 0.668
+   }
+  },
+  {
+   "book": "Hebrews",
+   "testament": "NT",
+   "chapters_done": 13,
+   "chapters": 13,
+   "verses": 303,
+   "flagged_verses": 28,
+   "flags": 28,
+   "by_category": {
+    "INTERP": 6,
+    "TEXT": 14,
+    "LEXICAL": 5,
+    "MEANING": 2,
+    "NAME": 1
+   },
+   "by_severity": {
+    "sev1": 26,
+    "sev2": 2
+   },
+   "sim": {
+    "mine_kjv": 0.626,
+    "mine_web": 0.722,
+    "web_kjv": 0.716
+   }
+  },
+  {
+   "book": "James",
+   "testament": "NT",
+   "chapters_done": 5,
+   "chapters": 5,
+   "verses": 108,
+   "flagged_verses": 12,
+   "flags": 13,
+   "by_category": {
+    "INTERP": 3,
+    "ARCHAIC": 2,
+    "LEXICAL": 3,
+    "TEXT": 5
+   },
+   "by_severity": {
+    "sev1": 13
+   },
+   "sim": {
+    "mine_kjv": 0.622,
+    "mine_web": 0.758,
+    "web_kjv": 0.661
+   }
+  },
+  {
+   "book": "1 Peter",
+   "testament": "NT",
+   "chapters_done": 5,
+   "chapters": 5,
+   "verses": 105,
+   "flagged_verses": 12,
+   "flags": 12,
+   "by_category": {
+    "ARCHAIC": 2,
+    "TEXT": 6,
+    "LEXICAL": 3,
+    "INTERP": 1
+   },
+   "by_severity": {
+    "sev1": 12
+   },
+   "sim": {
+    "mine_kjv": 0.6,
+    "mine_web": 0.708,
+    "web_kjv": 0.685
+   }
+  },
+  {
+   "book": "2 Peter",
+   "testament": "NT",
+   "chapters_done": 3,
+   "chapters": 3,
+   "verses": 61,
+   "flagged_verses": 7,
+   "flags": 7,
+   "by_category": {
+    "INTERP": 2,
+    "TEXT": 3,
+    "LEXICAL": 2
+   },
+   "by_severity": {
+    "sev1": 6,
+    "sev2": 1
+   },
+   "sim": {
+    "mine_kjv": 0.563,
+    "mine_web": 0.699,
+    "web_kjv": 0.686
+   }
+  },
+  {
+   "book": "1 John",
+   "testament": "NT",
+   "chapters_done": 5,
+   "chapters": 5,
+   "verses": 105,
+   "flagged_verses": 12,
+   "flags": 12,
+   "by_category": {
+    "TEXT": 9,
+    "INTERP": 3
+   },
+   "by_severity": {
+    "sev1": 11,
+    "sev3": 1
+   },
+   "sim": {
+    "mine_kjv": 0.693,
+    "mine_web": 0.765,
+    "web_kjv": 0.726
+   }
+  },
+  {
+   "book": "2 John",
+   "testament": "NT",
+   "chapters_done": 1,
+   "chapters": 1,
+   "verses": 13,
+   "flagged_verses": 3,
+   "flags": 3,
+   "by_category": {
+    "TEXT": 3
+   },
+   "by_severity": {
+    "sev1": 3
+   },
+   "sim": {
+    "mine_kjv": 0.633,
+    "mine_web": 0.678,
+    "web_kjv": 0.686
+   }
+  },
+  {
+   "book": "3 John",
+   "testament": "NT",
+   "chapters_done": 1,
+   "chapters": 1,
+   "verses": 15,
+   "flagged_verses": 2,
+   "flags": 2,
+   "by_category": {
+    "INTERP": 1,
+    "TEXT": 1
+   },
+   "by_severity": {
+    "sev1": 2
+   },
+   "sim": {
+    "mine_kjv": 0.533,
+    "mine_web": 0.65,
+    "web_kjv": 0.605
+   }
+  },
+  {
+   "book": "Jude",
+   "testament": "NT",
+   "chapters_done": 1,
+   "chapters": 1,
+   "verses": 25,
+   "flagged_verses": 6,
+   "flags": 6,
+   "by_category": {
+    "TEXT": 4,
+    "INTERP": 1,
+    "LEXICAL": 1
+   },
+   "by_severity": {
+    "sev1": 5,
+    "sev2": 1
+   },
+   "sim": {
+    "mine_kjv": 0.578,
+    "mine_web": 0.665,
+    "web_kjv": 0.711
+   }
+  },
+  {
+   "book": "Revelation",
+   "testament": "NT",
+   "chapters_done": 22,
+   "chapters": 22,
+   "verses": 405,
+   "flagged_verses": 66,
+   "flags": 70,
+   "by_category": {
+    "TEXT": 50,
+    "INTERP": 7,
+    "ARCHAIC": 6,
+    "LEXICAL": 3,
+    "MEANING": 4
+   },
+   "by_severity": {
+    "sev1": 60,
+    "sev2": 8,
+    "sev3": 2
+   },
+   "sim": {
+    "mine_kjv": 0.672,
+    "mine_web": 0.777,
+    "web_kjv": 0.736
+   }
+  }
+ ]
+}
