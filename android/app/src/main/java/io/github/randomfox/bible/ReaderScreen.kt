@@ -68,6 +68,11 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.PathFillType
+import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.AnnotatedString
@@ -167,8 +172,16 @@ fun ReaderScreen(db: BibleDb, state: AppState) {
                     }
                 },
                 navigationIcon = {
-                    IconButton({ state.screen = Screen.Books(db.book(current.book).nt) }) {
-                        Icon(Icons.AutoMirrored.Filled.List, "Quick Nav")
+                    Row {
+                        IconButton({ state.screen = Screen.Books(db.book(current.book).nt) }) {
+                            Icon(Icons.AutoMirrored.Filled.List, "Quick Nav")
+                        }
+                        // Chapter-wide comparison; shaded while other translations are shown.
+                        IconButton({ pickCompare = true },
+                            Modifier.padding(4.dp).clip(CircleShape)
+                                .background(if (others.isEmpty()) Color.Transparent else c.onBar.copy(alpha = 0.2f))) {
+                            Icon(CompareIcon, "Compare translations")
+                        }
                     }
                 },
                 actions = {
@@ -479,3 +492,14 @@ private fun TextSizeDialog(state: AppState, onDismiss: () -> Unit) {
             }
         })
 }
+
+/** Two pages side by side: one solid (the text being read), one outlined (the one compared with it). */
+val CompareIcon: ImageVector = ImageVector.Builder("Compare", 24.dp, 24.dp, 24f, 24f).apply {
+    path(fill = SolidColor(Color.Black)) {
+        moveTo(3f, 5f); horizontalLineTo(10.5f); verticalLineTo(19f); horizontalLineTo(3f); close()
+    }
+    path(fill = SolidColor(Color.Black), pathFillType = PathFillType.EvenOdd) {
+        moveTo(13.5f, 5f); horizontalLineTo(21f); verticalLineTo(19f); horizontalLineTo(13.5f); close()
+        moveTo(15.3f, 6.8f); horizontalLineTo(19.2f); verticalLineTo(17.2f); horizontalLineTo(15.3f); close()
+    }
+}.build()

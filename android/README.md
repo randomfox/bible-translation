@@ -4,7 +4,7 @@ A Bible reader for the translations in this repository. It is built with Kotlin 
 
 - **Reader:** a blue top bar with the reference and translation in the centre between previous and next chapter arrows, over a clean page with blue verse numbers and serif text. Swipe left or right to change chapter. It follows the phone's light or dark theme.
 - **Quick Nav:** tap the reference or the list icon. Book names sit in three columns under swipeable Old and New Testament tabs, then a five-column grid of chapters. The translation button and Home are in its bar.
-- **Compare translations** (⋮ menu): tick any translations to show them under every verse of the one you're reading, lined up through the KJV keys. Where the numbering differs, the other reference is shown, for example `KJV 51:2` under Psalm 51:4. The bar lists every translation shown.
+- **Compare translations** (the two-page button at the top left, or the ⋮ menu): tick any translations to show them under every verse of the one you're reading, lined up through the KJV keys. Where the numbering differs, the other reference is shown, for example `KJV 51:2` under Psalm 51:4. The bar lists every translation shown.
 - **Switching translation** keeps the verse at the top of the screen, even where the two numberings differ.
 - **Tap a verse** to open a panel with two tabs:
   - **Compare** shows the verse in every translation, the Hebrew or Greek included. Verses are matched through KJV numbering, so Malachi 3:19 in the Hebrew numbering lines up with KJV Malachi 4:1.
