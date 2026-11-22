@@ -192,6 +192,7 @@ fun ReaderScreen(db: BibleDb, state: AppState) {
                             DropdownMenuItem({ Text("Translation") }, { menu = false; pickTranslation = true })
                             DropdownMenuItem({ Text(if (others.isEmpty()) "Compare translations" else "Compare translations ✓") },
                                 { menu = false; pickCompare = true })
+                            DropdownMenuItem({ Text("Download translations") }, { menu = false; state.screen = Screen.Library })
                             DropdownMenuItem({ Text("Text size") }, { menu = false; textSize = true })
                             DropdownMenuItem({ Text("About ${db.book(current.book).name}") },
                                 { menu = false; state.screen = Screen.BookInfo(current.book) })
@@ -214,7 +215,7 @@ fun ReaderScreen(db: BibleDb, state: AppState) {
     }
 
     selected?.let { VerseSheet(db, state, translation, it) { selected = null } }
-    if (pickTranslation) TranslationDialog(db, tid, { pickTranslation = false }) { newTid ->
+    if (pickTranslation) TranslationDialog(db, tid, { pickTranslation = false }, { state.screen = Screen.Library }) { newTid ->
         pickTranslation = false
         state.switchTranslation(db, newTid)
     }
@@ -244,6 +245,7 @@ private fun CompareDialog(db: BibleDb, state: AppState, tid: Int, onDismiss: () 
                         Text("${t.name} (${t.code})")
                     }
                 }
+                TextButton({ onDismiss(); state.screen = Screen.Library }) { Text("Get more translations") }
             }
         })
 }
@@ -461,8 +463,9 @@ private fun Body(text: String, bold: Boolean = false) = Text(text, Modifier.padd
     fontWeight = if (bold) FontWeight.SemiBold else FontWeight.Normal)
 
 @Composable
-fun TranslationDialog(db: BibleDb, current: Int, onDismiss: () -> Unit, onPick: (Int) -> Unit) {
+fun TranslationDialog(db: BibleDb, current: Int, onDismiss: () -> Unit, onMore: () -> Unit, onPick: (Int) -> Unit) {
     AlertDialog(onDismiss, confirmButton = { TextButton(onDismiss) { Text("Close") } },
+        dismissButton = { TextButton({ onDismiss(); onMore() }) { Text("Get more") } },
         title = { Text("Translation") },
         text = {
             Column(Modifier.verticalScroll(rememberScrollState())) {

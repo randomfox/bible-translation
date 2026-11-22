@@ -3,6 +3,9 @@ package io.github.randomfox.bible
 import android.content.Context
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File
@@ -10,6 +13,7 @@ import java.io.File
 data class Translation(
     val id: Int, val code: String, val name: String, val language: String, val description: String,
     val license: String, val attribution: String, val italicBrackets: Boolean, val searchable: Boolean,
+    val version: String,
 )
 
 data class Book(val id: Int, val code: String, val abbrev: String, val name: String, val nt: Boolean)
@@ -32,20 +36,81 @@ data class Parallel(val translation: Translation, val verses: List<Verse>)
 
 data class SearchHit(val translationId: Int, val verse: Verse)
 
+/**
+ * The app's library: one writable SQLite database holding every installed translation. Each translation
+ * arrives as a "pack" (see scripts/app_db.py): the Claude Translation is bundled in the APK, the rest are
+ * downloaded (see Library.kt). Installing a pack copies its rows in; removing deletes them.
+ */
 class BibleDb private constructor(private val db: SQLiteDatabase) {
-    val translations: List<Translation> = db.list(
-        "SELECT id, code, name, language, description, license, attribution, markup, searchable " +
+    /** Installed translations, in display order. Compose state, so screens update after an install. */
+    var translations by mutableStateOf(loadTranslations())
+        private set
+
+    private fun loadTranslations() = db.list(
+        "SELECT id, code, name, language, description, license, attribution, markup, searchable, version " +
             "FROM translations ORDER BY sort"
     ) {
         Translation(it.getInt(0), it.getString(1), it.getString(2), it.getString(3), it.getString(4),
-            it.getString(5), it.getString(6), it.getString(7) == "italic", it.getInt(8) == 1)
+            it.getString(5), it.getString(6), it.getString(7) == "italic", it.getInt(8) == 1, it.getString(9))
     }
-    val books: List<Book> = db.list("SELECT id, code, abbrev, name, testament FROM books ORDER BY id") {
+
+    fun isInstalled(id: Int) = translations.any { it.id == id }
+
+    /** Copies a pack's rows into the library, replacing any older copy of the same translation. */
+    fun install(pack: File) {
+        db.execSQL("ATTACH DATABASE ? AS p", arrayOf(pack.path))
+        try {
+            val format = db.list("SELECT value FROM p.meta WHERE key='pack_format'") { it.getString(0) }.firstOrNull()
+            require(format == PACK_FORMAT.toString()) { "This translation needs a newer version of the app." }
+            val tid = db.list("SELECT id FROM p.translations") { it.getInt(0) }.single()
+            db.beginTransaction()
+            try {
+                deleteRows(tid)
+                db.execSQL("INSERT OR REPLACE INTO books SELECT * FROM p.books")
+                for (t in listOf("translations", "verses", "verse_keys", "notes", "book_notes"))
+                    db.execSQL("INSERT INTO $t SELECT * FROM p.$t")
+                if (db.list("SELECT searchable FROM p.translations") { it.getInt(0) }.single() == 1) {
+                    db.execSQL("CREATE VIRTUAL TABLE fts_$tid USING fts4(content=\"\", text, tokenize=unicode61)")
+                    db.execSQL("INSERT INTO fts_$tid (docid, text) SELECT id, text FROM verses WHERE translation_id=$tid")
+                }
+                db.setTransactionSuccessful()
+            } finally {
+                db.endTransaction()
+            }
+        } finally {
+            db.execSQL("DETACH DATABASE p")
+        }
+        refresh()
+    }
+
+    fun remove(tid: Int) {
+        db.beginTransaction()
+        try { deleteRows(tid); db.setTransactionSuccessful() } finally { db.endTransaction() }
+        refresh()
+    }
+
+    private fun deleteRows(tid: Int) {
+        db.execSQL("DELETE FROM verse_keys WHERE verse_id IN (SELECT id FROM verses WHERE translation_id=$tid)")
+        for (t in listOf("verses", "notes", "book_notes")) db.execSQL("DELETE FROM $t WHERE translation_id=$tid")
+        db.execSQL("DELETE FROM translations WHERE id=$tid")
+        db.execSQL("DROP TABLE IF EXISTS fts_$tid")
+    }
+
+    private fun refresh() {
+        synchronized(chapterCache) { chapterCache.clear() }
+        books = loadBooks()
+        translations = loadTranslations()
+    }
+    var books: List<Book> = loadBooks()
+        private set
+
+    private fun loadBooks() = db.list("SELECT id, code, abbrev, name, testament FROM books ORDER BY id") {
         Book(it.getInt(0), it.getString(1), it.getString(2), it.getString(3), it.getString(4) == "NT")
     }
     private val chapterCache = HashMap<Int, List<ChapterRef>>()
 
     fun translation(id: Int) = translations.firstOrNull { it.id == id } ?: translations.first()
+    fun installedVersion(id: Int) = translations.firstOrNull { it.id == id }?.version
     fun book(id: Int) = books[id - 1]
 
     /** Every chapter of a translation, in canonical order. Chapter counts differ between numberings. */
@@ -150,8 +215,8 @@ class BibleDb private constructor(private val db: SQLiteDatabase) {
     fun search(query: String, tid: Int, limit: Int = 500): List<SearchHit> {
         val match = ftsQuery(query) ?: return emptyList()
         return db.list(
-            "SELECT v.id, v.book_id, v.chapter, v.verse, v.text FROM verses_fts f JOIN verses v ON v.id=f.docid " +
-                "WHERE verses_fts MATCH ? AND v.translation_id=? ORDER BY v.id LIMIT ?", match, tid, limit
+            "SELECT v.id, v.book_id, v.chapter, v.verse, v.text FROM fts_$tid f JOIN verses v ON v.id=f.docid " +
+                "WHERE fts_$tid MATCH ? ORDER BY v.id LIMIT ?", match, limit
         ) { SearchHit(tid, Verse(it.getLong(0), it.getInt(1), it.getInt(2), it.getInt(3), it.getString(4))) }
     }
 
@@ -161,21 +226,59 @@ class BibleDb private constructor(private val db: SQLiteDatabase) {
         }
 
     companion object {
-        private const val NAME = "bible.db"
+        private const val NAME = "library.db"
+        private const val SCHEMA_VERSION = 2
+        const val PACK_FORMAT = 1
+        const val CORE_ID = 1
 
-        /** Copies the bundled database out of the APK on first run and after every app update. */
+        private val SCHEMA = listOf(
+            "CREATE TABLE translations (id INTEGER PRIMARY KEY, code TEXT NOT NULL UNIQUE, name TEXT NOT NULL, " +
+                "language TEXT NOT NULL, description TEXT NOT NULL, license TEXT NOT NULL, attribution TEXT NOT NULL, " +
+                "markup TEXT NOT NULL, searchable INTEGER NOT NULL, sort INTEGER NOT NULL, version TEXT NOT NULL)",
+            "CREATE TABLE books (id INTEGER PRIMARY KEY, code TEXT NOT NULL, abbrev TEXT NOT NULL, name TEXT NOT NULL, " +
+                "testament TEXT NOT NULL, chapters INTEGER NOT NULL)",
+            "CREATE TABLE verses (id INTEGER PRIMARY KEY, translation_id INTEGER NOT NULL, book_id INTEGER NOT NULL, " +
+                "chapter INTEGER NOT NULL, verse INTEGER NOT NULL, text TEXT NOT NULL)",
+            "CREATE UNIQUE INDEX verses_ref ON verses (translation_id, book_id, chapter, verse)",
+            "CREATE TABLE verse_keys (verse_id INTEGER NOT NULL, book_id INTEGER NOT NULL, " +
+                "kjv_chapter INTEGER NOT NULL, kjv_verse INTEGER NOT NULL)",
+            "CREATE INDEX verse_keys_verse ON verse_keys (verse_id)",
+            "CREATE INDEX verse_keys_kjv ON verse_keys (book_id, kjv_chapter, kjv_verse)",
+            "CREATE TABLE notes (translation_id INTEGER NOT NULL, book_id INTEGER NOT NULL, kjv_chapter INTEGER NOT NULL, " +
+                "kjv_verse INTEGER NOT NULL, chapter INTEGER NOT NULL, verse INTEGER NOT NULL, severity INTEGER NOT NULL, " +
+                "category TEXT NOT NULL, kjv_reading TEXT NOT NULL, translation_reading TEXT NOT NULL, " +
+                "preferred TEXT NOT NULL, preferred_reading TEXT NOT NULL, confidence TEXT, context TEXT, note TEXT NOT NULL)",
+            "CREATE INDEX notes_kjv ON notes (book_id, kjv_chapter, kjv_verse)",
+            "CREATE TABLE book_notes (translation_id INTEGER NOT NULL, book_id INTEGER NOT NULL, " +
+                "first_chapter INTEGER NOT NULL, last_chapter INTEGER NOT NULL, text TEXT NOT NULL)",
+        )
+
+        /**
+         * Opens the library, creating it on first run (or after a schema change) and installing the
+         * bundled Claude Translation whenever the APK carries a different version of it.
+         */
         suspend fun open(context: Context): BibleDb = withContext(Dispatchers.IO) {
-            val file = context.getDatabasePath(NAME)
-            val stamp = context.packageManager.getPackageInfo(context.packageName, 0).lastUpdateTime
-            val prefs = context.getSharedPreferences("db", Context.MODE_PRIVATE)
-            if (!file.exists() || prefs.getLong("stamp", -1) != stamp) {
-                file.parentFile?.mkdirs()
-                val tmp = File(file.path + ".tmp")
-                context.assets.open(NAME).use { input -> tmp.outputStream().use { input.copyTo(it, 1 shl 16) } }
-                tmp.renameTo(file)
-                prefs.edit().putLong("stamp", stamp).apply()
+            context.getDatabasePath("bible.db").let { if (it.exists()) context.deleteDatabase("bible.db") }  // 0.1 layout
+            var sql = SQLiteDatabase.openOrCreateDatabase(context.getDatabasePath(NAME).also { it.parentFile?.mkdirs() }, null)
+            if (sql.version != SCHEMA_VERSION) {
+                sql.close()
+                context.deleteDatabase(NAME)
+                sql = SQLiteDatabase.openOrCreateDatabase(context.getDatabasePath(NAME), null)
+                sql.beginTransaction()
+                try {
+                    SCHEMA.forEach(sql::execSQL)
+                    sql.version = SCHEMA_VERSION
+                    sql.setTransactionSuccessful()
+                } finally { sql.endTransaction() }
             }
-            BibleDb(SQLiteDatabase.openDatabase(file.path, null, SQLiteDatabase.OPEN_READONLY))
+            val lib = BibleDb(sql)
+            val bundled = context.assets.open("core.version").use { it.readBytes().decodeToString().trim() }
+            if (lib.installedVersion(CORE_ID) != bundled) {
+                val tmp = File(context.cacheDir, "core.db")
+                context.assets.open("core.db").use { input -> tmp.outputStream().use { input.copyTo(it, 1 shl 16) } }
+                try { lib.install(tmp) } finally { tmp.delete() }
+            }
+            lib
         }
 
         /** Turns typed words into an FTS4 query: all words must appear, the last may be a prefix. */

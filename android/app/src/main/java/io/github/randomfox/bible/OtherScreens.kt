@@ -100,7 +100,9 @@ private fun QuickNavBar(db: BibleDb, state: AppState, onBack: (() -> Unit)?) {
             navigationIconContentColor = c.onBar,
         ),
     )
-    if (pick) TranslationDialog(db, state.translationId, { pick = false }) { pick = false; state.switchTranslation(db, it) }
+    if (pick) TranslationDialog(db, state.translationId, { pick = false }, { state.screen = Screen.Library }) {
+        pick = false; state.switchTranslation(db, it)
+    }
 }
 
 /** The grey strip under the bar: testament tabs, or the chosen book's name. */
@@ -306,7 +308,7 @@ fun AboutScreen(db: BibleDb, state: AppState) {
     Scaffold(topBar = { BlueBar({ Text("About") }, onBack = { state.screen = Screen.Reader }) }) { pad ->
         Column(Modifier.padding(pad).fillMaxSize().verticalScroll(rememberScrollState()).padding(18.dp)) {
             Text("Bible", style = MaterialTheme.typography.headlineSmall, color = c.verseNumber)
-            Text("Read several translations side by side. Tap a verse to compare it across translations and to see " +
+            Text("Download more translations from ⋮ → Download translations. Read several side by side. Tap a verse to compare it across translations and to see " +
                 "where the Claude Translation differs from the KJV, which reading the text most likely means, and why.",
                 Modifier.padding(top = 6.dp), lineHeight = 21.sp)
             Text("A dot after a verse marks a recorded difference: light for a nuance, amber for a notable change, " +

@@ -4,5 +4,7 @@ android/.gradle/
 android/build/
 android/app/build/
 android/local.properties
-android/app/src/main/assets/bible.db
+android/app/src/main/assets/core.db
+android/app/src/main/assets/core.version
 android/app/src/main/assets/bible.tmp
+dist/

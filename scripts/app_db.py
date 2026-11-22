@@ -1,26 +1,31 @@
-"""Build the Android app's bundled database from bible.sqlite.
+"""Build the Android app's translation packs from bible.sqlite and the eBible.org texts.
 
-Usage: python3 -I scripts/app_db.py [OUT]   (default android/app/src/main/assets/bible.db)
+Usage: python3 -I scripts/app_db.py
 
-The app database holds any number of translations. Each translation keeps its own verse
-numbering; every verse also carries one or more KJV keys (verse_keys), which is how the app
-lines up the same verse across translations. To add a translation later, write a loader that
-returns a Translation (see load_kjv for the simplest case) and add it to TRANSLATIONS.
+Each translation becomes one SQLite "pack". The app installs packs into its own library database:
+  - the Claude Translation (CT) pack is bundled in the APK: android/app/src/main/assets/core.db
+  - every other pack is gzipped into dist/packs/<CODE>.db.gz and listed in dist/packs/catalog.json,
+    which are published as assets of the GitHub release "translations" (scripts/publish_packs.sh).
 
-Tables
-  meta          key/value
-  translations  id, code, name, language, description, license, attribution, markup, sort
-                markup: 'italic' = [words] are supplied words, shown in italics without brackets
-                        'keep'   = brackets are part of the text and shown as is
-  books         id 1..66, code, abbrev, name, testament, chapters (KJV count)
-  verses        id, translation_id, book_id, chapter, verse, text
-  verse_keys    verse_id, book_id, kjv_chapter, kjv_verse
-  notes         differences from the KJV, keyed by KJV reference (so every translation can show them)
-  book_notes    per-translation notes on a book (markdown)
-  verses_fts    contentless FTS4 index over English verses, docid = verses.id
+Pack tables (the app's library database has the same ones, plus an FTS4 table per searchable translation)
+  meta          key/value: pack_format, translation id, version
+  translations  one row: id, code, name, language, description, license, attribution, markup, searchable,
+                sort, version.  markup: 'italic' = [words] are supplied words; 'keep' = brackets are text
+  books         id 1..66, code, abbrev, name, testament, chapters (KJV count); the same in every pack
+  verses        id, translation_id, book_id, chapter, verse, text.  id = translation_id * 10,000,000 + n
+  verse_keys    verse_id, book_id, kjv_chapter, kjv_verse.  How the same verse is matched across translations
+  notes         differences from the KJV, keyed by KJV reference (CT only)
+  book_notes    per-translation notes on a book (CT only)
+
+Each translation keeps its own verse numbering; verse_keys tie every verse to one or more KJV references.
+To add a translation, write a loader that returns a Translation (vpl_loader does it for eBible.org texts),
+give it a new id, and add it to TRANSLATIONS.
 """
-import datetime
+import gzip
+import hashlib
+import json
 import pathlib
+import shutil
 import re
 import sqlite3
 import sys
@@ -28,35 +33,32 @@ from dataclasses import dataclass, field
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 SRC = ROOT / "bible.sqlite"
-SCHEMA_VERSION = 1
+PACK_FORMAT = 1
+VERSE_ID_BASE = 10_000_000
+CATALOG_URL = "https://github.com/randomfox/bible-translation/releases/download/translations/"
 
 SCHEMA = """
 CREATE TABLE meta (key TEXT PRIMARY KEY, value TEXT NOT NULL);
 CREATE TABLE translations (
   id INTEGER PRIMARY KEY, code TEXT NOT NULL UNIQUE, name TEXT NOT NULL, language TEXT NOT NULL,
   description TEXT NOT NULL, license TEXT NOT NULL, attribution TEXT NOT NULL,
-  markup TEXT NOT NULL CHECK (markup IN ('italic','keep')), searchable INTEGER NOT NULL, sort INTEGER NOT NULL);
+  markup TEXT NOT NULL, searchable INTEGER NOT NULL, sort INTEGER NOT NULL, version TEXT NOT NULL);
 CREATE TABLE books (
   id INTEGER PRIMARY KEY, code TEXT NOT NULL, abbrev TEXT NOT NULL, name TEXT NOT NULL,
   testament TEXT NOT NULL, chapters INTEGER NOT NULL);
 CREATE TABLE verses (
   id INTEGER PRIMARY KEY, translation_id INTEGER NOT NULL, book_id INTEGER NOT NULL,
   chapter INTEGER NOT NULL, verse INTEGER NOT NULL, text TEXT NOT NULL);
-CREATE UNIQUE INDEX verses_ref ON verses (translation_id, book_id, chapter, verse);
 CREATE TABLE verse_keys (verse_id INTEGER NOT NULL, book_id INTEGER NOT NULL,
   kjv_chapter INTEGER NOT NULL, kjv_verse INTEGER NOT NULL);
-CREATE INDEX verse_keys_verse ON verse_keys (verse_id);
-CREATE INDEX verse_keys_kjv ON verse_keys (book_id, kjv_chapter, kjv_verse);
 CREATE TABLE notes (
-  id INTEGER PRIMARY KEY, translation_id INTEGER NOT NULL, book_id INTEGER NOT NULL,
+  translation_id INTEGER NOT NULL, book_id INTEGER NOT NULL,
   kjv_chapter INTEGER NOT NULL, kjv_verse INTEGER NOT NULL, chapter INTEGER NOT NULL, verse INTEGER NOT NULL,
   severity INTEGER NOT NULL, category TEXT NOT NULL, kjv_reading TEXT NOT NULL,
   translation_reading TEXT NOT NULL, preferred TEXT NOT NULL, preferred_reading TEXT NOT NULL,
   confidence TEXT, context TEXT, note TEXT NOT NULL);
-CREATE INDEX notes_kjv ON notes (book_id, kjv_chapter, kjv_verse);
 CREATE TABLE book_notes (translation_id INTEGER NOT NULL, book_id INTEGER NOT NULL,
   first_chapter INTEGER NOT NULL, last_chapter INTEGER NOT NULL, text TEXT NOT NULL);
-CREATE VIRTUAL TABLE verses_fts USING fts4(content="", text, tokenize=unicode61);
 """
 
 
@@ -203,53 +205,74 @@ load_tr = vpl_loader(
 TRANSLATIONS = [load_ft, load_kjv, load_bsb, load_web, load_ylt, load_orig, load_tr]
 
 
-def main():
-    out = pathlib.Path(sys.argv[1]) if len(sys.argv) > 1 else ROOT / "android/app/src/main/assets/bible.db"
-    out.parent.mkdir(parents=True, exist_ok=True)
-    tmp = out.with_suffix(".tmp")
-    tmp.unlink(missing_ok=True)
-    src = sqlite3.connect(SRC)
-    meta = dict(src.execute("SELECT key, value FROM meta"))
-    db = sqlite3.connect(tmp)
+def write_pack(t, sort, books, out):
+    """Writes one translation as a pack and returns its content version (a hash of everything in it)."""
+    out.unlink(missing_ok=True)
+    db = sqlite3.connect(out)
     db.executescript(SCHEMA)
-    for bid, code, osis, name, test, ch in src.execute("SELECT id, code, osis, name, testament, chapters FROM books"):
-        kjv_ch = src.execute("SELECT max(chapter) FROM kjv_verses WHERE book_id=?", (bid,)).fetchone()[0]
-        db.execute("INSERT INTO books VALUES (?,?,?,?,?,?)", (bid, code, osis, name, test, kjv_ch))
-    vid = 0
-    counts = {}
-    for sort, loader in enumerate(TRANSLATIONS):
-        t = loader(src, meta)
-        tid = t.id
-        db.execute("INSERT INTO translations VALUES (?,?,?,?,?,?,?,?,?,?)",
-                   (tid, t.code, t.name, t.language, t.description, t.license, t.attribution, t.markup,
-                    int(t.searchable), sort))
-        for b, c, v, text, keys in t.verses:
-            vid += 1
-            db.execute("INSERT INTO verses VALUES (?,?,?,?,?,?)", (vid, tid, b, c, v, text))
-            db.executemany("INSERT INTO verse_keys VALUES (?,?,?,?)", [(vid, b, kc, kv) for kc, kv in keys])
-            if t.searchable:
-                plain = text.replace("[", "").replace("]", "")
-                db.execute("INSERT INTO verses_fts (docid, text) VALUES (?,?)", (vid, plain))
-        for d in t.notes:
-            db.execute("INSERT INTO notes (translation_id, book_id, kjv_chapter, kjv_verse, chapter, verse, severity, "
-                       "category, kjv_reading, translation_reading, preferred, preferred_reading, confidence, context, "
-                       "note) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
-                       (tid, d["book_id"], d["kjv_chapter"], d["kjv_verse"], d["chapter"], d["verse"], d["severity"],
-                        d["category"], d["kjv_reading"], d["translation_reading"], d["preferred"],
-                        d["preferred_reading"], d["confidence"], d["context"], d["note"]))
-        db.executemany("INSERT INTO book_notes VALUES (?,?,?,?,?)", [(tid, *bn) for bn in t.book_notes])
-        counts[t.code] = len(t.verses)
-    db.executemany("INSERT INTO meta VALUES (?,?)", {
-        "schema_version": str(SCHEMA_VERSION),
-        "built": datetime.date.today().isoformat(),
-        "translations": ",".join(counts),
-    }.items())
-    db.execute("INSERT INTO verses_fts(verses_fts) VALUES ('optimize')")
+    db.executemany("INSERT INTO books VALUES (?,?,?,?,?,?)", books)
+    h = hashlib.sha256(repr((t.code, t.name, t.description, t.license, t.attribution, t.markup)).encode())
+    for n, (b, c, v, text, keys) in enumerate(t.verses, 1):
+        vid = t.id * VERSE_ID_BASE + n
+        db.execute("INSERT INTO verses VALUES (?,?,?,?,?,?)", (vid, t.id, b, c, v, text))
+        db.executemany("INSERT INTO verse_keys VALUES (?,?,?,?)", [(vid, b, kc, kv) for kc, kv in keys])
+        h.update(repr((b, c, v, text, keys)).encode())
+    cols = ["book_id", "kjv_chapter", "kjv_verse", "chapter", "verse", "severity", "category", "kjv_reading",
+            "translation_reading", "preferred", "preferred_reading", "confidence", "context", "note"]
+    for d in t.notes:
+        db.execute(f"INSERT INTO notes (translation_id, {','.join(cols)}) VALUES (?{',?' * len(cols)})",
+                   (t.id, *[d[k] for k in cols]))
+        h.update(repr(sorted(d.items())).encode())
+    db.executemany("INSERT INTO book_notes VALUES (?,?,?,?,?)", [(t.id, *bn) for bn in t.book_notes])
+    h.update(repr(t.book_notes).encode())
+    version = h.hexdigest()[:12]
+    db.execute("INSERT INTO translations VALUES (?,?,?,?,?,?,?,?,?,?,?)",
+               (t.id, t.code, t.name, t.language, t.description, t.license, t.attribution, t.markup,
+                int(t.searchable), sort, version))
+    db.executemany("INSERT INTO meta VALUES (?,?)", [("pack_format", str(PACK_FORMAT)), ("translation", str(t.id)),
+                                                     ("version", version)])
     db.commit()
     db.execute("VACUUM")
     db.close()
-    tmp.replace(out)
-    print(f"{out}: {counts}, {out.stat().st_size / 1e6:.1f} MB")
+    return version
+
+
+def main():
+    dist = ROOT / "dist/packs"
+    dist.mkdir(parents=True, exist_ok=True)
+    assets = ROOT / "android/app/src/main/assets"
+    assets.mkdir(parents=True, exist_ok=True)
+    for old in ("bible.db", "bible.tmp"):
+        (assets / old).unlink(missing_ok=True)
+    src = sqlite3.connect(SRC)
+    meta = dict(src.execute("SELECT key, value FROM meta"))
+    books = []
+    for bid, code, osis, name, test, ch in src.execute("SELECT id, code, osis, name, testament, chapters FROM books"):
+        kjv_ch = src.execute("SELECT max(chapter) FROM kjv_verses WHERE book_id=?", (bid,)).fetchone()[0]
+        books.append((bid, code, osis, name, test, kjv_ch))
+    catalog = []
+    for sort, loader in enumerate(TRANSLATIONS):
+        t = loader(src, meta)
+        bundled = t.id == 1
+        raw = (assets / "core.db") if bundled else dist / f"{t.code}.db"
+        version = write_pack(t, sort, books, raw)
+        entry = {"id": t.id, "code": t.code, "name": t.name, "language": t.language, "description": t.description,
+                 "license": t.license, "version": version, "sort": sort, "verses": len(t.verses)}
+        if bundled:
+            (assets / "core.version").write_text(version)
+            entry["bundled"] = True
+        else:
+            gz = dist / f"{t.code}.db.gz"
+            with open(raw, "rb") as f, gzip.GzipFile(gz, "wb", mtime=0) as g:
+                shutil.copyfileobj(f, g)
+            raw.unlink()
+            data = gz.read_bytes()
+            entry.update(file=gz.name, size=len(data), sha256=hashlib.sha256(data).hexdigest())
+        catalog.append(entry)
+        size = "bundled" if bundled else f"{entry['size'] / 1e6:.1f} MB"
+        print(f"{t.code:8} {len(t.verses):6} verses  version {version}  {size}")
+    (dist / "catalog.json").write_text(json.dumps({"format": PACK_FORMAT, "base_url": CATALOG_URL,
+                                                   "translations": catalog}, indent=1, ensure_ascii=False))
 
 
 if __name__ == "__main__":

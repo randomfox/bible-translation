@@ -46,11 +46,12 @@ sealed interface Screen {
     data class BookInfo(val book: Int) : Screen
     data object Search : Screen
     data object About : Screen
+    data object Library : Screen
 }
 
 /** Reading position and settings, saved between launches. */
 class AppState(private val prefs: android.content.SharedPreferences, db: BibleDb) {
-    var translationId by mutableIntStateOf(prefs.getInt("tid", db.translations.first().id))
+    var translationId by mutableIntStateOf(prefs.getInt("tid", BibleDb.CORE_ID).takeIf { db.isInstalled(it) } ?: BibleDb.CORE_ID)
     var book by mutableIntStateOf(prefs.getInt("book", 43))
     var chapter by mutableIntStateOf(prefs.getInt("chapter", 1))
     var fontSize by mutableIntStateOf(prefs.getInt("font", 19))
@@ -84,6 +85,7 @@ class AppState(private val prefs: android.content.SharedPreferences, db: BibleDb
 fun App(db: BibleDb) {
     val context = LocalContext.current
     val state = remember { AppState(context.getSharedPreferences("app", Context.MODE_PRIVATE), db) }
+    val library = remember { Library(context.applicationContext, db) }
     BackHandler(state.screen != Screen.Reader) {
         state.screen = when (val s = state.screen) {
             is Screen.Chapters -> Screen.Books(db.book(s.book).nt)
@@ -98,5 +100,6 @@ fun App(db: BibleDb) {
         is Screen.BookInfo -> BookInfoScreen(db, state, s.book)
         Screen.Search -> SearchScreen(db, state)
         Screen.About -> AboutScreen(db, state)
+        Screen.Library -> LibraryScreen(db, state, library)
     }
 }
