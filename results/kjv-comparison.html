@@ -1,0 +1,358 @@
+<title>KJV Against Its Sources</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,500;0,600;1,400;1,500&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a single reading column (about 70ch) with wide breakouts for the charts and the book table. Garamond is reserved for quoted KJV text. */
+:root {
+  --paper: #f4f5f7;
+  --sheet: #ffffff;
+  --ink: #1c1f26;
+  --muted: #5d6472;
+  --rule: #d9dce3;
+  --lapis: #2c4a9a;
+  --lapis-soft: #e3e8f5;
+  --sev1: #9aa1ae;
+  --sev2: #c98a1d;
+  --sev3: #b8322a;
+  --cat-text: #2c4a9a;
+  --cat-interp: #6a4fa0;
+  --cat-lex: #2f7d6d;
+  --cat-mean: #b8322a;
+  --cat-arch: #c98a1d;
+  --cat-name: #7b8494;
+  --f-quote: "EB Garamond", Garamond, "Times New Roman", serif;
+  --f-body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #14161b; --sheet: #1b1e25; --ink: #e6e8ee; --muted: #9aa1b0; --rule: #2e333d;
+    --lapis: #8fa8ec; --lapis-soft: #232a40; --sev1: #6c7380; --sev2: #e0a640; --sev3: #e2675d;
+    --cat-text: #8fa8ec; --cat-interp: #b19ae0; --cat-lex: #6cc2ad; --cat-mean: #e2675d; --cat-arch: #e0a640; --cat-name: #8d95a4;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #14161b; --sheet: #1b1e25; --ink: #e6e8ee; --muted: #9aa1b0; --rule: #2e333d;
+  --lapis: #8fa8ec; --lapis-soft: #232a40; --sev1: #6c7380; --sev2: #e0a640; --sev3: #e2675d;
+  --cat-text: #8fa8ec; --cat-interp: #b19ae0; --cat-lex: #6cc2ad; --cat-mean: #e2675d; --cat-arch: #e0a640; --cat-name: #8d95a4;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--paper); color: var(--ink);
+  font: 400 16px/1.6 var(--f-body);
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 40px 64px;
+}
+.wrap { max-width: 1040px; margin: 0 auto; display: flex; flex-direction: column; gap: 56px; }
+.prose { max-width: 68ch; }
+h1, h2, h3 { font-family: var(--f-body); text-wrap: balance; margin: 0; line-height: 1.2; }
+h1 { font-size: clamp(30px, 5vw, 44px); font-weight: 600; letter-spacing: -0.01em; }
+h2 { font-size: 24px; font-weight: 600; }
+h3 { font-size: 17px; font-weight: 600; }
+p { margin: 0; }
+.stack { display: flex; flex-direction: column; gap: 14px; }
+.eyebrow { font: 500 12px/1 var(--f-mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+.lede { font-size: 18px; color: var(--muted); max-width: 64ch; }
+.mono { font-family: var(--f-mono); font-size: 0.92em; }
+a { color: var(--lapis); }
+q, .kjv { font-family: var(--f-quote); font-style: italic; font-size: 1.08em; }
+
+.tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1px; background: var(--rule); border: 1px solid var(--rule); border-radius: 6px; overflow: hidden; }
+.tile { background: var(--sheet); padding: 18px 18px 16px; display: flex; flex-direction: column; gap: 6px; }
+.tile b { font: 600 28px/1.1 var(--f-body); font-variant-numeric: tabular-nums; }
+.tile span { color: var(--muted); font-size: 13px; }
+
+.panel { background: var(--sheet); border: 1px solid var(--rule); border-radius: 6px; padding: 22px; display: flex; flex-direction: column; gap: 18px; min-width: 0; }
+.twocol { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+
+.stackbar { display: flex; height: 26px; border-radius: 3px; overflow: hidden; background: var(--rule); }
+.stackbar i { display: block; height: 100%; }
+.barrow { display: grid; grid-template-columns: 84px 1fr 56px; gap: 12px; align-items: center; font-size: 14px; }
+.barrow .num { text-align: right; font-variant-numeric: tabular-nums; color: var(--muted); font-family: var(--f-mono); font-size: 13px; }
+.legend { display: flex; flex-wrap: wrap; gap: 8px 16px; font-size: 13px; color: var(--muted); }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.legend i { width: 10px; height: 10px; border-radius: 2px; display: inline-block; }
+
+.sevs { display: flex; flex-direction: column; gap: 10px; }
+.sevrow { display: grid; grid-template-columns: 120px 1fr 64px; gap: 12px; align-items: center; font-size: 14px; }
+.sevrow .track { height: 14px; background: var(--rule); border-radius: 2px; overflow: hidden; }
+.sevrow .track i { display: block; height: 100%; }
+.sevrow .num { text-align: right; font-family: var(--f-mono); font-size: 13px; font-variant-numeric: tabular-nums; }
+
+.major { display: flex; flex-direction: column; border-top: 1px solid var(--rule); }
+.mrow { display: grid; grid-template-columns: 150px 1fr; gap: 8px 20px; padding: 16px 0; border-bottom: 1px solid var(--rule); }
+.mref { font: 500 14px/1.4 var(--f-mono); color: var(--sev3); }
+.mref small { display: block; color: var(--muted); font-size: 12px; margin-top: 2px; }
+.mbody { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.pair { display: grid; grid-template-columns: 48px 1fr; gap: 2px 10px; font-size: 15px; }
+.pair dt { font: 500 11px/1.9 var(--f-mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+.pair dd { margin: 0; }
+.note { color: var(--muted); font-size: 14px; }
+
+.patterns { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 20px; }
+.patterns ul { margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 8px; font-size: 15px; }
+
+.tablebox { overflow-x: auto; border: 1px solid var(--rule); border-radius: 6px; background: var(--sheet); }
+table { border-collapse: collapse; width: 100%; font-size: 14px; min-width: 640px; }
+th, td { padding: 7px 12px; text-align: right; border-bottom: 1px solid var(--rule); font-variant-numeric: tabular-nums; white-space: nowrap; }
+th:first-child, td:first-child { text-align: left; }
+th { font: 500 12px/1.3 var(--f-mono); letter-spacing: 0.04em; text-transform: uppercase; color: var(--muted); position: sticky; top: 0; background: var(--sheet); }
+th button { all: unset; cursor: pointer; display: inline-flex; gap: 4px; align-items: center; }
+th button:focus-visible { outline: 2px solid var(--lapis); outline-offset: 2px; border-radius: 2px; }
+th button[aria-sort="descending"]::after { content: "▾"; }
+th button[aria-sort="ascending"]::after { content: "▴"; }
+tr.nt td:first-child { color: var(--lapis); }
+td.rate { display: flex; align-items: center; gap: 8px; justify-content: flex-end; }
+td.rate i { display: inline-block; height: 8px; background: var(--lapis); border-radius: 1px; opacity: 0.75; }
+.s2 { color: var(--sev2); } .s3 { color: var(--sev3); font-weight: 600; }
+.filters { display: flex; gap: 8px; flex-wrap: wrap; }
+.filters button { font: 500 13px var(--f-body); border: 1px solid var(--rule); background: var(--sheet); color: var(--ink); padding: 6px 12px; border-radius: 999px; cursor: pointer; }
+.filters button[aria-pressed="true"] { background: var(--lapis-soft); border-color: var(--lapis); color: var(--lapis); }
+.filters button:focus-visible { outline: 2px solid var(--lapis); outline-offset: 2px; }
+
+.sim { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; }
+.sim div { display: flex; flex-direction: column; gap: 4px; }
+.sim b { font: 600 24px var(--f-body); font-variant-numeric: tabular-nums; }
+.sim span { font-size: 13px; color: var(--muted); }
+footer { color: var(--muted); font-size: 14px; border-top: 1px solid var(--rule); padding-top: 20px; }
+@media (max-width: 560px) {
+  .mrow { grid-template-columns: 1fr; }
+  .barrow { grid-template-columns: 64px 1fr 48px; }
+  .sevrow { grid-template-columns: 96px 1fr 52px; }
+}
+</style>
+
+<div class="wrap">
+
+<header class="stack">
+  <div class="eyebrow">Hebrew · Aramaic · Greek → English, verse by verse</div>
+  <h1>The KJV against its sources</h1>
+  <p class="lede">All 66 books were translated afresh from the original languages and compared with the King James Version of 1611, verse by verse. Every real difference in meaning was logged, sorted by cause, and graded for how much it changes what a reader would understand.</p>
+</header>
+
+<section class="tiles" aria-label="Headline figures">
+  <div class="tile"><b>66</b><span>books, 1,189 chapters</span></div>
+  <div class="tile"><b>31,152</b><span>verses translated from Hebrew, Aramaic and Greek</span></div>
+  <div class="tile"><b>2,316</b><span>differences flagged</span></div>
+  <div class="tile"><b>7.3%</b><span>of verses carry at least one flag</span></div>
+  <div class="tile"><b>15</b><span>major differences (severity 3)</span></div>
+</section>
+
+<section class="prose stack">
+  <h2>What was done</h2>
+  <p><b>Sources.</b> The Old Testament was translated from the Westminster Leningrad Codex (the Masoretic Text) and the New Testament from the SBL Greek New Testament. The KJV and the Greek text behind its New Testament (Scrivener's Textus Receptus) were set beside each translated chapter.</p>
+  <p><b>Flags.</b> Each difference got one of six categories: <span class="mono">TEXT</span> (the underlying manuscript differs), <span class="mono">MEANING</span>, <span class="mono">INTERP</span>, <span class="mono">LEXICAL</span>, <span class="mono">ARCHAIC</span> or <span class="mono">NAME</span>. It also got a severity: 1 for nuance, 2 for a notable change in sense, 3 for a change that alters what the passage says.</p>
+  <p><b>Not flagged.</b> Consistent conventions are recorded once per book, not at every verse. These include "the LORD" for YHWH, "Holy Ghost", and "hell" for Sheol and Hades.</p>
+</section>
+
+<section class="stack">
+  <h2>Two testaments, two kinds of gap</h2>
+  <p class="prose">The two testaments show almost the same rate of difference, about 7 flags per 100 verses each, but for opposite reasons. In the Old Testament the KJV and this translation read the same Hebrew text, and the differences are in how rare words, idioms and poetry were understood in 1611. In the New Testament the KJV translates a different Greek text, so most differences come from the manuscripts.</p>
+  <div class="twocol">
+    <div class="panel" id="catPanel">
+      <h3>Flags by cause</h3>
+      <div id="catBars" class="stack" style="gap:12px"></div>
+      <div class="legend" id="catLegend"></div>
+    </div>
+    <div class="panel">
+      <h3>Flags by severity</h3>
+      <div class="sevs" id="sevBars"></div>
+      <p class="note">85% of flags are nuance. One in seven changes the sense noticeably. Fifteen alter what a passage says.</p>
+    </div>
+  </div>
+</section>
+
+<section class="stack">
+  <h2>The fifteen major differences</h2>
+  <p class="prose">These are the places where a KJV reader meets a meaningfully different text or claim. Five come from the Greek text behind the KJV. The other ten are choices the 1611 translators made between readings of the same Hebrew, and in most of them they chose the reading that best supported Christian doctrine.</p>
+  <div class="major" id="major"></div>
+</section>
+
+<section class="stack">
+  <h2>Recurring patterns</h2>
+  <div class="patterns">
+    <div class="panel">
+      <h3>Old Testament</h3>
+      <ul>
+        <li><b>Guesses at rare words.</b> The KJV renders the wild ox as a "unicorn" (Numbers, Deuteronomy, Job, Psalms, Isaiah). It also has "badgers' skins", "mules" for hot springs, and "dragons" for jackals.</li>
+        <li><b>Cult vocabulary.</b> The goddess Asherah's cult poles become "groves" throughout Kings and Chronicles. Shrine personnel become "sodomites". Goat-demons become "devils".</li>
+        <li><b>Messianic readings of ambiguous verses.</b> Examples are Gen 49:10, Ps 22:16, Isa 7:14 and Dan 9:25, plus Job's three famous lines of faith.</li>
+        <li><b>Harmonising.</b> At 2 Sam 21:19 the KJV adds "the brother of" so that Elhanan does not kill Goliath. In 2 Sam 8:18 and 20:26 David's sons are called "chief rulers" where the Hebrew says priests.</li>
+        <li><b>English that has shifted.</b> Older senses of "replenish", "tempt", "prevent", "let", "meat offering" and "Thou shalt not kill" now mislead.</li>
+      </ul>
+    </div>
+    <div class="panel">
+      <h3>New Testament</h3>
+      <ul>
+        <li><b>Additions in the Greek text behind the KJV.</b> 61% of NT flags are textual. Fifteen whole verses in the KJV have no counterpart in the critical text, among them Mt 17:21, Mk 9:44 and Acts 8:37.</li>
+        <li><b>Three long passages.</b> The ending of Mark (16:9–20), the woman taken in adultery (John 7:53–8:11), and the Johannine Comma (1 John 5:7–8).</li>
+        <li><b>Readings found in no Greek manuscript.</b> Acts 9:5–6 and Rev 22:16–21 come from Erasmus translating the Latin back into Greek. "And shalt be" at Rev 16:5 is Beza's conjecture.</li>
+        <li><b>Not always the higher Christology.</b> In several places the critical text says more about Christ than the KJV does. At John 1:18 it calls him "the only God", and at Jude 5 it names Jesus as the one who led Israel out of Egypt. At Titus 2:13 and 2 Pet 1:1 the Greek names him "our God and Saviour", which the KJV's wording obscures.</li>
+        <li><b>Translation slips.</b> "Easter" at Acts 12:4, "Jesus" for Joshua at Acts 7:45 and Heb 4:8, "faith" for hope at Heb 10:23, and "the root of all evil" at 1 Tim 6:10.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="stack">
+  <h2>Book by book</h2>
+  <div class="filters" role="group" aria-label="Filter by testament">
+    <button type="button" id="fAll" aria-pressed="true">All 66</button>
+    <button type="button" id="fOT" aria-pressed="false">Old Testament</button>
+    <button type="button" id="fNT" aria-pressed="false">New Testament</button>
+  </div>
+  <div class="tablebox">
+    <table>
+      <thead><tr>
+        <th><button type="button" data-k="0">Book</button></th>
+        <th><button type="button" data-k="2">Verses</button></th>
+        <th><button type="button" data-k="3">Flags</button></th>
+        <th><button type="button" data-k="7" aria-sort="descending">Per 100 verses</button></th>
+        <th><button type="button" data-k="4">Sev 2</button></th>
+        <th><button type="button" data-k="5">Sev 3</button></th>
+        <th><button type="button" data-k="8">Textual share</button></th>
+      </tr></thead>
+      <tbody id="books"></tbody>
+    </table>
+  </div>
+  <p class="note prose">Malachi has the highest rate (35 per 100 verses) and Haggai the lowest (3). Short books swing widely, so the rates are most meaningful for the longer books. Revelation has the highest share of textual flags: 71%, because Erasmus had only one incomplete manuscript of it.</p>
+</section>
+
+<section class="panel">
+  <h3>Overall wording similarity</h3>
+  <div class="sim">
+    <div><b>0.69</b><span>this translation vs the KJV</span></div>
+    <div><b>0.77</b><span>this translation vs the World English Bible</span></div>
+    <div><b>0.77</b><span>World English Bible vs the KJV</span></div>
+  </div>
+  <p class="note">The scores measure word overlap per verse, averaged across the Bible. This translation is as close to a modern public-domain version as that version is to the KJV. Most of the distance from the KJV is modern English, not disagreement. The flags count the disagreements.</p>
+</section>
+
+<section class="prose stack">
+  <h2>What this means for a KJV reader</h2>
+  <p>The KJV is a careful and, in most places, accurate translation of the texts its translators had. On 93% of verses it says what the source says. Most of the remaining differences are small.</p>
+  <p>The real gaps are of two kinds. In the Old Testament, a handful of contested verses were settled in the direction of Christian doctrine, and a number of rare words were guessed wrongly. In the New Testament, the Greek text it translated carries later additions. Among them are two long passages, the ending of Mark and the woman taken in adultery, and one doctrinal formula, the Johannine Comma, that the earliest manuscripts do not contain.</p>
+</section>
+
+<footer class="stack">
+  <p><b>Limits.</b> The Textus Receptus was checked at known variant sites and selected verses, not compared word by word across every verse. The severity grades are one translator's judgement. The flag notes give the manuscript evidence or Hebrew grammar behind each grade, so each can be checked.</p>
+  <p><b>Data.</b> Every flag, with the KJV wording, the new rendering and a note, is in <span class="mono">results/flags.tsv</span>. Totals are in <span class="mono">results/stats.json</span>. Each book has a short summary in <span class="mono">data/compare/&lt;book&gt;/</span>. The translation itself is in <span class="mono">data/translation/</span>.</p>
+  <p><b>Sources.</b> Westminster Leningrad Codex (OSHB), SBL Greek New Testament, Scrivener's Textus Receptus (1894), KJV 1611 text, and the World English Bible (as a baseline for the similarity scores).</p>
+</footer>
+
+</div>
+
+<script>
+const BOOKS = [["Genesis","OT",1533,158,25,1,2],["Exodus","OT",1213,126,27,0,1],["Leviticus","OT",859,91,17,0,2],["Numbers","OT",1289,96,15,0,0],["Deuteronomy","OT",959,119,20,1,3],["Joshua","OT",658,50,3,0,3],["Judges","OT",618,80,12,0,1],["Ruth","OT",85,8,1,0,2],["1 Samuel","OT",811,74,5,0,7],["2 Samuel","OT",695,74,13,1,7],["1 Kings","OT",817,78,11,0,1],["2 Kings","OT",719,72,15,0,5],["1 Chronicles","OT",943,43,4,0,7],["2 Chronicles","OT",822,53,6,0,14],["Ezra","OT",280,15,1,0,1],["Nehemiah","OT",405,13,0,0,3],["Esther","OT",167,9,2,0,0],["Job","OT",1070,71,17,3,5],["Psalms","OT",2527,123,23,1,12],["Proverbs","OT",915,53,11,0,3],["Ecclesiastes","OT",222,15,5,0,3],["Song of Songs","OT",117,13,0,0,1],["Isaiah","OT",1291,73,14,2,8],["Jeremiah","OT",1364,42,4,0,8],["Lamentations","OT",154,6,0,0,2],["Ezekiel","OT",1273,47,5,0,3],["Daniel","OT",357,20,8,1,0],["Hosea","OT",197,17,1,0,0],["Joel","OT",73,3,0,0,0],["Amos","OT",146,8,1,0,0],["Obadiah","OT",21,2,0,0,0],["Jonah","OT",48,2,0,0,0],["Micah","OT",105,5,1,0,0],["Nahum","OT",47,3,0,0,0],["Habakkuk","OT",56,4,1,0,0],["Zephaniah","OT",53,2,0,0,0],["Haggai","OT",38,1,1,0,0],["Zechariah","OT",211,23,1,0,1],["Malachi","OT",55,19,2,0,0],["Matthew","NT",1068,66,10,0,44],["Mark","NT",673,38,12,1,31],["Luke","NT",1149,73,10,0,55],["John","NT",878,48,4,1,30],["Acts","NT",1002,54,10,0,30],["Romans","NT",430,32,1,0,17],["1 Corinthians","NT",437,31,1,0,13],["2 Corinthians","NT",256,16,0,0,6],["Galatians","NT",149,14,0,0,8],["Ephesians","NT",155,16,0,0,11],["Philippians","NT",104,9,2,0,2],["Colossians","NT",95,11,0,0,8],["1 Thessalonians","NT",89,7,0,0,3],["2 Thessalonians","NT",47,7,0,0,4],["1 Timothy","NT",113,15,1,0,7],["2 Timothy","NT",83,7,0,0,3],["Titus","NT",46,5,0,0,2],["Philemon","NT",25,3,0,0,2],["Hebrews","NT",303,28,2,0,14],["James","NT",108,13,0,0,5],["1 Peter","NT",105,12,0,0,6],["2 Peter","NT",61,7,1,0,3],["1 John","NT",105,12,0,1,9],["2 John","NT",13,3,0,0,3],["3 John","NT",15,2,0,0,1],["Jude","NT",25,6,1,0,4],["Revelation","NT",405,70,8,2,50]];
+const CATS = {
+  OT: {LEXICAL:497, INTERP:513, ARCHAIC:228, NAME:100, MEANING:268, TEXT:105},
+  NT: {TEXT:371, INTERP:99, ARCHAIC:23, NAME:7, LEXICAL:81, MEANING:24}
+};
+const CAT_ORDER = [["TEXT","Manuscript","--cat-text"],["INTERP","Interpretation","--cat-interp"],["LEXICAL","Word sense","--cat-lex"],["MEANING","Meaning","--cat-mean"],["ARCHAIC","Archaic English","--cat-arch"],["NAME","Names","--cat-name"]];
+const SEV = [["Severity 1","nuance",1966,"--sev1"],["Severity 2","notable",335,"--sev2"],["Severity 3","major",15,"--sev3"]];
+const MAJOR = [
+  ["Genesis 49:10","Interpretation","until Shiloh come; and unto him shall the gathering of the people be","until he comes to whom it belongs, and the obedience of the peoples is his","\"Shiloh\" may be a place, a name, or shello, \"he to whom it belongs\". The KJV turns a debated phrase into a messianic name."],
+  ["Deuteronomy 6:4","Interpretation","The LORD our God is one LORD","Yahweh is our God, Yahweh alone","The Shema can state God's unity or Israel's exclusive loyalty. Both readings are ancient, and the KJV takes the first."],
+  ["2 Samuel 21:19","Manuscript (harmonised)","slew the brother of Goliath the Gittite","struck down Goliath the Gittite","The Hebrew says Elhanan killed Goliath. The KJV adds \"the brother of\" in italics, taking it from 1 Chr 20:5, so that the verse agrees with 1 Samuel 17."],
+  ["Job 13:15","Manuscript","Though he slay me, yet will I trust in him","Behold, he will kill me; I have no hope","Two readings differ by one letter. The KJV follows the traditional reading, which gives a confession of trust; the written text gives defiance."],
+  ["Job 19:26","Interpretation","though after my skin worms destroy this body, yet in my flesh shall I see God","after my skin has been thus destroyed, yet from my flesh I shall see God","\"Worms\" and \"body\" are KJV additions. The Hebrew allows bodily resurrection but does not state it."],
+  ["Job 42:6","Interpretation","Wherefore I abhor myself, and repent in dust and ashes","therefore I reject my words and am consoled, here in dust and ashes","The verb has no object, and the second verb can mean \"repent\" or \"be comforted\". Job's last words are the book's central puzzle."],
+  ["Psalm 22:16","Manuscript","they pierced my hands and my feet","like a lion they are at my hands and my feet","The Masoretic Text reads \"like a lion\". The KJV follows the Septuagint, Syriac and Vulgate tradition of a verb meaning \"pierced\"."],
+  ["Isaiah 7:14","Interpretation","a virgin shall conceive","the young woman is pregnant","Almah means a young woman. The KJV follows the Greek parthenos, the reading that Matthew 1:23 quotes."],
+  ["Isaiah 14:12","Name","O Lucifer, son of the morning","O Shining One, son of Dawn","A taunt against the king of Babylon. The Vulgate's Latin word for the morning star became a name for Satan."],
+  ["Daniel 9:25","Interpretation","unto the Messiah the Prince shall be seven weeks, and threescore and two weeks","until an anointed one, a prince, there shall be seven weeks. Then for sixty-two weeks…","The Hebrew has no article and the accent divides the clause after \"seven weeks\". The KJV joins 7 and 62 weeks to reach \"the Messiah\"."],
+  ["Mark 16:9–20","Manuscript","the longer ending, printed as Mark's text","printed in double brackets as a later addition","Absent from Sinaiticus and Vaticanus, and different from Mark in style. Without it Mark ends at 16:8 with the women's silence."],
+  ["John 7:53–8:11","Manuscript","the woman taken in adultery, printed as John's text","in double brackets","Absent from P66, P75, Sinaiticus, Vaticanus and the early versions. Some later manuscripts place it in Luke."],
+  ["1 John 5:7–8","Manuscript","the Father, the Word, and the Holy Ghost: and these three are one","three that testify: the Spirit and the water and the blood","The Johannine Comma is not in any Greek manuscript before the late Middle Ages. It began in Latin commentary."],
+  ["Revelation 22:14","Manuscript","Blessed are they that do his commandments","Blessed are those who wash their robes","The two Greek readings look alike in uncial script. One speaks of obedience, the other of the Lamb's cleansing (7:14)."],
+  ["Revelation 22:19","Manuscript","God shall take away his part out of the book of life","God will take away his share in the tree of life","Every Greek manuscript reads \"tree\". \"Book\" comes from Erasmus translating the Latin back into Greek."]
+];
+
+const cssVar = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+
+// Category bars per testament
+(function(){
+  const box = document.getElementById('catBars');
+  for (const t of ["OT","NT"]) {
+    const c = CATS[t]; const total = Object.values(c).reduce((a,b)=>a+b,0);
+    const row = document.createElement('div'); row.className = 'barrow';
+    const bar = document.createElement('div'); bar.className = 'stackbar';
+    bar.setAttribute('role','img');
+    bar.setAttribute('aria-label', t + ': ' + CAT_ORDER.map(([k,l])=>l+' '+Math.round(100*c[k]/total)+'%').join(', '));
+    for (const [k,label,v] of CAT_ORDER) {
+      const i = document.createElement('i'); i.style.width = (100*c[k]/total)+'%'; i.style.background = 'var('+v+')';
+      i.title = label + ': ' + c[k] + ' (' + Math.round(100*c[k]/total) + '%)'; bar.appendChild(i);
+    }
+    row.innerHTML = '<span>' + (t==="OT" ? "Old Test." : "New Test.") + '</span>';
+    row.appendChild(bar);
+    const n = document.createElement('span'); n.className='num'; n.textContent = total.toLocaleString(); row.appendChild(n);
+    box.appendChild(row);
+  }
+  const note = document.createElement('p'); note.className='note';
+  note.textContent = 'Manuscript differences are 6% of Old Testament flags and 61% of New Testament flags.';
+  box.appendChild(note);
+  const lg = document.getElementById('catLegend');
+  lg.innerHTML = CAT_ORDER.map(([k,l,v]) => '<span><i style="background:var('+v+')"></i>'+l+'</span>').join('');
+})();
+
+// Severity bars (log-free, linear against the largest)
+(function(){
+  const box = document.getElementById('sevBars'); const max = SEV[0][2];
+  for (const [name,desc,n,v] of SEV) {
+    const r = document.createElement('div'); r.className='sevrow';
+    r.innerHTML = '<span>'+name+' <span class="note">'+desc+'</span></span>' +
+      '<div class="track" role="img" aria-label="'+name+': '+n+'"><i style="width:'+Math.max(0.6,100*n/max)+'%;background:var('+v+')"></i></div>' +
+      '<span class="num">'+n.toLocaleString()+'</span>';
+    box.appendChild(r);
+  }
+})();
+
+// Major differences
+(function(){
+  const box = document.getElementById('major');
+  for (const [ref,kind,kjv,mine,note] of MAJOR) {
+    const r = document.createElement('div'); r.className='mrow';
+    const a = document.createElement('div'); a.className='mref'; a.textContent = ref;
+    const s = document.createElement('small'); s.textContent = kind; a.appendChild(s);
+    const b = document.createElement('div'); b.className='mbody';
+    const dl = document.createElement('dl'); dl.className='pair'; dl.style.margin='0';
+    dl.innerHTML = '<dt>KJV</dt><dd class="kjv"></dd><dt>Source</dt><dd></dd>';
+    dl.children[1].textContent = kjv; dl.children[3].textContent = mine;
+    const p = document.createElement('p'); p.className='note'; p.textContent = note;
+    b.append(dl,p); r.append(a,b); box.appendChild(r);
+  }
+})();
+
+// Book table
+(function(){
+  const rows = BOOKS.map(b => b.concat([+(100*b[3]/b[2]).toFixed(1), b[3] ? Math.round(100*b[6]/b[3]) : 0]));
+  let key = 7, dir = -1, filter = 'all';
+  const tbody = document.getElementById('books');
+  const maxRate = Math.max(...rows.map(r=>r[7]));
+  function render(){
+    const list = rows.filter(r => filter==='all' || r[1]===filter).slice()
+      .sort((a,b) => (typeof a[key]==='string' ? a[key].localeCompare(b[key]) : a[key]-b[key]) * dir);
+    tbody.innerHTML = list.map(r =>
+      '<tr class="'+r[1].toLowerCase()+'"><td>'+r[0]+'</td><td>'+r[2].toLocaleString()+'</td><td>'+r[3]+'</td>' +
+      '<td class="rate"><i style="width:'+(48*r[7]/maxRate).toFixed(1)+'px"></i>'+r[7].toFixed(1)+'</td>' +
+      '<td class="'+(r[4]?'s2':'')+'">'+r[4]+'</td><td class="'+(r[5]?'s3':'')+'">'+(r[5]||'·')+'</td><td>'+r[8]+'%</td></tr>'
+    ).join('');
+  }
+  document.querySelectorAll('th button').forEach(btn => btn.addEventListener('click', () => {
+    const k = +btn.dataset.k;
+    if (k === key) dir = -dir; else { key = k; dir = (k===0) ? 1 : -1; }
+    document.querySelectorAll('th button').forEach(b => b.removeAttribute('aria-sort'));
+    btn.setAttribute('aria-sort', dir === 1 ? 'ascending' : 'descending');
+    render();
+  }));
+  const fb = {all:'fAll', OT:'fOT', NT:'fNT'};
+  for (const [f,id] of Object.entries(fb)) document.getElementById(id).addEventListener('click', () => {
+    filter = f; for (const i of Object.values(fb)) document.getElementById(i).setAttribute('aria-pressed', i===id ? 'true':'false'); render();
+  });
+  render();
+})();
+</script>
