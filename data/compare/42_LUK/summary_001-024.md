@@ -9,7 +9,7 @@
 ## Systematic
 
 - **Textual base.** As in Matthew and Mark, most differences come from the Textus Receptus behind the KJV. In Luke the TR:
-  - harmonises with Matthew and Mark (5:39-type additions, 11:2–4, 19:45, 20:23, 22:64, 23:38),
+  - harmonises with Matthew and Mark (11:2–4, 19:45, 20:23, 22:64, 23:38),
   - imports whole verses (17:36 from Mt 24:40, 23:17 from Mk 15:6), and
   - adds liturgical endings ("Amen" at 24:53).
 - **Passages SBLGNT brackets but the KJV prints without mark:**
