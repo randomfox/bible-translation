@@ -96,9 +96,9 @@ WHERE d.severity = 3 ORDER BY b.id, d.chapter, d.verse;
 
 ## Sources and licences
 
-The `meta` table lists these as well.
+The full terms are in [LICENSE.md](LICENSE.md). The `meta` table carries them too: `license`, `license_spdx` (`CC0-1.0`) and the `attribution_nt`, `attribution_ot` and `attribution_kjv` keys.
 
-- **Old Testament:** Westminster Leningrad Codex, through the Open Scriptures Hebrew Bible. The text is in the public domain.
-- **New Testament:** SBL Greek New Testament, CC BY 4.0. Attribution is required if you redistribute `source_verses`. Romans 16:25–27, which the SBLGNT leaves out, comes from its apparatus.
-- **KJV:** from eBible.org. It is public domain except in the UK, where it is under Crown patent.
-- **Translation and comparison notes:** produced in this project. No licence has been set yet.
+- **Translation and comparison data:** the English translation, the `differences`, `book_notes` and the database structure are dedicated to the public domain under **CC0 1.0**. You may use them for anything, without credit.
+- **New Testament:** SBL Greek New Testament, © 2010 Society of Biblical Literature and Logos Bible Software, **CC BY 4.0**. Romans 16:25–27, which the SBLGNT leaves out, comes from its apparatus. The English New Testament is translated from this text, so an app that ships `source_verses` or the New Testament translation should show the `attribution_nt` credit, for example on its About screen.
+- **Old Testament:** Westminster Leningrad Codex, through the Open Scriptures Hebrew Bible. The text is in the public domain. The credit is in `attribution_ot`.
+- **KJV:** from eBible.org. It is public domain except in the UK, where printing it is under Crown patent.

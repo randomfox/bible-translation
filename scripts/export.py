@@ -215,7 +215,21 @@ def main():
                      "Romans 16:25-27 supplied from its apparatus (WH, Tregelles, NA28)",
         "source_kjv": "King James Version (1611/1769) from eBible.org; public domain outside the UK "
                       "(Crown patent applies in the UK)",
-        "source_tr": "Scrivener 1894 Textus Receptus, used for comparison only",
+        "source_tr": "Scrivener 1894 Textus Receptus (ed. Maurice A. Robinson), public domain; used for comparison only",
+        "license": "Translation, differences, verdicts, book notes and database structure: CC0 1.0 Universal "
+                   "(public domain dedication), https://creativecommons.org/publicdomain/zero/1.0/. "
+                   "Third-party texts keep their own terms; see the attribution_* keys and LICENSE.md.",
+        "license_spdx": "CC0-1.0",
+        "attribution_nt": "New Testament translated from the SBL Greek New Testament, (c) 2010 Society of Biblical "
+                          "Literature and Logos Bible Software, CC BY 4.0, https://creativecommons.org/licenses/by/4.0/ "
+                          "(source: https://github.com/LogosBible/SBLGNT). Changes: translated into English; verse "
+                          "references mapped to the KJV; Romans 16:25-27 added from the SBLGNT apparatus. Show this "
+                          "credit wherever the Greek text or the New Testament translation is distributed. "
+                          "SBL and Logos do not endorse this work.",
+        "attribution_ot": "Original work of the Open Scriptures Hebrew Bible available at "
+                          "https://github.com/openscriptures/morphhb. Hebrew text: Westminster Leningrad Codex, public domain.",
+        "attribution_kjv": "King James Version (1769 text) courtesy of the CrossWire Bible Society and eBible.org, "
+                           "https://ebible.org/. Public domain outside the UK; in the UK printing is under Crown letters patent.",
         "numbering": "verses use source numbering (Hebrew/SBLGNT); kjv_chapter/kjv_verse and verse_map give the KJV equivalent",
         "translation_marks": "[[ ]] passage judged a later addition; [ ] doubtful words",
         "preferred": "translation = this translation's reading is what the text most likely means; "
