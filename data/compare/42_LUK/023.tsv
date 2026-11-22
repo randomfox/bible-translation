@@ -1,7 +1,7 @@
 ref	category	severity	kjv	mine	note
 23:15	TEXT	1	for I sent you to him	for he sent him back to us	TR "anepempsa gar hymas pros auton" against "anepempsen gar auton pros hemas" (P75, Sinaiticus, B).
 23:17	TEXT	2	(For of necessity he must release one unto them at the feast.)	(absent)	Absent from P75, Vaticanus, A; appears at different places in other manuscripts, a sign of insertion from Mk 15:6 / Mt 27:15.
-23:34	TEXT	2	Then said Jesus, Father, forgive them; for they know not what they do.	[[And Jesus said, "Father, forgive them …"]]	The prayer is absent from P75, Vaticanus, D*, W and others; SBLGNT double-brackets it. The KJV prints it without mark. Its age and authenticity are debated.
+23:34	TEXT	2	Then said Jesus, Father, forgive them; for they know not what they do.	[[And Jesus said, "Father, forgive them …"]]	The prayer is absent from P75, Vaticanus, D*, W and others; SBLGNT double-brackets it. The KJV prints it without mark. Its age and authenticity are debated. Context: open; Luke's own style supports it (low confidence). Luke favours prayers to 'Father' (23:46) and parallels this prayer in Stephen's death (Acts 7:60), which supports authenticity; but early manuscripts lack it.
 23:38	TEXT	1	written over him in letters of Greek, and Latin, and Hebrew	an inscription over him	TR adds the three languages from Jn 19:20.
 23:42	TEXT	1	he said unto Jesus, Lord, remember me	he said, "Jesus, remember me	TR turns the vocative "Jesus" into "unto Jesus" and adds "Lord".
 23:47	INTERP	1	Certainly this was a righteous man	Certainly this man was innocent	"dikaios" in a verdict after Pilate's threefold "no guilt" means innocent; "righteous" is also defensible.
