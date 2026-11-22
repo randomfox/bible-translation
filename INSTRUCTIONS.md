@@ -1,8 +1,8 @@
 # Translation agent instructions
 
 You are translating part of the Bible directly from the original languages into English, then
-comparing your translation with the King James Version (KJV). Project root:
-`/home/micah/code/claude/bible-translation`. All paths below are relative to it.
+comparing your translation with the King James Version (KJV). All paths below are relative to the
+repository root.
 
 ## Inputs (read-only)
 
