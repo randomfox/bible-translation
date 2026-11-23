@@ -104,15 +104,31 @@ fun App(db: BibleDb, link: Uri? = null, onLinkOpened: () -> Unit = {}) {
         AppState(context.getSharedPreferences("app", Context.MODE_PRIVATE), db, UserNotes(context.applicationContext))
     }
     val library = remember { Library(context.applicationContext, db) }
+    var notice by remember { mutableStateOf<LinkNotice?>(null) }
     LaunchedEffect(link) {
         if (link == null) return@LaunchedEffect
-        Links.parse(link, db.books)?.let { l ->
-            val pos = db.fromKjv(state.translationId, l.book, l.kjvChapter, l.kjvVerse ?: 1)
-            // a chapter link starts at the top, unless the chapter begins partway through one in this numbering
-            if (pos == null) state.goTo(l.book, 1)
-            else state.goTo(l.book, pos.first, pos.second.takeIf { l.kjvVerse != null || it > 1 })
-        }
+        Links.parse(link, db.books)?.let { notice = Links.open(it, db, state, library.catalog) }
         onLinkOpened()
+    }
+    notice?.let { n ->
+        androidx.compose.material3.AlertDialog({ notice = null },
+            confirmButton = {
+                if (n.entry?.file != null) androidx.compose.material3.TextButton({
+                    library.download(n.entry); notice = null; state.screen = Screen.Library
+                }) { androidx.compose.material3.Text("Download") }
+                else androidx.compose.material3.TextButton({ notice = null }) { androidx.compose.material3.Text("OK") }
+            },
+            dismissButton = if (n.entry?.file != null) ({
+                androidx.compose.material3.TextButton({ notice = null }) { androidx.compose.material3.Text("Not now") }
+            }) else null,
+            title = { androidx.compose.material3.Text(if (n.entry != null) "${n.entry.name} isn't downloaded" else "Unknown translation") },
+            text = {
+                androidx.compose.material3.Text(if (n.entry != null)
+                    "This link asked for the ${n.entry.name} (${n.entry.code}). It's open in the ${n.openedIn} instead, " +
+                        "at the same passage. Download the ${n.entry.code} to read it there."
+                else "This link asked for a translation called \"${n.code}\", which Bible Reader doesn't have. The " +
+                    "reference was read as a KJV reference and opened in the ${n.openedIn}.")
+            })
     }
     BackHandler(state.screen != Screen.Reader && state.screen !is Screen.EditNote) {
         state.screen = when (val s = state.screen) {

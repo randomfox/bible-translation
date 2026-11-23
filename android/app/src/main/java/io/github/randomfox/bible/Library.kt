@@ -47,6 +47,8 @@ import java.util.zip.GZIPInputStream
 data class CatalogEntry(
     val id: Int, val code: String, val name: String, val description: String, val license: String,
     val version: String, val sort: Int, val file: String?, val size: Long, val sha256: String?, val bundled: Boolean,
+    /** "kjv" or "original" (Hebrew Bible / SBL Greek New Testament numbering), for links naming it. */
+    val numbering: String = "kjv",
 )
 
 /** Fetches the catalog and downloads, checks and installs translation packs. Downloads outlive the screen. */
@@ -71,7 +73,8 @@ class Library(private val context: Context, private val db: BibleDb) {
             val o = list.getJSONObject(i)
             CatalogEntry(o.getInt("id"), o.getString("code"), o.getString("name"), o.getString("description"),
                 o.getString("license"), o.getString("version"), o.getInt("sort"), o.optString("file").ifEmpty { null },
-                o.optLong("size"), o.optString("sha256").ifEmpty { null }, o.optBoolean("bundled"))
+                o.optLong("size"), o.optString("sha256").ifEmpty { null }, o.optBoolean("bundled"),
+                o.optString("numbering", "kjv"))
         }.sortedBy { it.sort }
     }
 

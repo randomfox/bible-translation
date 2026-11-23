@@ -23,11 +23,32 @@ Other apps can open a passage with a link. Bible Year uses one to open each day'
 ```
 biblereader://BOOK/CHAPTER
 biblereader://BOOK/CHAPTER/VERSE
+biblereader://BOOK/CHAPTER/VERSE?translation=CODE
 ```
 
-For example `biblereader://JOH/3` or `biblereader://JOH/3/16`. BOOK can be the book's code (`JOH`), abbreviation (`John`), name (`1 John` or `1John`) or number from 1 to 66 (`43`), in any case. A chapter link opens the chapter at the top. A verse link scrolls to the verse and highlights it.
+For example `biblereader://JOH/3`, `biblereader://JOH/3/16` or `biblereader://PSA/51/3?translation=CT`. BOOK can be the book's code (`JOH`), abbreviation (`John`), name (`1 John` or `1John`) or number from 1 to 66 (`43`), in any case. A chapter link opens the chapter at the top. A verse link scrolls to the verse and highlights it.
 
-### References are in KJV numbering, whichever translation is open
+### Choosing the translation
+
+Add `?translation=CODE` to open the passage in a particular translation. CODE is one of the codes on the Translations screen, in any case: `CT`, `KJV`, `BSB`, `WEB`, `YLT`, `HEB-GRK` or `TR`. **The chapter and verse are then read in that translation's own numbering**, and the app switches to it.
+
+| Link | Opens |
+|:--|:--|
+| `biblereader://MAL/3/19?translation=CT` | Claude Translation, Malachi 3:19 |
+| `biblereader://MAL/4?translation=KJV` | KJV, Malachi 4 |
+| `biblereader://PSA/51/3?translation=CT` | Claude Translation, Psalm 51:3, which is KJV 51:1 |
+| `biblereader://MAT/17/21?translation=KJV` | KJV, Matthew 17:21 |
+| `biblereader://MAT/17/21?translation=CT` | Claude Translation, Matthew 17:22, the next verse it has |
+
+The same rules apply within the translation as below: a verse it leaves out opens the next verse it has, and a chapter past the end of the book opens chapter 1.
+
+**If the translation isn't downloaded**, the passage opens in the translation being read, and a prompt offers to download the one the link asked for. The reference is still read in the named translation's numbering, using the `numbering` field of the catalog the app last fetched: `original` for the Claude Translation and Hebrew & Greek, `kjv` for the rest. So `biblereader://MAL/3/24?translation=HEB-GRK` opens KJV Malachi 4:6 for someone reading the KJV. The catalog is refreshed only when the Translations screen opens, so an app that has never opened it reads the reference as KJV.
+
+**An unknown code**, such as `?translation=NIV`, opens the passage in the translation being read, reading the reference as KJV, and says the translation isn't available.
+
+The WEB uses KJV numbering except for the Romans doxology, which it prints at 14:24–26 where the KJV has 16:25–27.
+
+### Without a translation, references are in KJV numbering
 
 The chapter and verse in a link are always read as a KJV reference, and Bible Reader opens the same text in the translation you are reading. It finds it through the KJV key that every verse in every translation carries, the same way it lines up translations for comparison.
 

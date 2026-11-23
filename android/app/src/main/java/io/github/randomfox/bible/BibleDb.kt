@@ -237,6 +237,15 @@ class BibleDb private constructor(private val db: SQLiteDatabase) {
             "ORDER BY k.kjv_chapter, k.kjv_verse, v.chapter, v.verse LIMIT 1", tid, book, kjvChapter, kjvChapter, kjvVerse
     ) { it.getInt(0) to it.getInt(1) }.firstOrNull()
 
+    /**
+     * A reference in a translation's own numbering: the verse itself, or the next one it has (a verse it leaves
+     * out, or one past the chapter's end). Null if the chapter is past the end of the book.
+     */
+    fun position(tid: Int, book: Int, chapter: Int, verse: Int): Pair<Int, Int>? = db.list(
+        "SELECT chapter, verse FROM verses WHERE translation_id=? AND book_id=? AND (chapter>? OR (chapter=? AND verse>=?)) " +
+            "ORDER BY chapter, verse LIMIT 1", tid, book, chapter, chapter, verse
+    ) { it.getInt(0) to it.getInt(1) }.firstOrNull()
+
     fun search(query: String, tid: Int, limit: Int = 500): List<SearchHit> {
         val match = ftsQuery(query) ?: return emptyList()
         return db.list(

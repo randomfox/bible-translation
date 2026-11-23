@@ -73,6 +73,9 @@ class Translation:
     attribution: str
     markup: str
     searchable: bool
+    # Verse numbering, for links naming a translation that isn't installed: "kjv", or "original" for the numbering
+    # of the Hebrew Bible and the SBL Greek New Testament (the Claude Translation and Hebrew & Greek)
+    numbering: str = "kjv"
     # (book_id, chapter, verse, text, [(kjv_chapter, kjv_verse), ...])
     verses: list = field(default_factory=list)
     notes: list = field(default_factory=list)       # dict rows, keyed by KJV reference
@@ -90,7 +93,7 @@ def _keys(src, table_filter=""):
 def load_ft(src, meta):
     keys = _keys(src)
     t = Translation(
-        id=1, code="CT", name="Claude Translation", language="en",
+        id=1, code="CT", name="Claude Translation", language="en", numbering="original",
         description="Made by Claude, Anthropic's AI model, and not reviewed by human scholars, so check important "
                     "passages against other translations. A new translation from the Hebrew, Aramaic and Greek, made "
                     "with attention to the original "
@@ -134,7 +137,7 @@ def load_orig(src, meta):
     kv0 = {(b, c, v): (kc, kv) for b, c, v, kc, kv in
            src.execute("SELECT book_id, chapter, verse, kjv_chapter, kjv_verse FROM verses")}
     t = Translation(
-        id=3, code="HEB-GRK", name="Hebrew & Greek", language="hbo,grc",
+        id=3, code="HEB-GRK", name="Hebrew & Greek", language="hbo,grc", numbering="original",
         description="The texts the Claude Translation was made from: the Westminster Leningrad Codex for the Old "
                     "Testament and the SBL Greek New Testament for the New. (K) marks the written text (ketiv) and "
                     "[Q: ] the reading tradition (qere).",
@@ -259,7 +262,8 @@ def main():
         raw = (assets / "core.db") if bundled else dist / f"{t.code}.db"
         version = write_pack(t, sort, books, raw)
         entry = {"id": t.id, "code": t.code, "name": t.name, "language": t.language, "description": t.description,
-                 "license": t.license, "version": version, "sort": sort, "verses": len(t.verses)}
+                 "license": t.license, "version": version, "sort": sort, "verses": len(t.verses),
+                 "numbering": t.numbering}
         if bundled:
             (assets / "core.version").write_text(version)
             entry["bundled"] = True
