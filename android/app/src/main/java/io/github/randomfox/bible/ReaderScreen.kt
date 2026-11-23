@@ -91,6 +91,7 @@ import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -132,7 +133,9 @@ fun ReaderScreen(db: BibleDb, state: AppState) {
     val others = state.compare.filter { it != tid && db.translations.any { t -> t.id == it } }
 
     LaunchedEffect(pager, pages) {
-        snapshotFlow { pager.settledPage }.collect { p ->
+        // drop(1): the first value is just the page the pager started on. If a link or jump changed the position
+        // in the meantime (e.g. a biblereader:// link on a cold start), that stale page must not overwrite it.
+        snapshotFlow { pager.settledPage }.drop(1).collect { p ->
             val ref = pages[p]
             if (ref.book != state.book || ref.chapter != state.chapter) {
                 state.book = ref.book; state.chapter = ref.chapter; state.save()
