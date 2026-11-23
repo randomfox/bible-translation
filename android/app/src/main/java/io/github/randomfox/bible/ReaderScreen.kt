@@ -192,6 +192,7 @@ fun ReaderScreen(db: BibleDb, state: AppState) {
                             DropdownMenuItem({ Text("Translation") }, { menu = false; pickTranslation = true })
                             DropdownMenuItem({ Text(if (others.isEmpty()) "Compare translations" else "Compare translations ✓") },
                                 { menu = false; pickCompare = true })
+                            DropdownMenuItem({ Text("My notes") }, { menu = false; state.screen = Screen.MyNotes })
                             DropdownMenuItem({ Text("Download translations") }, { menu = false; state.screen = Screen.Library })
                             DropdownMenuItem({ Text("Text size") }, { menu = false; textSize = true })
                             DropdownMenuItem({ Text("About ${db.book(current.book).name}") },
@@ -256,10 +257,17 @@ private fun ChapterPage(
     selected: Verse?, onTap: (Verse) -> Unit,
 ) {
     val c = LocalBibleColors.current
-    val data by produceState<Pair<List<Verse>, Map<Long, List<Pair<Translation, Verse>>>>?>(null, translation.id, ref, others) {
+    val data by produceState<Pair<List<Verse>, Map<Long, List<Pair<Translation, Verse>>>>?>(null, translation.id, ref, others,
+        state.notes.revision) {
         value = withContext(Dispatchers.IO) {
             val v = db.chapter(translation.id, ref.book, ref.chapter)
-            v to db.parallelChapter(translation.id, v, others)
+            val noteKeys = state.notes.keysInBook(ref.book)
+            val keys = if (noteKeys.isEmpty()) emptyMap() else db.chapterKeys(translation.id, ref.book, ref.chapter)
+            val marked = v.map { verse ->
+                if ((keys[verse.id] ?: listOf(verse.chapter to verse.verse)).any { it in noteKeys }) verse.copy(hasUserNote = true)
+                else verse
+            }
+            marked to db.parallelChapter(translation.id, v, others)
         }
     }
     val list = rememberLazyListState()
@@ -334,6 +342,9 @@ private fun verseLine(v: Verse, t: Translation, c: BibleColors): AnnotatedString
     if (v.id == 0L) withStyle(SpanStyle(color = c.muted, fontStyle = FontStyle.Italic, fontSize = 0.85.em)) {
         append("Not in the source text. The KJV has a verse here; tap for the note.")
     } else append(renderText(v.text, t.italicBrackets))
+    if (v.hasUserNote) withStyle(SpanStyle(color = c.verseNumber, fontSize = 0.7.em, baselineShift = BaselineShift(0.3f))) {
+        append(" ✎")
+    }
     if (v.noteCount > 0) withStyle(SpanStyle(color = c.severity[(v.maxSeverity - 1).coerceIn(0, 2)],
         fontSize = 0.6.em, baselineShift = BaselineShift(0.35f))) { append(" ●") }
 }
@@ -363,7 +374,8 @@ private fun VerseSheet(db: BibleDb, state: AppState, t: Translation, verse: Vers
     val clipboard = LocalClipboardManager.current
     val notes = remember(verse) { db.notes(verse, t.id) }
     val parallel = remember(verse) { db.parallel(verse) }
-    var tab by remember { mutableIntStateOf(if (notes.isNotEmpty()) 1 else 0) }
+    val mine = remember(verse, state.notes.revision) { state.notes.forKeys(verse.book, db.keys(verse)) }
+    var tab by remember { mutableIntStateOf(if (notes.isNotEmpty() || mine.isNotEmpty()) 1 else 0) }
     val ref = "${db.book(verse.book).name} ${verse.chapter}:${verse.verse}"
     val plain = verse.text.let { if (t.italicBrackets) it.replace("[", "").replace("]", "") else it }
     ModalBottomSheet(onDismiss, sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = false)) {
@@ -384,12 +396,18 @@ private fun VerseSheet(db: BibleDb, state: AppState, t: Translation, verse: Vers
             }
             TabRow(tab, Modifier.padding(top = 8.dp), containerColor = MaterialTheme.colorScheme.surfaceContainerLow) {
                 Tab(tab == 0, { tab = 0 }, text = { Text("Compare") })
-                Tab(tab == 1, { tab = 1 }, text = { Text(if (notes.isEmpty()) "Notes" else "Notes (${notes.size})") })
+                val count = notes.size + mine.size
+                Tab(tab == 1, { tab = 1 }, text = { Text(if (count == 0) "Notes" else "Notes ($count)") })
             }
             Column(Modifier.fillMaxWidth().verticalScroll(rememberScrollState()).padding(18.dp)) {
                 if (tab == 0) parallel.forEach { p -> ParallelBlock(db, p, verse, state.fontSize) }
-                else if (notes.isEmpty()) Text("No difference from the KJV is recorded for this verse.", color = c.muted)
-                else notes.forEach { NoteCard(it) }
+                else {
+                    UserNotesSection(db, state, verse, t.id, mine, onDismiss)
+                    Text("DIFFERENCES FROM THE KJV", Modifier.padding(top = 8.dp, bottom = 8.dp), color = c.muted,
+                        fontSize = 11.sp, fontWeight = FontWeight.SemiBold, letterSpacing = 0.08.em)
+                    if (notes.isEmpty()) Text("No difference from the KJV is recorded for this verse.", color = c.muted)
+                    else notes.forEach { NoteCard(it) }
+                }
                 Spacer(Modifier.height(32.dp))
             }
         }

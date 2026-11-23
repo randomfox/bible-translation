@@ -59,10 +59,14 @@ sealed interface Screen {
     data object Search : Screen
     data object About : Screen
     data object Library : Screen
+    data object MyNotes : Screen
+    /** Editing a note ([noteId] null for a new one) on a verse given by KJV key and by the reading translation's ref. */
+    data class EditNote(val noteId: Long?, val book: Int, val kjvChapter: Int, val kjvVerse: Int,
+                        val tid: Int, val chapter: Int, val verse: Int) : Screen
 }
 
 /** Reading position and settings, saved between launches. */
-class AppState(private val prefs: android.content.SharedPreferences, db: BibleDb) {
+class AppState(private val prefs: android.content.SharedPreferences, db: BibleDb, val notes: UserNotes) {
     var translationId by mutableIntStateOf(prefs.getInt("tid", BibleDb.CORE_ID).takeIf { db.isInstalled(it) } ?: BibleDb.CORE_ID)
     var book by mutableIntStateOf(prefs.getInt("book", 43))
     var chapter by mutableIntStateOf(prefs.getInt("chapter", 1))
@@ -96,7 +100,9 @@ class AppState(private val prefs: android.content.SharedPreferences, db: BibleDb
 @Composable
 fun App(db: BibleDb, link: Uri? = null, onLinkOpened: () -> Unit = {}) {
     val context = LocalContext.current
-    val state = remember { AppState(context.getSharedPreferences("app", Context.MODE_PRIVATE), db) }
+    val state = remember {
+        AppState(context.getSharedPreferences("app", Context.MODE_PRIVATE), db, UserNotes(context.applicationContext))
+    }
     val library = remember { Library(context.applicationContext, db) }
     LaunchedEffect(link) {
         if (link == null) return@LaunchedEffect
@@ -108,7 +114,7 @@ fun App(db: BibleDb, link: Uri? = null, onLinkOpened: () -> Unit = {}) {
         }
         onLinkOpened()
     }
-    BackHandler(state.screen != Screen.Reader) {
+    BackHandler(state.screen != Screen.Reader && state.screen !is Screen.EditNote) {
         state.screen = when (val s = state.screen) {
             is Screen.Chapters -> Screen.Books(db.book(s.book).nt)
             is Screen.BookInfo -> Screen.Chapters(s.book)
@@ -123,5 +129,7 @@ fun App(db: BibleDb, link: Uri? = null, onLinkOpened: () -> Unit = {}) {
         Screen.Search -> SearchScreen(db, state)
         Screen.About -> AboutScreen(db, state)
         Screen.Library -> LibraryScreen(db, state, library)
+        Screen.MyNotes -> MyNotesScreen(db, state)
+        is Screen.EditNote -> NoteEditorScreen(db, state, s)
     }
 }

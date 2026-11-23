@@ -10,6 +10,7 @@ Bible Reader is an Android app for the translations in this repository. The Clau
   - **Compare** shows the verse in every translation, the Hebrew or Greek included. Verses are matched through KJV numbering, so Malachi 3:19 in the Hebrew numbering lines up with KJV Malachi 4:1.
   - **Notes** shows every recorded difference from the KJV: its severity and category, both readings, the most likely meaning with its confidence, and the reasoning behind it.
 - **Dots after verses** mark recorded differences. A light dot is a nuance, amber a notable change, and red a major one.
+- **Your own notes:** in a verse's Notes tab, tap **+ Add note**. Notes use Markdown: `# headings`, `**bold**`, `*italic*`, `- lists`, `1. numbered lists`, `> quotes`, `` `code` ``, `~~strike~~`, and `---` rules. The editor has a toolbar for these and a **Preview** tab. A ✎ after a verse marks your note. Notes are tied to the KJV verse key, so a note shows under the same verse in every translation. **⋮ → My notes** lists them all, jumps to any one, and **Share all** exports them as one Markdown document. They're stored in their own database (`user.db`), separate from the translations, so updating or removing a translation never touches them, and Android's backup includes them.
 - **Search:** full text search of the English translations. Use quotes for an exact phrase.
 - **Other:** text size, notes on each book, and an About screen with each translation's licence and attribution.
 
@@ -74,7 +75,7 @@ The app has the `INTERNET` permission and uses it only for translations:
 
 - **When:** only when you open the Translations screen (⋮ → Download translations, or **Get more**), which fetches `catalog.json`, and when you tap **Download** or **Update**, which fetches that translation's pack. Nothing runs in the background or at startup.
 - **Where:** only the GitHub release [`translations`](https://github.com/randomfox/bible-translation/releases/tag/translations) on github.com, which redirects downloads to githubusercontent.com.
-- **What is sent:** ordinary HTTPS requests for those files. There is no account, analytics, advertising, crash reporting or tracking, and nothing you read, note or search leaves the phone. GitHub sees your IP address, as with any download.
+- **What is sent:** ordinary HTTPS requests for those files. There is no account, analytics, advertising, crash reporting or tracking, and nothing you read, write in your notes or search leaves the phone. GitHub sees your IP address, as with any download.
 - **Offline:** reading, comparing, notes and search need no connection. The Claude Translation is built in, and downloaded translations stay on the phone.
 
 ## How translations are stored and downloaded

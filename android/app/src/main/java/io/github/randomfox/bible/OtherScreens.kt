@@ -207,39 +207,6 @@ fun BookInfoScreen(db: BibleDb, state: AppState, bookId: Int) {
     }
 }
 
-/** Enough Markdown for the book notes: headings, bullets, **bold**, `code`, tables as plain rows. */
-@Composable
-private fun Markdown(md: String) {
-    val c = LocalBibleColors.current
-    for (raw in md.lines()) {
-        val line = raw.trimEnd()
-        when {
-            line.isBlank() -> Spacer(Modifier.height(8.dp))
-            line.startsWith("#") -> Text(inline(line.trimStart('#').trim()), Modifier.padding(top = 10.dp, bottom = 4.dp),
-                style = if (line.startsWith("# ")) MaterialTheme.typography.titleLarge else MaterialTheme.typography.titleMedium,
-                color = c.verseNumber)
-            line.matches(Regex("^\\|[-:| ]+\\|$")) -> {}
-            line.startsWith("|") -> Text(inline(line.trim('|').split("|").joinToString("  ·  ") { it.trim() }),
-                Modifier.padding(vertical = 2.dp), fontSize = 14.sp)
-            line.trimStart().startsWith("- ") || line.trimStart().startsWith("* ") -> Row(Modifier.padding(vertical = 2.dp)) {
-                Text("•  ", color = c.verseNumber)
-                Text(inline(line.trimStart().drop(2)), fontSize = 15.sp, lineHeight = 21.sp)
-            }
-            else -> Text(inline(line), Modifier.padding(vertical = 2.dp), fontSize = 15.sp, lineHeight = 21.sp)
-        }
-    }
-}
-
-private fun inline(s: String): AnnotatedString = buildAnnotatedString {
-    var bold = false
-    var i = 0
-    while (i < s.length) {
-        if (s.startsWith("**", i)) { bold = !bold; i += 2; continue }
-        if (s[i] == '`') { i++; continue }
-        if (bold) withStyle(SpanStyle(fontWeight = FontWeight.SemiBold)) { append(s[i]) } else append(s[i])
-        i++
-    }
-}
 
 @Composable
 fun SearchScreen(db: BibleDb, state: AppState) {

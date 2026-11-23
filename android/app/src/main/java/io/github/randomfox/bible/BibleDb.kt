@@ -23,7 +23,7 @@ data class ChapterRef(val book: Int, val chapter: Int)
 /** One row in a chapter. [id] is 0 for a verse the KJV has but this translation's source lacks. */
 data class Verse(
     val id: Long, val book: Int, val chapter: Int, val verse: Int, val text: String,
-    val noteCount: Int = 0, val maxSeverity: Int = 0,
+    val noteCount: Int = 0, val maxSeverity: Int = 0, val hasUserNote: Boolean = false,
 )
 
 data class Note(
@@ -199,6 +199,24 @@ class BibleDb private constructor(private val db: SQLiteDatabase) {
         }
         return out
     }
+
+    /** The KJV references a verse is tied to (for a gap row, its own reference). */
+    fun keys(verse: Verse): List<Pair<Int, Int>> = if (verse.id == 0L) listOf(verse.chapter to verse.verse)
+    else db.list("SELECT kjv_chapter, kjv_verse FROM verse_keys WHERE verse_id=? ORDER BY kjv_chapter, kjv_verse",
+        verse.id) { it.getInt(0) to it.getInt(1) }
+
+    /** KJV references for every verse of a chapter, by verse id. */
+    fun chapterKeys(tid: Int, book: Int, chapter: Int): Map<Long, List<Pair<Int, Int>>> =
+        db.list("SELECT v.id, k.kjv_chapter, k.kjv_verse FROM verses v JOIN verse_keys k ON k.verse_id=v.id " +
+            "WHERE v.translation_id=? AND v.book_id=? AND v.chapter=?", tid, book, chapter) {
+            it.getLong(0) to (it.getInt(1) to it.getInt(2))
+        }.groupBy({ it.first }, { it.second })
+
+    /** The first verse of a translation tied to a KJV reference. */
+    fun findByKey(tid: Int, book: Int, kc: Int, kv: Int): Pair<Int, Int>? =
+        db.list("SELECT v.chapter, v.verse FROM verse_keys k JOIN verses v ON v.id=k.verse_id WHERE k.book_id=? " +
+            "AND k.kjv_chapter=? AND k.kjv_verse=? AND v.translation_id=? ORDER BY v.chapter, v.verse LIMIT 1",
+            book, kc, kv, tid) { it.getInt(0) to it.getInt(1) }.firstOrNull()
 
     /** Where a chapter/verse in one translation falls in another translation's numbering. */
     fun mapPosition(fromTid: Int, book: Int, chapter: Int, verse: Int, toTid: Int): Pair<Int, Int>? {
