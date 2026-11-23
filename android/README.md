@@ -15,6 +15,55 @@ Bible Reader is an Android app for the translations in this repository. The Clau
 
 Verses the KJV has but the critical text lacks, such as Matthew 17:21, appear in the Claude Translation as marked gaps that open their note.
 
+## Opening a passage from another app
+
+Other apps can open a passage with a link. Bible Year uses one to open each day's readings.
+
+```
+biblereader://BOOK/CHAPTER
+biblereader://BOOK/CHAPTER/VERSE
+```
+
+For example `biblereader://JOH/3` or `biblereader://JOH/3/16`. BOOK can be the book's code (`JOH`), abbreviation (`John`), name (`1 John` or `1John`) or number from 1 to 66 (`43`), in any case. A chapter link opens the chapter at the top. A verse link scrolls to the verse and highlights it.
+
+### References are in KJV numbering, whichever translation is open
+
+The chapter and verse in a link are always read as a KJV reference, and Bible Reader opens the same text in the translation you are reading. It finds it through the KJV key that every verse in every translation carries, the same way it lines up translations for comparison.
+
+For the KJV, BSB, YLT and TR, a link opens exactly the reference it names. The WEB differs in only 3 verses. But the Claude Translation and the Hebrew & Greek texts follow the numbering of the Hebrew Bible and the SBL Greek New Testament, which differs from the KJV in about 2,000 verses. There, a link can open a different chapter or verse number from the one it names:
+
+| Link | Opens in the Claude Translation | Why |
+|:--|:--|:--|
+| `biblereader://MAL/4` | Malachi 3:19 | The Hebrew Bible has no Malachi 4. KJV 4:1–6 is Hebrew 3:19–24. |
+| `biblereader://JOE/2/28` | Joel 3:1 | KJV Joel 2:28–32 is Hebrew Joel 3, and KJV Joel 3 is Hebrew Joel 4. |
+| `biblereader://DAN/4/1` | Daniel 3:31 | KJV Daniel 4:1–3 is Hebrew 3:31–33. |
+| `biblereader://GEN/32` | Genesis 32, at verse 2 | KJV Genesis 31:55 is Hebrew 32:1, so KJV chapter 32 begins at Hebrew verse 2. |
+| `biblereader://PSA/51` | Psalm 51, at the top | Hebrew verses 1–2 are the psalm's title and verse 3 is KJV verse 1. All three share KJV 51:1, and the link opens at the first. |
+| `biblereader://PSA/51/2` | Psalm 51:4 | Two verses ahead, because of the title. |
+| `biblereader://2CO/13/14` | 2 Corinthians 13:13 | KJV 13:14 is verse 13 in the SBL Greek New Testament. |
+| `biblereader://REV/13/1` | Revelation 12:18 | KJV 13:1 starts at 12:18 in the SBL Greek New Testament. |
+| `biblereader://MAT/17/21` | Matthew 17:22 | The SBL Greek New Testament has no 17:21, so the link opens the next verse it has. |
+
+In detail:
+
+- **A chapter link** opens at the top of the chapter that holds the KJV chapter's first verse. If that chapter starts partway through a chapter in this numbering, it scrolls to the verse where it starts and highlights it, as for Malachi 4.
+- **A verse link** highlights the verse that holds the KJV verse. Where several verses share one KJV verse, as in a psalm's title, it is the first of them.
+- **A KJV verse the translation leaves out** opens the next verse the translation has.
+- **A reference past the end of the book in KJV numbering** opens the book at chapter 1. For example, `biblereader://JOE/4`: Joel 4 exists only in the Hebrew numbering.
+- **Don't send a Hebrew- or Greek-numbered reference.** `biblereader://MAL/3/24` is read as KJV Malachi 3:24. KJV Malachi 3 has 18 verses, so the link opens the next KJV verse, 4:1, which is Malachi 3:19 in the Claude Translation, not 3:24.
+
+Switching to another translation afterwards keeps the verse, as usual.
+
+### Checking for Bible Reader from another app
+
+On Android 11 and later, an app can only see whether Bible Reader is installed if it lists the package in its manifest:
+
+```xml
+<queries>
+    <package android:name="io.github.randomfox.bible" />
+</queries>
+```
+
 ## Install
 
 Download the APK from the [latest release](https://github.com/randomfox/bible-translation/releases/latest) on your phone, open it, and allow installs from your browser or file manager when Android asks. The APK is signed with a development key, not a store key.

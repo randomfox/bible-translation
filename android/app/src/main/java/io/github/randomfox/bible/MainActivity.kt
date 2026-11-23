@@ -1,6 +1,8 @@
 package io.github.randomfox.bible
 
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
@@ -11,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -22,8 +25,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 
 class MainActivity : ComponentActivity() {
+    /** A biblereader:// link waiting to be opened, see [Links]. */
+    private var link by mutableStateOf<Uri?>(null)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        if (savedInstanceState == null) link = intent?.data // not again when the activity is recreated, e.g. on rotation
         enableEdgeToEdge()
         setContent {
             BibleTheme {
@@ -32,10 +39,15 @@ class MainActivity : ComponentActivity() {
                     val db by produceState<BibleDb?>(null) { value = BibleDb.open(context.applicationContext) }
                     val loaded = db
                     if (loaded == null) Box(Modifier.fillMaxSize(), Alignment.Center) { CircularProgressIndicator() }
-                    else App(loaded)
+                    else App(loaded, link) { link = null }
                 }
             }
         }
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        link = intent.data
     }
 }
 
@@ -82,10 +94,20 @@ class AppState(private val prefs: android.content.SharedPreferences, db: BibleDb
 }
 
 @Composable
-fun App(db: BibleDb) {
+fun App(db: BibleDb, link: Uri? = null, onLinkOpened: () -> Unit = {}) {
     val context = LocalContext.current
     val state = remember { AppState(context.getSharedPreferences("app", Context.MODE_PRIVATE), db) }
     val library = remember { Library(context.applicationContext, db) }
+    LaunchedEffect(link) {
+        if (link == null) return@LaunchedEffect
+        Links.parse(link, db.books)?.let { l ->
+            val pos = db.fromKjv(state.translationId, l.book, l.kjvChapter, l.kjvVerse ?: 1)
+            // a chapter link starts at the top, unless the chapter begins partway through one in this numbering
+            if (pos == null) state.goTo(l.book, 1)
+            else state.goTo(l.book, pos.first, pos.second.takeIf { l.kjvVerse != null || it > 1 })
+        }
+        onLinkOpened()
+    }
     BackHandler(state.screen != Screen.Reader) {
         state.screen = when (val s = state.screen) {
             is Screen.Chapters -> Screen.Books(db.book(s.book).nt)
