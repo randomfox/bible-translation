@@ -66,27 +66,24 @@ References use the translation's own numbering: Hebrew numbering in the Old Test
 | Ps 105:19; 118:26 | "his word"; "We bless you" | In 118:26 "Blessed is He Who comes" is capitalised; "you" is the worshippers. |
 | Prov 1; 8 | Wisdom speaking | Wisdom is personified, not identified with God. Some read Proverbs 8 as Christ. |
 | Prov 14:26; Eccl 9:1 | "his children"; "his hand" | |
-| Isa 7:15 | the child ("when he knows how to refuse the evil") | Isa 7:14 is capitalised, so the next verse is inconsistent. Worth aligning. |
 | Isa 8:16; 16:9–11; 21:9 | the prophet's voice | |
 | Isa 25:10–11; 44:18; 63:11a; Jer 14:17 | various | Referent unclear. |
-| Ezek 21:15; 21:32; 43:18 | "my son"; "he to whom judgment belongs"; "he" | 21:32 echoes Gen 49:10, which is now capitalised. Worth aligning. |
+| Ezek 21:15; 43:18 | "my son"; "he" | |
 | Hos 2:3; 12:5 | | |
 | Mic 3:2–3 | "my people" | |
-| Mic 5:5 | "he shall deliver us" (Hebrew numbering, KJV 5:6) | Just outside the listed passage, though it continues the same ruler's description. Worth aligning. |
 | Zech 2:12–13; 3:1; 4:9; 11:7–14; 14:5 | | The prophet as shepherd in chapter 11. "My mountains" in 14:5 may be Yahweh's. |
 | Nah 2:8 | "she" | Referent uncertain. |
-| John 3:29; 10:1–5 | the bridegroom; the shepherd in the parable | The parable figures stand for Jesus, but other parable figures are lowercase too. |
 | Rom 8:34 | "the one who died … who is at the right hand of God" | The referent is Christ, but "the one who" is lowercase elsewhere. |
 | 2 Thess 2:6–7 | the restrainer | Identity debated. Some read the Holy Spirit. |
 | Heb 2:6–8 | "him", "his control" | Ps 8 quoted of mankind, then applied to Jesus in 2:9. |
 | Rev 1:4 | "who" for the seven spirits | |
 | Rev 6:2 | the rider on the white horse | Usually not identified with Christ (contrast Rev 19:11). |
 
-## Inconsistencies to align
+## Inconsistencies aligned
 
-These are the clearest cases where one passage was capitalised and a closely linked one was not:
+Four places where one passage was capitalised and a closely linked one was not have been aligned (commit after `807f906`):
 
-1. **Isa 7:15** follows the capitalised Isa 7:14 but keeps "when he knows" lowercase.
-2. **Mic 5:5** (Hebrew) continues the ruler of Mic 5:1–4 but keeps "he shall deliver us" lowercase.
-3. **Ezek 21:32** echoes Gen 49:10 ("until he comes, the one to whom judgment belongs") but stays lowercase.
-4. **Parables:** the master in Luke 13:25–27 and Matt 10:25 is capitalised, but the shepherd in John 10:1–5 and the bridegroom in John 3:29 are not.
+1. **Isa 7:15:** "when He knows how to refuse the evil", following Isa 7:14.
+2. **Mic 5:5** (Hebrew numbering, KJV 5:6): "and He shall deliver us", continuing the ruler of Mic 5:1–4.
+3. **Ezek 21:32:** "until He comes, the One to Whom judgment belongs, and I will give it to Him", matching Gen 49:10, which it echoes.
+4. **Parable figures:** a figure is capitalised where the context itself identifies it as Jesus. So the master of the house in Luke 13:25–27 ("You taught in our streets") and Matt 10:25, the shepherd in John 10:2–4 ("I am the good shepherd", 10:11), and the bridegroom in John 3:29 ("He must increase", 3:30) are capitalised. The thief in John 10:1, the stranger in 10:5, and parable characters the context does not identify with Jesus, such as the bridegroom of Matt 25 or the son in the vineyard parable, stay lowercase.
