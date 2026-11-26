@@ -293,7 +293,9 @@ fun AboutScreen(db: BibleDb, state: AppState) {
                 Modifier.padding(top = 4.dp), lineHeight = 21.sp)
             Text("A dot after a verse marks a recorded difference: light for a nuance, amber for a notable change, " +
                 "red for a major one. A purple ◆ marks a contested passage, where scholars still debate the reading: " +
-                "its note gives a confidence level and the other possible meanings. ✎ marks your own note.",
+                "its note gives a confidence level and the other possible meanings. ✎ marks your own note. In a note's " +
+                "readings, a name in parentheses after a pronoun, as in \"he (Elhanan)\", says who is meant; it is not " +
+                "part of the text.",
                 Modifier.padding(top = 8.dp), lineHeight = 21.sp, color = c.muted)
             db.translations.forEach { t ->
                 HorizontalDivider(Modifier.padding(vertical = 16.dp), color = c.muted.copy(alpha = 0.25f))

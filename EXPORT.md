@@ -50,7 +50,7 @@ Sixteen KJV verses have no source verse because the source texts do not contain 
 |---|---|
 | `category` | What causes the difference: `TEXT` (different manuscript), `MEANING`, `INTERP`, `LEXICAL` (word sense), `ARCHAIC` (KJV English has shifted), `NAME` |
 | `severity` | 1 = a nuance; 2 = a notable change in sense; 3 = a change in what the passage says |
-| `kjv_reading` / `translation_reading` | The two wordings being compared |
+| `kjv_reading` / `translation_reading` | The two wordings being compared. Where a pronoun would be unclear out of context, the person or thing it refers to follows it in parentheses, e.g. "he (Elhanan) struck down Goliath". The parenthesis is an editorial aid, not part of either text. It is left out where the referent is uncertain, and in manuscript differences where one text names the person and the other has a pronoun |
 | `preferred` | `translation`: this translation's reading is what the text most likely means. `either`: the KJV reading is equally valid (34 cases where the evidence is balanced, including 13 contested passages judged open). `kjv`: reserved; no current difference prefers the KJV |
 | `preferred_reading` | The reading judged most likely. For ambiguous high-impact passages it is the context verdict, which may be fuller than the translation's own wording |
 | `confidence` | Set only where a context verdict was made (65 passages; `context` also lists the other possible meanings and who holds them). `high` means the context points clearly one way; `medium` means it favours one reading; `low` means it does not settle the question. NULL elsewhere |
