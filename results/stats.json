@@ -1,30 +1,30 @@
 {
  "books_touched": 66,
  "verses_translated": 31155,
- "flags": 2319,
- "flagged_verses": 2275,
- "flagged_verse_pct": 7.3,
+ "flags": 2316,
+ "flagged_verses": 2272,
+ "flagged_verse_pct": 7.29,
  "by_category": {
-  "INTERP": 611,
+  "INTERP": 610,
   "LEXICAL": 579,
-  "TEXT": 479,
+  "TEXT": 477,
   "MEANING": 292,
   "ARCHAIC": 251,
   "NAME": 107
  },
  "by_severity": {
   "1": 1970,
-  "2": 334,
-  "3": 15
+  "2": 333,
+  "3": 13
  },
  "by_testament": {
   "OT": {
    "LEXICAL": 497,
-   "INTERP": 512,
+   "INTERP": 511,
    "ARCHAIC": 228,
    "NAME": 100,
    "MEANING": 268,
-   "TEXT": 105
+   "TEXT": 103
   },
   "NT": {
    "TEXT": 374,
@@ -358,22 +358,22 @@
    "chapters_done": 29,
    "chapters": 29,
    "verses": 943,
-   "flagged_verses": 42,
-   "flags": 42,
+   "flagged_verses": 41,
+   "flags": 41,
    "by_category": {
     "ARCHAIC": 5,
     "MEANING": 3,
-    "INTERP": 15,
+    "INTERP": 14,
     "TEXT": 7,
     "NAME": 6,
     "LEXICAL": 6
    },
    "by_severity": {
     "sev1": 39,
-    "sev2": 3
+    "sev2": 2
    },
    "sim": {
-    "mine_kjv": 0.746,
+    "mine_kjv": 0.747,
     "mine_web": 0.813,
     "web_kjv": 0.809
    }
@@ -483,20 +483,20 @@
    "chapters_done": 42,
    "chapters": 42,
    "verses": 1070,
-   "flagged_verses": 71,
-   "flags": 71,
+   "flagged_verses": 70,
+   "flags": 70,
    "by_category": {
     "INTERP": 18,
     "LEXICAL": 30,
     "ARCHAIC": 2,
-    "TEXT": 5,
+    "TEXT": 4,
     "MEANING": 15,
     "NAME": 1
    },
    "by_severity": {
     "sev2": 17,
     "sev1": 51,
-    "sev3": 3
+    "sev3": 2
    },
    "sim": {
     "mine_kjv": 0.63,
@@ -510,20 +510,19 @@
    "chapters_done": 150,
    "chapters": 150,
    "verses": 2527,
-   "flagged_verses": 122,
-   "flags": 123,
+   "flagged_verses": 121,
+   "flags": 122,
    "by_category": {
     "INTERP": 45,
     "ARCHAIC": 12,
     "LEXICAL": 33,
     "NAME": 5,
-    "TEXT": 12,
+    "TEXT": 11,
     "MEANING": 16
    },
    "by_severity": {
     "sev1": 99,
-    "sev2": 23,
-    "sev3": 1
+    "sev2": 23
    },
    "sim": {
     "mine_kjv": 0.656,

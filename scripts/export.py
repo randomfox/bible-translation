@@ -27,6 +27,8 @@ EITHER = {
     ("John", "21:17"), ("Romans", "3:22"), ("Romans", "6:7"), ("Romans", "16:24"),
     ("Galatians", "2:16"), ("Ephesians", "1:15"), ("Hebrews", "1:2"), ("Hebrews", "11:1"),
     ("Revelation", "19:15"), ("Revelation", "20:4"),
+    # Context verdicts judged balanced in the 2026-11 review of contested passages
+    ("Daniel", "9:25"), ("Deuteronomy", "6:4"), ("Exodus", "21:22"), ("Ezekiel", "21:32"), ("Genesis", "26:4"), ("Genesis", "37:3"), ("Job", "13:15"), ("Job", "42:6"), ("Luke", "23:34"), ("Proverbs", "30:1"),
 }
 
 # NT verses where the SBLGNT numbering differs from the KJV (source ref -> KJV refs).
@@ -178,7 +180,8 @@ def main():
                 vd = verdicts.get((b["name"], ref))
                 if vd:
                     used_verdicts.add((b["name"], ref))
-                    preferred, reading, conf, ctx = "translation", vd["verdict"], vd["confidence"], vd["context"]
+                    preferred = "either" if (b["name"], ref) in EITHER else "translation"
+                    reading, conf, ctx = vd["verdict"], vd["confidence"], vd["context"]
                 elif (b["name"], ref) in EITHER:
                     preferred, reading, conf, ctx = "either", mine, None, None
                 else:
@@ -198,12 +201,13 @@ def main():
             continue
         bid = ids[vd["book"]]
         c, v = map(int, vd["ref"].split(":"))
-        kt = db.execute("SELECT text FROM kjv_verses WHERE book_id=? AND chapter=? AND verse=?", (bid, c, v)).fetchone()
-        tt = db.execute("SELECT text FROM verses WHERE book_id=? AND chapter=? AND verse=?", (bid, c, v)).fetchone()
+        tt = db.execute("SELECT text, kjv_chapter, kjv_verse FROM verses WHERE book_id=? AND chapter=? AND verse=?", (bid, c, v)).fetchone()
+        kc, kv = (tt[1], tt[2]) if tt and tt[1] else (c, v)
+        kt = db.execute("SELECT text FROM kjv_verses WHERE book_id=? AND chapter=? AND verse=?", (bid, kc, kv)).fetchone()
         db.execute("INSERT INTO differences (book_id,chapter,verse,kjv_chapter,kjv_verse,category,severity,"
                    "kjv_reading,translation_reading,preferred,preferred_reading,confidence,context,note) "
                    "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
-                   (bid, c, v, c, v, "INTERP", 1, kt[0] if kt else "", tt[0] if tt else "", "either",
+                   (bid, c, v, kc, kv, "INTERP", 1, kt[0] if kt else "", tt[0] if tt else "", "either",
                     vd["verdict"], vd["confidence"], vd["context"],
                     f"Ambiguous: {vd['question']}. After weighing the context this translation agrees with the KJV, so it is not counted as a difference."))
     meta = {

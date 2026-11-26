@@ -10,7 +10,7 @@ A new English translation of the 66-book Bible, made directly from the Hebrew, A
 |---|---|
 | **Bible Reader (Android)** | [Download the APK](https://github.com/randomfox/bible-translation/releases/latest). The Claude Translation is built in. More translations can be downloaded in the app. See [android/README.md](android/README.md). |
 | **The translation** | `data/translation/` holds one tab-separated file per chapter, `ref` then text. |
-| **Comparison with the KJV** | 2,319 recorded differences, each with a category, a severity, both readings and the evidence: `data/compare/`, `results/flags.tsv`, and the summary page `results/kjv-comparison.html` (open it in a browser). 65 ambiguous high-impact passages were decided from their context: `results/ambiguities.tsv`. |
+| **Comparison with the KJV** | 2,316 recorded differences, each with a category, a severity, both readings and the evidence: `data/compare/`, `results/flags.tsv`, and the summary page `results/kjv-comparison.html` (open it in a browser). 65 ambiguous high-impact passages were decided from their context, each with a confidence level and the other possible meanings: `results/ambiguities.tsv`. |
 | **Database** | `bible.sqlite` has the translation, the KJV, the source texts and the differences, with the reading each passage most likely means. See [EXPORT.md](EXPORT.md). |
 | **How it was made** | [INSTRUCTIONS.md](INSTRUCTIONS.md) gives the per-chapter method: translate from the source first, then compare with the KJV. `scripts/` holds the tools. |
 
@@ -25,9 +25,9 @@ A new English translation of the 66-book Bible, made directly from the Hebrew, A
 | | |
 |---|---|
 | Verses translated | 31,155, in Hebrew and SBLGNT numbering |
-| Recorded differences from the KJV | 2,319, in 7.3% of verses |
-| By severity | 1,970 nuances, 334 notable changes, 15 changes in what a passage says |
-| Most common causes | interpretation 611, word sense 579, manuscript differences 479 |
+| Recorded differences from the KJV | 2,316, in 7.3% of verses |
+| By severity | 1,970 nuances, 333 notable changes, 13 changes in what a passage says |
+| Most common causes | interpretation 610, word sense 579, manuscript differences 477 |
 
 ## Licence
 

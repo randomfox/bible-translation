@@ -50,13 +50,13 @@ Sixteen KJV verses have no source verse because the source texts do not contain 
 | `category` | What causes the difference: `TEXT` (different manuscript), `MEANING`, `INTERP`, `LEXICAL` (word sense), `ARCHAIC` (KJV English has shifted), `NAME` |
 | `severity` | 1 = a nuance; 2 = a notable change in sense; 3 = a change in what the passage says |
 | `kjv_reading` / `translation_reading` | The two wordings being compared |
-| `preferred` | `translation`: this translation's reading is what the text most likely means. `either`: the KJV reading is equally valid (21 cases where the evidence is balanced). `kjv`: reserved; no current difference prefers the KJV |
+| `preferred` | `translation`: this translation's reading is what the text most likely means. `either`: the KJV reading is equally valid (34 cases where the evidence is balanced, including 13 contested passages judged open). `kjv`: reserved; no current difference prefers the KJV |
 | `preferred_reading` | The reading judged most likely. For ambiguous high-impact passages it is the context verdict, which may be fuller than the translation's own wording |
-| `confidence` | Set only where a context verdict was made (65 passages). `high` means the context points clearly one way; `medium` means it favours one reading; `low` means it does not settle the question. NULL elsewhere |
+| `confidence` | Set only where a context verdict was made (65 passages; `context` also lists the other possible meanings and who holds them). `high` means the context points clearly one way; `medium` means it favours one reading; `low` means it does not settle the question. NULL elsewhere |
 | `context` | The contextual argument behind the verdict |
 | `note` | Manuscript evidence, grammar and other explanation |
 
-1 Chronicles 21:1 has a row with `preferred = 'either'`. After the context review, this translation agrees with the KJV there, so the row records the verdict but is not counted as a difference.
+Four verses have a row with `preferred = 'either'` that is not counted as a difference: 1 Chronicles 17:17, 1 Chronicles 21:1, Job 13:15 and Psalm 22:17 (KJV 22:16). After the context review this translation agrees with the KJV there, so the row records the verdict, its confidence and the other possible meanings.
 
 ## Example queries
 
