@@ -18,6 +18,9 @@ Pack tables (the app's library database has the same ones, plus an FTS4 table pe
   verse_keys    verse_id, book_id, kjv_chapter, kjv_verse.  How the same verse is matched across translations
   notes         differences from the KJV, keyed by KJV reference (CT only)
   book_notes    per-translation notes on a book (CT only)
+  note_spans    notes that cover a passage of several verses (CT only): the note sits at the first KJV verse
+                and applies to every verse up to end_chapter:end_verse. A separate table, so apps older than
+                0.5.0, which copy only the tables above, still install the pack and simply ignore it.
 
 Each translation keeps its own verse numbering; verse_keys tie every verse to one or more KJV references.
 To add a translation, write a loader that returns a Translation (vpl_loader does it for eBible.org texts),
@@ -61,6 +64,8 @@ CREATE TABLE notes (
   confidence TEXT, context TEXT, note TEXT NOT NULL);
 CREATE TABLE book_notes (translation_id INTEGER NOT NULL, book_id INTEGER NOT NULL,
   first_chapter INTEGER NOT NULL, last_chapter INTEGER NOT NULL, text TEXT NOT NULL);
+CREATE TABLE note_spans (translation_id INTEGER NOT NULL, book_id INTEGER NOT NULL,
+  kjv_chapter INTEGER NOT NULL, kjv_verse INTEGER NOT NULL, end_chapter INTEGER NOT NULL, end_verse INTEGER NOT NULL);
 """
 
 
@@ -82,6 +87,7 @@ class Translation:
     verses: list = field(default_factory=list)
     notes: list = field(default_factory=list)       # dict rows, keyed by KJV reference
     book_notes: list = field(default_factory=list)  # (book_id, first, last, markdown)
+    spans: list = field(default_factory=list)       # (book_id, kjv_chapter, kjv_verse, end_chapter, end_verse)
 
 
 def _keys(src, table_filter=""):
@@ -116,6 +122,8 @@ def load_ft(src, meta):
         t.notes.append(d)
     t.book_notes = list(src.execute("SELECT book_id, first_chapter, last_chapter, markdown FROM book_notes "
                                     "ORDER BY book_id, first_chapter"))
+    t.spans = list(src.execute("SELECT book_id, kjv_chapter, kjv_verse, end_kjv_chapter, end_kjv_verse FROM spans "
+                               "ORDER BY book_id, kjv_chapter, kjv_verse"))
     return t
 
 
@@ -232,6 +240,9 @@ def write_pack(t, sort, books, out):
         h.update(repr(sorted(d.items())).encode())
     db.executemany("INSERT INTO book_notes VALUES (?,?,?,?,?)", [(t.id, *bn) for bn in t.book_notes])
     h.update(repr(t.book_notes).encode())
+    db.executemany("INSERT INTO note_spans VALUES (?,?,?,?,?,?)", [(t.id, *s) for s in t.spans])
+    if t.spans:  # hashed only when present, so packs without spans keep their published version
+        h.update(repr(t.spans).encode())
     version = h.hexdigest()[:12]
     db.execute("INSERT INTO translations VALUES (?,?,?,?,?,?,?,?,?,?,?)",
                (t.id, t.code, t.name, t.language, t.description, t.license, t.attribution, t.markup,

@@ -12,6 +12,7 @@ Tables (see EXPORT.md for the full description):
   source_verses   Hebrew/Aramaic (WLC) and Greek (SBLGNT) text, source numbering
   differences     every flagged difference from the KJV, with the reading the text most likely means
   book_notes      the per-book comparison summaries (Markdown)
+  spans           differences that cover a passage of several verses, from the first KJV verse to the last
 """
 import csv, datetime, json, re, sqlite3, sys
 from pathlib import Path
@@ -29,6 +30,15 @@ EITHER = {
     ("Revelation", "19:15"), ("Revelation", "20:4"),
     # Context verdicts judged balanced in the 2026-11 review of contested passages
     ("Daniel", "9:25"), ("Deuteronomy", "6:4"), ("Exodus", "21:22"), ("Ezekiel", "21:32"), ("Genesis", "26:4"), ("Genesis", "37:3"), ("Job", "13:15"), ("Job", "42:6"), ("Luke", "23:34"), ("Proverbs", "30:1"),
+}
+
+# Differences that cover a whole passage. The difference is recorded at the passage's first verse;
+# (book, source ref of that verse) -> last KJV verse of the passage. Kept in their own table, "spans".
+SPANS = {
+    ("Mark", "16:9"): (16, 20),     # the longer ending
+    ("Luke", "22:43"): (22, 44),    # the angel and the sweat like drops of blood
+    ("John", "7:53"): (8, 11),      # the woman caught in adultery
+    ("1 John", "5:7"): (5, 8),      # the Johannine Comma (KJV 5:7 and the start of 5:8)
 }
 
 # NT verses where the SBLGNT numbering differs from the KJV (source ref -> KJV refs).
@@ -105,6 +115,12 @@ CREATE TABLE book_notes (
   first_chapter INTEGER NOT NULL, last_chapter INTEGER NOT NULL,
   markdown TEXT NOT NULL,
   PRIMARY KEY (book_id, first_chapter)
+);
+CREATE TABLE spans (                 -- a difference that covers a passage of several verses
+  book_id INTEGER NOT NULL REFERENCES books(id),
+  kjv_chapter INTEGER NOT NULL, kjv_verse INTEGER NOT NULL,          -- first verse: where the difference is recorded
+  end_kjv_chapter INTEGER NOT NULL, end_kjv_verse INTEGER NOT NULL,  -- last verse of the passage
+  PRIMARY KEY (book_id, kjv_chapter, kjv_verse)
 );
 """
 
@@ -210,6 +226,12 @@ def main():
                    (bid, c, v, kc, kv, "INTERP", 1, kt[0] if kt else "", tt[0] if tt else "", "either",
                     vd["verdict"], vd["confidence"], vd["context"],
                     f"Ambiguous: {vd['question']}. After weighing the context this translation agrees with the KJV, so it is not counted as a difference."))
+    for (book, ref), (ec, ev) in SPANS.items():
+        c, v = map(int, ref.split(":"))
+        row = db.execute("SELECT kjv_chapter, kjv_verse FROM differences WHERE book_id=? AND chapter=? AND verse=? "
+                         "ORDER BY severity DESC LIMIT 1", (ids[book], c, v)).fetchone()
+        assert row, f"span {book} {ref} has no difference to attach to"
+        db.execute("INSERT INTO spans VALUES (?,?,?,?,?)", (ids[book], row[0], row[1], ec, ev))
     meta = {
         "title": "A fresh translation of the 66-book Bible, compared with the King James Version",
         "built": datetime.date.today().isoformat(),

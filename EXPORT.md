@@ -24,6 +24,7 @@ The Android app in [android/](android/README.md) uses translation packs that `sc
 | `source_verses` | source verse | Hebrew/Aramaic (WLC, `hbo`) or Greek (SBLGNT, `grc`). OT: `(K)` = ketiv, `[Q: ]` = qere |
 | `differences` | flagged difference (2,320) | The KJV reading, this translation's reading, **the reading the text most likely means**, and the evidence |
 | `book_notes` | book summary | Markdown summary of each book's comparison |
+| `spans` | multi-verse difference (4) | A difference that covers a passage of several verses, from its first KJV verse to its last |
 
 ### Verse numbering
 
@@ -57,6 +58,29 @@ Sixteen KJV verses have no source verse because the source texts do not contain 
 | `note` | Manuscript evidence, grammar and other explanation |
 
 Four verses have a row with `preferred = 'either'` that is not counted as a difference: 1 Chronicles 17:17, 1 Chronicles 21:1, Job 13:15 and Psalm 22:17 (KJV 22:16). After the context review this translation agrees with the KJV there, so the row records the verdict, its confidence and the other possible meanings.
+
+### The `spans` table
+
+A few differences concern a whole passage, not one verse. The difference is recorded once, at the passage's first verse, and `spans` gives the passage's extent so an app can mark every verse in it and show the same note on each.
+
+| Passage | First verse (`kjv_chapter:kjv_verse`) | Last verse (`end_kjv_chapter:end_kjv_verse`) |
+|---|---|---|
+| Mark 16:9–20, the longer ending | 16:9 | 16:20 |
+| Luke 22:43–44, the angel and the sweat like drops of blood | 22:43 | 22:44 |
+| John 7:53–8:11, the woman caught in adultery | 7:53 | 8:11 |
+| 1 John 5:7–8, the Johannine Comma | 5:7 | 5:8 |
+
+The differences that apply to a KJV verse, including the passages it falls in:
+
+```sql
+SELECT d.* FROM differences d
+WHERE d.book_id = :book AND d.kjv_chapter = :ch AND d.kjv_verse = :v
+UNION
+SELECT d.* FROM spans s
+JOIN differences d ON d.book_id = s.book_id AND d.kjv_chapter = s.kjv_chapter AND d.kjv_verse = s.kjv_verse
+WHERE s.book_id = :book
+  AND :ch * 1000 + :v BETWEEN s.kjv_chapter * 1000 + s.kjv_verse AND s.end_kjv_chapter * 1000 + s.end_kjv_verse;
+```
 
 ## Example queries
 

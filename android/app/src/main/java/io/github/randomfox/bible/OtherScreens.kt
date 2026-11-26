@@ -292,7 +292,9 @@ fun AboutScreen(db: BibleDb, state: AppState) {
                 "your IP address, as with any download. Reading, comparing, notes and search work offline.",
                 Modifier.padding(top = 4.dp), lineHeight = 21.sp)
             Text("A dot after a verse marks a recorded difference: light for a nuance, amber for a notable change, " +
-                "red for a major one.", Modifier.padding(top = 8.dp), lineHeight = 21.sp, color = c.muted)
+                "red for a major one. A purple ◆ marks a contested passage, where scholars still debate the reading: " +
+                "its note gives a confidence level and the other possible meanings. ✎ marks your own note.",
+                Modifier.padding(top = 8.dp), lineHeight = 21.sp, color = c.muted)
             db.translations.forEach { t ->
                 HorizontalDivider(Modifier.padding(vertical = 16.dp), color = c.muted.copy(alpha = 0.25f))
                 Text("${t.name} (${t.code})", fontWeight = FontWeight.SemiBold, fontSize = 17.sp)

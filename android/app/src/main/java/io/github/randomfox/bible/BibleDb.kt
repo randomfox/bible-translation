@@ -24,6 +24,8 @@ data class ChapterRef(val book: Int, val chapter: Int)
 data class Verse(
     val id: Long, val book: Int, val chapter: Int, val verse: Int, val text: String,
     val noteCount: Int = 0, val maxSeverity: Int = 0, val hasUserNote: Boolean = false,
+    /** A contested passage: one of its notes carries a context verdict with a confidence level. */
+    val contested: Boolean = false,
 )
 
 data class Note(
@@ -69,6 +71,9 @@ class BibleDb private constructor(private val db: SQLiteDatabase) {
                 db.execSQL("INSERT OR REPLACE INTO books SELECT * FROM p.books")
                 for (t in listOf("translations", "verses", "verse_keys", "notes", "book_notes"))
                     db.execSQL("INSERT INTO $t SELECT * FROM p.$t")
+                // Packs built before 0.5.0 have no note_spans table.
+                if (db.list("SELECT 1 FROM p.sqlite_master WHERE type='table' AND name='note_spans'") { 1 }.isNotEmpty())
+                    db.execSQL("INSERT INTO note_spans SELECT * FROM p.note_spans")
                 if (db.list("SELECT searchable FROM p.translations") { it.getInt(0) }.single() == 1) {
                     db.execSQL("CREATE VIRTUAL TABLE fts_$tid USING fts4(content=\"\", text, tokenize=unicode61)")
                     db.execSQL("INSERT INTO fts_$tid (docid, text) SELECT id, text FROM verses WHERE translation_id=$tid")
@@ -91,7 +96,7 @@ class BibleDb private constructor(private val db: SQLiteDatabase) {
 
     private fun deleteRows(tid: Int) {
         db.execSQL("DELETE FROM verse_keys WHERE verse_id IN (SELECT id FROM verses WHERE translation_id=$tid)")
-        for (t in listOf("verses", "notes", "book_notes")) db.execSQL("DELETE FROM $t WHERE translation_id=$tid")
+        for (t in listOf("verses", "notes", "book_notes", "note_spans")) db.execSQL("DELETE FROM $t WHERE translation_id=$tid")
         db.execSQL("DELETE FROM translations WHERE id=$tid")
         db.execSQL("DROP TABLE IF EXISTS fts_$tid")
     }
@@ -122,18 +127,19 @@ class BibleDb private constructor(private val db: SQLiteDatabase) {
     }
 
     fun chapter(tid: Int, book: Int, chapter: Int): List<Verse> {
-        val sub = "FROM notes n JOIN verse_keys k ON n.book_id=k.book_id AND n.kjv_chapter=k.kjv_chapter " +
-            "AND n.kjv_verse=k.kjv_verse WHERE k.verse_id=v.id"
+        val sub = "FROM notes n WHERE n.rowid IN (${noteIds("v.id")})"
         val verses = db.list(
-            "SELECT v.id, v.verse, v.text, (SELECT count(*) $sub), (SELECT max(n.severity) $sub) FROM verses v " +
+            "SELECT v.id, v.verse, v.text, (SELECT count(*) $sub), (SELECT max(n.severity) $sub), " +
+                "(SELECT count(n.confidence) $sub) FROM verses v " +
                 "WHERE v.translation_id=? AND v.book_id=? AND v.chapter=? ORDER BY v.verse", tid, book, chapter
-        ) { Verse(it.getLong(0), book, chapter, it.getInt(1), it.getString(2), it.getInt(3), it.getInt(4)) }
+        ) { Verse(it.getLong(0), book, chapter, it.getInt(1), it.getString(2), it.getInt(3), it.getInt(4),
+            contested = it.getInt(5) > 0) }
         // Verses the KJV has and this translation's source text lacks (e.g. Matt 17:21), shown as gaps.
         val have = verses.map { it.verse }.toSet()
         val gaps = db.list(
-            "SELECT verse, count(*), max(severity) FROM notes WHERE translation_id=? AND book_id=? AND chapter=? " +
-                "AND translation_reading='(absent)' GROUP BY verse", tid, book, chapter
-        ) { Verse(0, book, chapter, it.getInt(0), "", it.getInt(1), it.getInt(2)) }
+            "SELECT verse, count(*), max(severity), count(confidence) FROM notes WHERE translation_id=? AND book_id=? " +
+                "AND chapter=? AND translation_reading='(absent)' GROUP BY verse", tid, book, chapter
+        ) { Verse(0, book, chapter, it.getInt(0), "", it.getInt(1), it.getInt(2), contested = it.getInt(3) > 0) }
             .filter { it.verse !in have && it.verse <= (have.maxOrNull() ?: 0) + 1 }
         return (verses + gaps).sortedBy { it.verse }
     }
@@ -147,9 +153,8 @@ class BibleDb private constructor(private val db: SQLiteDatabase) {
         }
         return if (verse.id == 0L) db.list("SELECT $cols FROM notes n WHERE n.translation_id=? AND n.book_id=? " +
             "AND n.chapter=? AND n.verse=? ORDER BY n.severity DESC", tid, verse.book, verse.chapter, verse.verse, map = map)
-        else db.list("SELECT DISTINCT $cols FROM notes n JOIN verse_keys k ON n.book_id=k.book_id " +
-            "AND n.kjv_chapter=k.kjv_chapter AND n.kjv_verse=k.kjv_verse WHERE k.verse_id=? ORDER BY n.severity DESC",
-            verse.id, map = map)
+        else db.list("SELECT DISTINCT $cols FROM notes n WHERE n.rowid IN (${noteIds(verse.id.toString())}) " +
+            "ORDER BY n.severity DESC", map = map)
     }
 
     /** The same verse in every translation, matched through the shared KJV keys. */
@@ -288,6 +293,28 @@ class BibleDb private constructor(private val db: SQLiteDatabase) {
         )
 
         /**
+         * Notes that cover a passage (e.g. Mark 16:9-20): the note sits at the first KJV verse and applies up to
+         * end_chapter:end_verse. Added in 0.5.0 without a schema version bump, so existing libraries (and the
+         * translations downloaded into them) are kept: open() creates the table, in new and old libraries alike.
+         */
+        private val SPANS_SCHEMA = listOf(
+            "CREATE TABLE IF NOT EXISTS note_spans (translation_id INTEGER NOT NULL, book_id INTEGER NOT NULL, " +
+                "kjv_chapter INTEGER NOT NULL, kjv_verse INTEGER NOT NULL, end_chapter INTEGER NOT NULL, end_verse INTEGER NOT NULL)",
+        )
+
+        /**
+         * The notes that apply to a verse, as notes.rowid values: those keyed to one of its KJV references, and
+         * those whose passage span covers one. [verse] is an SQL expression for the verse id.
+         */
+        fun noteIds(verse: String) =
+            "SELECT n.rowid FROM notes n JOIN verse_keys k ON n.book_id=k.book_id AND n.kjv_chapter=k.kjv_chapter " +
+                "AND n.kjv_verse=k.kjv_verse WHERE k.verse_id=$verse " +
+            "UNION SELECT n.rowid FROM verse_keys k JOIN note_spans s ON s.book_id=k.book_id " +
+                "AND k.kjv_chapter*1000+k.kjv_verse BETWEEN s.kjv_chapter*1000+s.kjv_verse AND s.end_chapter*1000+s.end_verse " +
+                "JOIN notes n ON n.translation_id=s.translation_id AND n.book_id=s.book_id " +
+                "AND n.kjv_chapter=s.kjv_chapter AND n.kjv_verse=s.kjv_verse WHERE k.verse_id=$verse"
+
+        /**
          * Opens the library, creating it on first run (or after a schema change) and installing the
          * bundled Claude Translation when none is installed or when the APK brings a new version of it.
          * A newer CT downloaded from the catalog is kept until the next APK update.
@@ -306,6 +333,7 @@ class BibleDb private constructor(private val db: SQLiteDatabase) {
                     sql.setTransactionSuccessful()
                 } finally { sql.endTransaction() }
             }
+            SPANS_SCHEMA.forEach(sql::execSQL)
             val lib = BibleDb(sql)
             val bundled = context.assets.open("core.version").use { it.readBytes().decodeToString().trim() }
             // The bundled version this app last saw. If it hasn't changed, an installed CT that differs from

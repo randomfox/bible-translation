@@ -13,6 +13,8 @@ import androidx.compose.ui.graphics.Color
 data class BibleColors(
     val bar: Color, val onBar: Color, val verseNumber: Color, val tile: Color, val onTile: Color,
     val selected: Color, val muted: Color, val strip: Color, val indicator: Color, val severity: List<Color>,
+    /** Marks contested passages: readings still debated, with a confidence level and other possible meanings. */
+    val contested: Color,
 )
 
 private val Light = BibleColors(
@@ -20,6 +22,7 @@ private val Light = BibleColors(
     tile = Color(0xFFE8EFF9), onTile = Color(0xFF173A6B), selected = Color(0xFFFFF4C2),
     muted = Color(0xFF6B7380), strip = Color(0xFFDDE1E7), indicator = Color(0xFF3C4A5C),
     severity = listOf(Color(0xFF9DB3D3), Color(0xFFE0A100), Color(0xFFC62828)),
+    contested = Color(0xFF7B3FA8),
 )
 
 private val Dark = BibleColors(
@@ -27,6 +30,7 @@ private val Dark = BibleColors(
     tile = Color(0xFF1E2A3A), onTile = Color(0xFFCFE0F7), selected = Color(0xFF3A3420),
     muted = Color(0xFF9AA3AF), strip = Color(0xFF232933), indicator = Color(0xFF8FB4E8),
     severity = listOf(Color(0xFF5C7397), Color(0xFFE0A100), Color(0xFFEF5350)),
+    contested = Color(0xFFC6A0F0),
 )
 
 val LocalBibleColors = staticCompositionLocalOf { Light }

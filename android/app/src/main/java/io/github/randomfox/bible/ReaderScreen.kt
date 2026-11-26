@@ -348,7 +348,10 @@ private fun verseLine(v: Verse, t: Translation, c: BibleColors): AnnotatedString
     if (v.hasUserNote) withStyle(SpanStyle(color = c.verseNumber, fontSize = 0.7.em, baselineShift = BaselineShift(0.3f))) {
         append(" ✎")
     }
-    if (v.noteCount > 0) withStyle(SpanStyle(color = c.severity[(v.maxSeverity - 1).coerceIn(0, 2)],
+    // A contested passage gets a purple diamond in place of the dot, whatever its severity.
+    if (v.contested) withStyle(SpanStyle(color = c.contested, fontSize = 0.7.em, baselineShift = BaselineShift(0.3f))) {
+        append(" ◆")
+    } else if (v.noteCount > 0) withStyle(SpanStyle(color = c.severity[(v.maxSeverity - 1).coerceIn(0, 2)],
         fontSize = 0.6.em, baselineShift = BaselineShift(0.35f))) { append(" ●") }
 }
 
@@ -456,6 +459,8 @@ private fun NoteCard(n: Note) {
                 Text("${SEVERITY_LABEL[sev]} · ${CATEGORY_LABEL[n.category] ?: n.category}",
                     fontWeight = FontWeight.SemiBold, fontSize = 14.sp)
             }
+            if (n.confidence != null) Text("◆ Contested passage · ${n.confidence} confidence",
+                Modifier.padding(top = 6.dp), color = c.contested, fontWeight = FontWeight.SemiBold, fontSize = 13.sp)
             Label("KJV"); Body(n.kjvReading)
             Label("This translation"); Body(n.translationReading)
             if (n.preferred == "either") {
