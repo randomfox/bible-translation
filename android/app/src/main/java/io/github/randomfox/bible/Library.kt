@@ -186,8 +186,11 @@ fun LibraryScreen(db: BibleDb, state: AppState, library: Library) {
                         }
                         Spacer(Modifier.width(12.dp))
                         when {
-                            e.bundled -> Text("Built in", color = c.muted, fontSize = 14.sp)
                             p != null -> Text(if (p >= 1f) "Installing…" else "${(p * 100).toInt()}%", color = c.verseNumber)
+                            // Built in, but a newer (or different) version is published: update it in place.
+                            e.bundled && e.file != null && have != null && have != e.version ->
+                                Button({ library.download(e) }) { Text("Update") }
+                            e.bundled -> Text("Built in", color = c.muted, fontSize = 14.sp)
                             have == null -> Button({ library.download(e) }, enabled = e.file != null) { Text("Download") }
                             e.file != null && have != e.version -> Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                                 OutlinedButton({ remove(db, state, e.id) }) { Text("Remove") }

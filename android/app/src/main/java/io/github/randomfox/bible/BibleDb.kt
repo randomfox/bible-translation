@@ -289,7 +289,8 @@ class BibleDb private constructor(private val db: SQLiteDatabase) {
 
         /**
          * Opens the library, creating it on first run (or after a schema change) and installing the
-         * bundled Claude Translation whenever the APK carries a different version of it.
+         * bundled Claude Translation when none is installed or when the APK brings a new version of it.
+         * A newer CT downloaded from the catalog is kept until the next APK update.
          */
         suspend fun open(context: Context): BibleDb = withContext(Dispatchers.IO) {
             context.getDatabasePath("bible.db").let { if (it.exists()) context.deleteDatabase("bible.db") }  // 0.1 layout
@@ -307,11 +308,17 @@ class BibleDb private constructor(private val db: SQLiteDatabase) {
             }
             val lib = BibleDb(sql)
             val bundled = context.assets.open("core.version").use { it.readBytes().decodeToString().trim() }
-            if (lib.installedVersion(CORE_ID) != bundled) {
+            // The bundled version this app last saw. If it hasn't changed, an installed CT that differs from
+            // it was downloaded from the catalog (Translations → Update) and must not be replaced.
+            val seenFile = File(context.filesDir, "core.bundled")
+            val seen = runCatching { seenFile.readText().trim() }.getOrNull()
+            val installed = lib.installedVersion(CORE_ID)
+            if (installed == null || (installed != bundled && seen != bundled)) {
                 val tmp = File(context.cacheDir, "core.db")
                 context.assets.open("core.db").use { input -> tmp.outputStream().use { input.copyTo(it, 1 shl 16) } }
                 try { lib.install(tmp) } finally { tmp.delete() }
             }
+            if (seen != bundled) runCatching { seenFile.writeText(bundled) }
             lib
         }
 

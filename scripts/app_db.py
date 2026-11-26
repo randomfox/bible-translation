@@ -4,8 +4,10 @@ Usage: python3 -I scripts/app_db.py
 
 Each translation becomes one SQLite "pack". The app installs packs into its own library database:
   - the Claude Translation (CT) pack is bundled in the APK: android/app/src/main/assets/core.db
-  - every other pack is gzipped into dist/packs/<CODE>.db.gz and listed in dist/packs/catalog.json,
+  - every pack, the CT included, is gzipped into dist/packs/<CODE>.db.gz and listed in dist/packs/catalog.json,
     which are published as assets of the GitHub release "translations" (scripts/publish_packs.sh).
+    The CT's entry is marked "bundled"; the app installs it from the APK and offers Update when the
+    published CT is a different version, so a translation fix reaches phones without a new APK.
 
 Pack tables (the app's library database has the same ones, plus an FTS4 table per searchable translation)
   meta          key/value: pack_format, translation id, version
@@ -264,18 +266,19 @@ def main():
         entry = {"id": t.id, "code": t.code, "name": t.name, "language": t.language, "description": t.description,
                  "license": t.license, "version": version, "sort": sort, "verses": len(t.verses),
                  "numbering": t.numbering}
+        # Every pack, the bundled CT included, is also published so installed apps can update it.
+        gz = dist / f"{t.code}.db.gz"
+        with open(raw, "rb") as f, gzip.GzipFile(gz, "wb", mtime=0) as g:
+            shutil.copyfileobj(f, g)
+        data = gz.read_bytes()
+        entry.update(file=gz.name, size=len(data), sha256=hashlib.sha256(data).hexdigest())
         if bundled:
             (assets / "core.version").write_text(version)
             entry["bundled"] = True
         else:
-            gz = dist / f"{t.code}.db.gz"
-            with open(raw, "rb") as f, gzip.GzipFile(gz, "wb", mtime=0) as g:
-                shutil.copyfileobj(f, g)
             raw.unlink()
-            data = gz.read_bytes()
-            entry.update(file=gz.name, size=len(data), sha256=hashlib.sha256(data).hexdigest())
         catalog.append(entry)
-        size = "bundled" if bundled else f"{entry['size'] / 1e6:.1f} MB"
+        size = f"{entry['size'] / 1e6:.1f} MB" + (", bundled" if bundled else "")
         print(f"{t.code:8} {len(t.verses):6} verses  version {version}  {size}")
     (dist / "catalog.json").write_text(json.dumps({"format": PACK_FORMAT, "base_url": CATALOG_URL,
                                                    "translations": catalog}, indent=1, ensure_ascii=False))
