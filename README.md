@@ -14,6 +14,10 @@ A new English translation of the 66-book Bible, made directly from the Hebrew, A
 | **Database** | `bible.sqlite` has the translation, the KJV, the source texts and the differences, with the reading each passage most likely means. See [EXPORT.md](EXPORT.md). |
 | **How it was made** | [INSTRUCTIONS.md](INSTRUCTIONS.md) gives the per-chapter method: translate from the source first, then compare with the KJV. `scripts/` holds the tools. |
 
+## Capitalised pronouns
+
+The translation capitalises pronouns that refer to God, Jesus or the Holy Spirit (He, Him, His, You, Your, My, Who), as the NKJV and NASB do. In Old Testament prophecy it does so only in passages the New Testament applies to Jesus. The original languages have no capital letters, so this is a reading aid, not part of the text.
+
 ## Sources
 
 - **Old Testament:** the Westminster Leningrad Codex, through the Open Scriptures Hebrew Bible.

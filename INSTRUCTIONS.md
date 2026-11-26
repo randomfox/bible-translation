@@ -61,6 +61,7 @@ Shared conventions (so all agents are consistent):
 | πνεῦμα ἅγιον | Holy Spirit · ᾅδης Hades · γέεννα Gehenna · ἐκκλησία church (assembly for non-Christian gatherings) |
 | δοῦλος | slave · ἀδελφοί → brothers (or brothers and sisters when clearly mixed) |
 | ὁ υἱὸς τοῦ ἀνθρώπου | the Son of Man |
+| Pronouns for God, Jesus, the Holy Spirit | Capitalised: He, Him, His, Himself, You, Your, Me, My, Mine, Who, Whom, Whose. OT messianic prophecy only where the NT applies the passage to Jesus |
 
 ## What to flag in the compare file
 

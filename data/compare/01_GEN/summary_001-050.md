@@ -17,7 +17,7 @@
 
 ## Most important differences
 
-1. **49:10 (sev 3).** "until Shiloh come". This is the most debated crux in Genesis. The Hebrew can be read as "until he comes to whom it belongs" or as "until tribute comes to him". The KJV turns it into a messianic name.
+1. **49:10 (sev 3).** "until Shiloh come". This is the most debated crux in Genesis. The Hebrew can be read as "until the One to Whom it belongs comes" or as "until tribute comes to him". The KJV turns it into a messianic name.
 2. **3:15 and 22:18 / 26:4.** In 3:15 the KJV's "it shall bruise thy head" treats the offspring collectively. In 22:18 and 26:4 the reflexive "bless themselves by your offspring" is made passive, "be blessed", which gave the verses their later Pauline reading.
 3. **24:43.** "the virgin" for *almah*, which means a young woman. Virginity is stated separately, with *betulah*, in 24:16. Compare Isaiah 7:14.
 4. **2:7.** "a living soul" for *nephesh hayyah*. The same phrase is used of animals in chapter 1.

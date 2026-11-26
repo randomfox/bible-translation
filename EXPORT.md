@@ -43,6 +43,7 @@ Sixteen KJV verses have no source verse because the source texts do not contain 
 
 - `[[ … ]]` marks a passage judged to be a later addition: Mark 16:9–20, John 7:53–8:11, Luke 22:43–44 and 23:34a.
 - `[ … ]` marks doubtful words that the source edition prints in brackets.
+- Pronouns that refer to God, Jesus or the Holy Spirit are capitalised (He, Him, His, You, My, Who …). In the Old Testament this extends to the coming figure only in passages the New Testament applies to Jesus, such as Genesis 49:10, Psalms 2, 22 and 110, Isaiah 53 and Micah 5:2. The capitals are an editorial convention: Hebrew and Greek have no capital letters.
 
 ### The `differences` table
 

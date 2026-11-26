@@ -1,4 +1,4 @@
-23:1	Then Jesus said to the crowds and to his disciples,
+23:1	Then Jesus said to the crowds and to His disciples,
 23:2	"The scribes and the Pharisees sit on Moses' seat,
 23:3	so do and observe whatever they tell you, but not the works they do. For they preach, but do not practice.
 23:4	They tie up heavy burdens, hard to bear, and lay them on people's shoulders, but they themselves are not willing to move them with their finger.
@@ -6,7 +6,7 @@
 23:6	and they love the place of honor at feasts and the best seats in the synagogues
 23:7	and greetings in the marketplaces and being called rabbi by others.
 23:8	But you are not to be called rabbi, for you have one teacher, and you are all brothers.
-23:9	And call no man your father on earth, for you have one Father, who is in heaven.
+23:9	And call no man your father on earth, for you have one Father, Who is in heaven.
 23:10	Neither be called instructors, for you have one instructor, the Christ.
 23:11	The greatest among you shall be your servant.
 23:12	Whoever exalts himself will be humbled, and whoever humbles himself will be exalted.
@@ -17,8 +17,8 @@
 23:18	And you say, 'If anyone swears by the altar, it is nothing, but if anyone swears by the gift that is on the altar, he is bound by his oath.'
 23:19	You blind men! For which is greater, the gift or the altar that makes the gift sacred?
 23:20	So whoever swears by the altar swears by it and by everything on it.
-23:21	And whoever swears by the temple swears by it and by him who dwells in it.
-23:22	And whoever swears by heaven swears by the throne of God and by him who sits upon it.
+23:21	And whoever swears by the temple swears by it and by Him Who dwells in it.
+23:22	And whoever swears by heaven swears by the throne of God and by Him Who sits upon it.
 23:23	Woe to you, scribes and Pharisees, hypocrites! For you tithe mint and dill and cumin, and have neglected the weightier matters of the law: justice and mercy and faithfulness. These you ought to have done, without neglecting the others.
 23:24	You blind guides, straining out a gnat and swallowing a camel!
 23:25	Woe to you, scribes and Pharisees, hypocrites! For you clean the outside of the cup and the plate, but inside they are full of greed and self-indulgence.
@@ -35,4 +35,4 @@
 23:36	Truly, I say to you, all these things will come upon this generation.
 23:37	O Jerusalem, Jerusalem, the city that kills the prophets and stones those who are sent to it! How often would I have gathered your children together as a hen gathers her brood under her wings, and you were not willing!
 23:38	See, your house is left to you desolate.
-23:39	For I tell you, you will not see me again, until you say, 'Blessed is he who comes in the name of the Lord.'"
+23:39	For I tell you, you will not see Me again, until you say, 'Blessed is He Who comes in the name of the Lord.'"
