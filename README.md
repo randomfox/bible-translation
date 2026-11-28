@@ -1,14 +1,14 @@
 # The Claude Translation
 
-A new English translation of the 66-book Bible, made directly from the Hebrew, Aramaic and Greek and compared verse by verse with the King James Version. The repository also has an Android app, **Bible Reader**, that puts the translation beside the KJV, the BSB, the WEB, the YLT and the original-language texts.
+A new English translation of the 66-book Bible, made directly from the Hebrew, Aramaic and Greek and compared verse by verse with the King James Version. To read it on Android beside the KJV, the BSB, the WEB, the YLT and the original-language texts, use [Bible Reader](https://github.com/randomfox/bible-reader), which has it built in.
 
-> **Made with Claude.** The translation, the comparison notes, the judgements about which reading a passage most likely means, and the Android app were all produced by Claude, Anthropic's AI model, working under the direction of the repository's owner. No human biblical scholars or translation committee have reviewed them. They will contain mistakes, some of them significant. Use the translation for reading and comparison, not as an authority, and check any passage that matters against established translations and the original texts.
+> **Made with Claude.** The translation, the comparison notes and the judgements about which reading a passage most likely means were all produced by Claude, Anthropic's AI model, working under the direction of the repository's owner. No human biblical scholars or translation committee have reviewed them. They will contain mistakes, some of them significant. Use the translation for reading and comparison, not as an authority, and check any passage that matters against established translations and the original texts.
 
 ## What's here
 
 | | |
 |---|---|
-| **Bible Reader (Android)** | [Download the APK](https://github.com/randomfox/bible-translation/releases/latest). The Claude Translation is built in. More translations can be downloaded in the app. See [android/README.md](android/README.md). |
+| **Bible Reader (Android)** | Now in its own repository, [randomfox/bible-reader](https://github.com/randomfox/bible-reader), with the APK on its [releases page](https://github.com/randomfox/bible-reader/releases/latest). It builds its copy of the translation from `bible.sqlite` here. |
 | **The translation** | `data/translation/` holds one tab-separated file per chapter, `ref` then text. |
 | **Comparison with the KJV** | 2,316 recorded differences, each with a category, a severity, both readings and the evidence: `data/compare/`, `results/flags.tsv`, and the summary page `results/kjv-comparison.html` (open it in a browser). Capitalised pronouns: the judgement calls and places to review are in `results/capitalisation-review.md`. 65 ambiguous high-impact passages were decided from their context, each with a confidence level and the other possible meanings: `results/ambiguities.tsv`. |
 | **Database** | `bible.sqlite` has the translation, the KJV, the source texts and the differences, with the reading each passage most likely means. See [EXPORT.md](EXPORT.md). |
@@ -35,4 +35,4 @@ The translation capitalises pronouns that refer to God, Jesus or the Holy Spirit
 
 ## Licence
 
-The translation, the notes, the scripts and the app are dedicated to the public domain under [CC0 1.0](LICENSES/CC0-1.0.txt). The New Testament is translated from the SBLGNT, © 2010 Society of Biblical Literature and Logos Bible Software, CC BY 4.0, so anyone republishing it should keep that credit. See [LICENSE.md](LICENSE.md) for every source's terms.
+The translation, the notes and the scripts are dedicated to the public domain under [CC0 1.0](LICENSES/CC0-1.0.txt). The New Testament is translated from the SBLGNT, © 2010 Society of Biblical Literature and Logos Bible Software, CC BY 4.0, so anyone republishing it should keep that credit. See [LICENSE.md](LICENSE.md) for every source's terms.

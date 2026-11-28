@@ -1,6 +1,0 @@
-<resources>
-    <style name="Theme.Bible" parent="android:Theme.Material.Light.NoActionBar">
-        <item name="android:statusBarColor">#FF173A6B</item>
-        <item name="android:windowBackground">#FFFFFFFF</item>
-    </style>
-</resources>
