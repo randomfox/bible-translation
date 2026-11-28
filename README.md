@@ -8,7 +8,7 @@ A new English translation of the 66-book Bible, made directly from the Hebrew, A
 
 | | |
 |---|---|
-| **Bible Reader (Android)** | Now in its own repository, [randomfox/bible-reader](https://github.com/randomfox/bible-reader), with the APK on its [releases page](https://github.com/randomfox/bible-reader/releases/latest). It builds its copy of the translation from `bible.sqlite` here. |
+| **Bible Reader (Android)** | In its own repository, [randomfox/bible-reader](https://github.com/randomfox/bible-reader), with the APK on its [releases page](https://github.com/randomfox/bible-reader/releases/latest). It reads the translation from this repository's releases; see [Releases](#releases). |
 | **The translation** | `data/translation/` holds one tab-separated file per chapter, `ref` then text. |
 | **Comparison with the KJV** | 2,316 recorded differences, each with a category, a severity, both readings and the evidence: `data/compare/`, `results/flags.tsv`, and the summary page `results/kjv-comparison.html` (open it in a browser). Capitalised pronouns: the judgement calls and places to review are in `results/capitalisation-review.md`. 65 ambiguous high-impact passages were decided from their context, each with a confidence level and the other possible meanings: `results/ambiguities.tsv`. |
 | **Database** | `bible.sqlite` has the translation, the KJV, the source texts and the differences, with the reading each passage most likely means. See [EXPORT.md](EXPORT.md). |
@@ -17,6 +17,17 @@ A new English translation of the 66-book Bible, made directly from the Hebrew, A
 ## Capitalised pronouns
 
 The translation capitalises pronouns that refer to God, Jesus or the Holy Spirit (He, Him, His, You, Your, My, Who), as the NKJV and NASB do. In Old Testament prophecy it does so only in passages the New Testament applies to Jesus. The original languages have no capital letters, so this is a reading aid, not part of the text.
+
+## Releases
+
+The translation is released for Bible Reader as GitHub releases tagged `ct-<version>`. Each holds `CT.db.gz`, the translation and its notes as one SQLite pack, and `ct.json`, with its version, size, SHA-256 and download URL. The version is a hash of the pack's contents. Bible Reader bundles the [latest release](https://github.com/randomfox/bible-translation/releases/latest) when it is built, and installed apps offer it as an update on their Translations screen.
+
+To release a change to the translation:
+
+1. Rebuild `bible.sqlite` with `scripts/export.py`, then commit and push.
+2. Run `scripts/release.sh`, optionally with release notes as its argument. It builds the pack with `scripts/pack.py`, tags the current commit and publishes the release as the latest. If the translation hasn't changed since the last release, it does nothing.
+
+Keep the latest release a translation release: Bible Reader reads `ct.json` from whichever release GitHub marks as latest.
 
 ## Sources
 

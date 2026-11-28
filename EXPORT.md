@@ -10,7 +10,7 @@ python3 -I scripts/export.py
 
 The script writes `bible.sqlite` in the project root. You can pass a different output path as an argument.
 
-[Bible Reader](https://github.com/randomfox/bible-reader), the Android app, builds its bundled copy of the translation from this file, at a commit pinned in its `scripts/fetch_sources.sh`.
+[Bible Reader](https://github.com/randomfox/bible-reader), the Android app, reads the translation as a pack that `scripts/pack.py` builds from this file and `scripts/release.sh` publishes as a GitHub release. See [Releases](README.md#releases).
 
 ## Tables
 
